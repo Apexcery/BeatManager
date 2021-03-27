@@ -15,24 +15,17 @@ namespace BeatManager_WPF_
         public MainWindow()
         {
             InitializeComponent();
-
-            LoadCustomSongs();
-            LoadPlaylists();
-
-            this.Loaded += showNotifs;
         }
 
-        private void LoadPlaylists()
+        public MainWindow(string notifMessage) : this()
         {
-           
+            if (!string.IsNullOrEmpty(notifMessage))
+            {
+                this.Loaded += (o, args) => ShowNotification(o, args, notifMessage);
+            }
         }
 
-        private void LoadCustomSongs()
-        {
-           
-        }
-
-        private void showNotifs(object sender, RoutedEventArgs e)
+        private void ShowNotification(object sender, RoutedEventArgs e, string message)
         {
             var notifier = new Notifier(cfg =>
             {
@@ -46,12 +39,7 @@ namespace BeatManager_WPF_
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
 
-            notifier.ShowSuccess("400 custom songs found.", new MessageOptions { ShowCloseButton = true });
-            notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
-            notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
-            notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
-            notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
-            notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
+            notifier.ShowSuccess(message, new MessageOptions { ShowCloseButton = true });
         }
 
         private void BtnOpenMenu_Click(object sender, RoutedEventArgs e)
@@ -80,7 +68,6 @@ namespace BeatManager_WPF_
 
         private void BtnSongs_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Trace.WriteLine("FUCK YOU");
             BtnSongs.BorderThickness = new Thickness(0, 0, 2, 0);
         }
     }

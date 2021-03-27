@@ -38,16 +38,16 @@ namespace BeatManager_WPF_
             }
         }
 
-        private void StartChangeWindowTimer(int seconds)
+        private void StartChangeWindowTimer(int seconds, string notifMessage = null)
         {
-            _dispatchTimer.Tick += new EventHandler(ChangeWindow);
+            _dispatchTimer.Tick += new EventHandler((o, args) => ChangeWindow(o, args, notifMessage));
             _dispatchTimer.Interval = new TimeSpan(0, 0, seconds);
             _dispatchTimer.Start();
         }
 
-        private void ChangeWindow(object sender, EventArgs e)
+        private void ChangeWindow(object sender, EventArgs e, string notifMessage = null)
         {
-            var main = new MainWindow();
+            var main = new MainWindow(notifMessage);
             Application.Current.MainWindow = main;
             this.Close();
             main.Show();
@@ -126,7 +126,7 @@ namespace BeatManager_WPF_
 
             File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
 
-            StartChangeWindowTimer(0);
+            StartChangeWindowTimer(0, "Root directory saved successfully.");
         }
     }
 }

@@ -9,7 +9,7 @@
         Title="SplashScreen" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Black">
     <Grid Background="#FF0C0C0C">
         
-        <StackPanel Width="600" Height="400" Orientation="Vertical">
+        <StackPanel x:Name="DirectoryPanel" Width="600" Height="400" Orientation="Vertical" Visibility="Hidden">
             <Label Content="Please select your Beat Saber Directory" HorizontalAlignment="Center" Margin="20,0,0,0"/>
             <StackPanel Orientation="Horizontal">
                 <TextBox Width="500" IsReadOnly="True" Foreground="Black" Background="White"></TextBox>
@@ -19,17 +19,6 @@
                 </Grid>
             </StackPanel>
             
-        </StackPanel>
-        <StackPanel Width="600" Height="400" Orientation="Vertical" Margin="100,25,100,25">
-            <Label Content="Please select your Beat Saber Directory" HorizontalAlignment="Center" Margin="20,0,0,0"/>
-            <StackPanel Orientation="Horizontal">
-                <TextBox Width="500" IsReadOnly="True" Foreground="Black" Background="White"/>
-                <Grid Width="100">
-                    <Rectangle Fill="CornflowerBlue"/>
-                    <TextBlock Text="FUCK YOU" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Grid>
-            </StackPanel>
-
         </StackPanel>
 
     </Grid>

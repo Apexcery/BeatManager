@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using BeatManager_WPF_.Models;
 
 namespace BeatManager_WPF_
 {
@@ -21,12 +11,20 @@ namespace BeatManager_WPF_
     public partial class SplashScreen : Window
     {
         DispatcherTimer dt = new DispatcherTimer();
-        public SplashScreen()
+        public SplashScreen(Config config)
         {
             InitializeComponent();
-            dt.Tick += new EventHandler(ChangeWindow);
-            dt.Interval = new TimeSpan(0, 0, 3);
-            dt.Start();
+
+            if (!string.IsNullOrEmpty(config.BeatSaberLocation))
+            {
+                dt.Tick += new EventHandler(ChangeWindow);
+                dt.Interval = new TimeSpan(0, 0, 3);
+                dt.Start();
+            }
+            else
+            {
+                DirectoryPanel.Visibility = Visibility.Visible;
+            }
         }
 
         private void ChangeWindow(object sender, EventArgs e)

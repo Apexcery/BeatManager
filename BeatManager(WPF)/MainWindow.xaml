@@ -5,8 +5,137 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BeatManager_WPF_"
         mc:Ignorable="d"
-        Title="Beat Manager | Main Window" Height="720" Width="1280">
-    <Grid>
+        Title="Beat Manager | Main Window" Height="720" Width="1280"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Storyboard x:Key="MenuOpen">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="200"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="MenuClose">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="BtnOpenMenu">
+            <BeginStoryboard Storyboard="{StaticResource MenuOpen}"/>
+        </EventTrigger>
+
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="BtnCloseMenu">
+            <BeginStoryboard Storyboard="{StaticResource MenuClose}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    
+    <Grid Background="#FF0E0E0E">
         
+        
+        <Grid x:Name="TopBar" Height="50" VerticalAlignment="Top" Background="#FF191919" MouseLeftButtonDown="TopBar_MouseLeftButtonDown" >
+            
+            
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
+                <materialDesign:PopupBox HorizontalAlignment="Right" Margin="10" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
+                    
+                    <StackPanel Width="150">
+                        <Button Content="Test"/>
+                        <Button Content="Test"  />
+                        <Button Content="Test"  />
+                        <Button Content="Test"  />
+                        <Separator/>
+                        <Button x:Name="BtnPopUpExit" Content="Exit" Click="BtnPopUpExit_Click"/>
+                    </StackPanel>
+
+                </materialDesign:PopupBox>
+                
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="GridMenu" Width="{StaticResource NavWidth}" HorizontalAlignment="Left" Background="#FF212121">
+            
+            <StackPanel>
+                <Grid Height="150" Background="Black">
+                    <TextBlock Text="Beat Manager" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                    <Button x:Name="BtnCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="BtnCloseMenu_Click">
+                        <materialDesign:PackIcon Foreground="White" Kind="ArrowLeft"/>
+                    </Button>
+
+                    <Button x:Name="BtnOpenMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Click="BtnOpenMenu_Click">
+                        <materialDesign:PackIcon Foreground="White" Kind="Menu"/>
+                    </Button>
+                </Grid>
+                <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    
+                    
+                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_MouseUp"  SnapsToDevicePixels="True" BorderBrush="#FF2E67FF" >
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Music" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Songs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="MusicBox" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Playlists" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Person" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Avatars" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="SwordCross" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Sabers" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ArrowUpBoldBox" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Notes" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+
+                   
+
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="SkiWater" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Platforms" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Spanner" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Mods" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+                
+            </StackPanel>
+        </Grid>
+
+
     </Grid>
 </Window>

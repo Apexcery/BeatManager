@@ -14,10 +14,23 @@ namespace BeatManager_WPF_
         {
             InitializeComponent();
 
-            this.Loaded += showNotif;
+            LoadCustomSongs();
+            LoadPlaylists();
+
+            this.Loaded += showNotifs;
         }
 
-        private void showNotif(object sender, RoutedEventArgs e)
+        private void LoadPlaylists()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void LoadCustomSongs()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void showNotifs(object sender, RoutedEventArgs e)
         {
             var notifier = new Notifier(cfg =>
             {

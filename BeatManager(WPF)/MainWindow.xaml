@@ -64,7 +64,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="#FF212121">
+        <Grid x:Name="GridMenu" Width="{StaticResource NavWidth}" HorizontalAlignment="Left" Background="#FF212121">
             
             <StackPanel>
                 <Grid Height="150" Background="Black">
@@ -80,35 +80,35 @@
                 <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     
                     
-                    <ListViewItem Height="60">
+                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_MouseUp"  SnapsToDevicePixels="True" BorderBrush="#FF2E67FF" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Music" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Songs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60">
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="MusicBox" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Playlists" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60">
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Person" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Avatars" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60">
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="SwordCross" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Sabers" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60">
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ArrowUpBoldBox" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Notes" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
@@ -117,14 +117,15 @@
 
                    
 
-                    <ListViewItem Height="60" IsEnabled="False">
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
+                        
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="SkiWater" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Platforms" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60">
+                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Spanner" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Mods" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>

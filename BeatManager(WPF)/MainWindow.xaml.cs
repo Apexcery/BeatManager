@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using ToastNotifications;
 using ToastNotifications.Core;
@@ -10,6 +11,7 @@ namespace BeatManager_WPF_
 {
     public partial class MainWindow : Window
     {
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -74,6 +76,12 @@ namespace BeatManager_WPF_
         private void TopBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void BtnSongs_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Trace.WriteLine("FUCK YOU");
+            BtnSongs.BorderThickness = new Thickness(0, 0, 2, 0);
         }
     }
 }

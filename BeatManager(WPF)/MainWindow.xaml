@@ -32,7 +32,7 @@
     </Window.Resources>
 
     <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="BtnOpen Menu">
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="BtnOpenMenu">
             <BeginStoryboard Storyboard="{StaticResource MenuOpen}"/>
         </EventTrigger>
 

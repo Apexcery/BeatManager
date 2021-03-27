@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using BeatManager_WPF_.Models;
+using Newtonsoft.Json;
+using Application = System.Windows.Application;
+using Button = System.Windows.Controls.Button;
+using Cursors = System.Windows.Input.Cursors;
 using MessageBox = System.Windows.MessageBox;
 
 namespace BeatManager_WPF_
@@ -15,16 +18,19 @@ namespace BeatManager_WPF_
     /// </summary>
     public partial class SplashScreen : Window
     {
-        DispatcherTimer dt = new DispatcherTimer();
+        private readonly Config _config;
+        readonly DispatcherTimer _dispatchTimer = new DispatcherTimer();
+
         public SplashScreen(Config config)
         {
-            InitializeComponent();
+            _config = config;
 
-            if (!string.IsNullOrEmpty(config.BeatSaberLocation))
+            InitializeComponent();
+            DirectoryPanel.Visibility = Visibility.Hidden;
+
+            if (!string.IsNullOrEmpty(_config.BeatSaberLocation))
             {
-                dt.Tick += new EventHandler(ChangeWindow);
-                dt.Interval = new TimeSpan(0, 0, 3);
-                dt.Start();
+                StartChangeWindowTimer(3);
             }
             else
             {
@@ -32,13 +38,20 @@ namespace BeatManager_WPF_
             }
         }
 
+        private void StartChangeWindowTimer(int seconds)
+        {
+            _dispatchTimer.Tick += new EventHandler(ChangeWindow);
+            _dispatchTimer.Interval = new TimeSpan(0, 0, seconds);
+            _dispatchTimer.Start();
+        }
+
         private void ChangeWindow(object sender, EventArgs e)
         {
-            MainWindow main = new MainWindow();
-            App.Current.MainWindow = main;
+            var main = new MainWindow();
+            Application.Current.MainWindow = main;
             this.Close();
             main.Show();
-            dt.Stop();
+            _dispatchTimer.Stop();
         }
 
         private void BtnBrowse_OnClick(object sender, RoutedEventArgs e)
@@ -61,6 +74,7 @@ namespace BeatManager_WPF_
                 if (!exeFound)
                 {
                     MessageBox.Show("Please check your selected directory.", "Invalid Directory");
+                    DisableSaveButton();
                     return;
                 }
 
@@ -69,18 +83,50 @@ namespace BeatManager_WPF_
                 if (!Directory.Exists(selectedPath + "\\Beat Saber_Data\\CustomLevels"))
                 {
                     MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
+                    DisableSaveButton();
                     return;
                 }
                 if (!Directory.Exists(selectedPath + "\\Playlists"))
                 {
                     MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
+                    DisableSaveButton();
                     return;
                 }
 
+                selectedPath = selectedPath.Replace(@"\", "/");
                 TxtRootDirectory.Text = selectedPath;
 
+                BtnSave.Cursor = Cursors.Hand;
+                BtnSave.Tag = selectedPath;
                 BtnSave.IsEnabled = true;
             }
+        }
+
+        private void DisableSaveButton()
+        {
+            BtnSave.Cursor = Cursors.AppStarting;
+            BtnSave.IsEnabled = false;
+            BtnSave.Tag = null;
+            TxtRootDirectory.Text = "";
+        }
+
+        private void BtnSave_OnClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button) sender;
+
+            var beatSaberRootDir = (string) button.Tag;
+
+            if (_config.BeatSaberLocation.Equals(beatSaberRootDir))
+            {
+                StartChangeWindowTimer(0);
+                return;
+            }
+
+            _config.BeatSaberLocation = beatSaberRootDir;
+
+            File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
+
+            StartChangeWindowTimer(0);
         }
     }
 }

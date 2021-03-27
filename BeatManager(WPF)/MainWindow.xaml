@@ -80,7 +80,7 @@
                 <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     
                     
-                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_MouseUp"  SnapsToDevicePixels="True" BorderBrush="#FF2E67FF" >
+                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_MouseUp"  SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Music" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Songs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>

@@ -22,12 +22,12 @@ namespace BeatManager_WPF_
 
         private void LoadPlaylists()
         {
-            throw new NotImplementedException();
+           
         }
 
         private void LoadCustomSongs()
         {
-            throw new NotImplementedException();
+           
         }
 
         private void showNotifs(object sender, RoutedEventArgs e)
@@ -50,6 +50,30 @@ namespace BeatManager_WPF_
             notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
             notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
             notifier.ShowSuccess("7 playlists found.", new MessageOptions { ShowCloseButton = true });
+        }
+
+        private void BtnOpenMenu_Click(object sender, RoutedEventArgs e)
+        {
+            BtnCloseMenu.Visibility = Visibility.Visible;
+            BtnOpenMenu.Visibility = Visibility.Collapsed;
+            
+        }
+
+        private void BtnCloseMenu_Click(object sender, RoutedEventArgs e)
+        {
+            BtnCloseMenu.Visibility = Visibility.Collapsed;
+            BtnOpenMenu.Visibility = Visibility.Visible;
+            
+        }
+
+        private void BtnPopUpExit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void TopBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            this.DragMove();
         }
     }
 }

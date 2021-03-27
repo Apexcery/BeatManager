@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         Title="SplashScreen" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Black">
     <Grid Background="#FF0C0C0C">
-        
-        <StackPanel x:Name="DirectoryPanel" Width="600" Height="400" Orientation="Vertical" Visibility="Hidden">
-            <Label Content="Please select your Beat Saber Directory" HorizontalAlignment="Center" Margin="20,0,0,0"/>
+
+        <StackPanel x:Name="DirectoryPanel" Width="1000" Height="100" Orientation="Vertical" VerticalAlignment="Bottom">
+            <Label Content="Please select your Beat Saber Directory" HorizontalAlignment="Center" Margin="20,0,0,0" FontSize="22"/>
             <StackPanel Orientation="Horizontal">
 
                 <Grid Width="1000">
@@ -30,6 +30,7 @@
 
 
         </StackPanel>
+
 
     </Grid>
 </Window>

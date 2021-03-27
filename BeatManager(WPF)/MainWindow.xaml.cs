@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using ToastNotifications;
 using ToastNotifications.Core;
@@ -11,7 +10,6 @@ namespace BeatManager_WPF_
 {
     public partial class MainWindow : Window
     {
-        
         public MainWindow()
         {
             InitializeComponent();

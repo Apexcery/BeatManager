@@ -13,9 +13,6 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace BeatManager_WPF_
 {
-    /// <summary>
-    /// Interaction logic for SplashScreen.xaml
-    /// </summary>
     public partial class SplashScreen : Window
     {
         private readonly Config _config;

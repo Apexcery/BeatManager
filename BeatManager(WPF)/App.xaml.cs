@@ -6,9 +6,6 @@ using Newtonsoft.Json;
 
 namespace BeatManager_WPF_
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         private readonly ServiceProvider _serviceProvider;

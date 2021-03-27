@@ -6,19 +6,29 @@
         xmlns:local="clr-namespace:BeatManager_WPF_"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="BeatManager_WPF_.SplashScreen"
         mc:Ignorable="d"
-        Title="SplashScreen" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Black">
+        Title="SplashScreen" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Black">
     <Grid Background="#FF0C0C0C">
         
         <StackPanel x:Name="DirectoryPanel" Width="600" Height="400" Orientation="Vertical" Visibility="Hidden">
             <Label Content="Please select your Beat Saber Directory" HorizontalAlignment="Center" Margin="20,0,0,0"/>
             <StackPanel Orientation="Horizontal">
-                <TextBox Width="500" IsReadOnly="True" Foreground="Black" Background="White"></TextBox>
-                <Grid Width="100">
-                    <Rectangle Fill="CornflowerBlue"></Rectangle>
-                    <TextBlock Text="FUCK YOU" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <Grid Width="1000">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}"  Grid.Column="0"  Background="{StaticResource SecondaryHueMidBrush}" />
+                    <TextBlock Text="BROWSE" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False"/>
+                    <Button materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}"  Grid.Column="2" IsEnabled="False" Background="{StaticResource PrimaryHueMidBrush}"/>
+                    <TextBlock Text="SAVE" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False"/>
+                    <TextBox IsReadOnly="True" Foreground="Black" Background="White" Grid.Column="1"></TextBox>
                 </Grid>
             </StackPanel>
-            
+
+
         </StackPanel>
 
     </Grid>

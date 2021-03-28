@@ -13,8 +13,6 @@ namespace BeatManager_WPF_
         public MainWindow()
         {
             InitializeComponent();
-
-            // WindowContent.Margin = new Thickness((double) FindResource("NavWidth"), (double) FindResource("TopBarHeight"), 0, 0);
         }
 
         public MainWindow(string notifMessage) : this()

@@ -66,23 +66,24 @@ namespace BeatManager_WPF_
             this.DragMove();
         }
 
-        private void RemoveColoredEdgeFromNavButtons()
+        private void AddBorderToButton(Button btn)
         {
             var listOfButtons = NavButtonList;
             foreach (var item in listOfButtons.Items)
             {
-                if (item.GetType() == typeof(ListViewItem) && ((ListViewItem) item).Name.StartsWith("Btn"))
+                if (item.GetType() == typeof(ListViewItem) && ((ListViewItem)item).Name.StartsWith("Btn"))
                 {
-                    var button = (ListViewItem) item;
+                    var button = (ListViewItem)item;
                     button.BorderThickness = new Thickness(0, 0, 0, 0);
                 }
             }
+
+            btn.BorderThickness = new Thickness(0, 0, 2, 0);
         }
 
         private void BtnSongs_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            RemoveColoredEdgeFromNavButtons();
-            BtnSongs.BorderThickness = new Thickness(0, 0, 2, 0);
+            AddBorderToButton((Button) sender);
         }
 
         private void BtnPlaylists_OnMouseUp(object sender, MouseButtonEventArgs e)

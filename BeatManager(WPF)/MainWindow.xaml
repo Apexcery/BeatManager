@@ -77,62 +77,58 @@
                         <materialDesign:PackIcon Foreground="White" Kind="Menu"/>
                     </Button>
                 </Grid>
-                <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView x:Name="NavButtonList" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     
                     
-                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_MouseUp"  SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" >
+                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Music" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Songs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                    <ListViewItem x:Name="BtnPlaylists" Height="60" MouseUp="BtnPlaylists_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="MusicBox" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Playlists" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                    <ListViewItem x:Name="BtnAvatars" Height="60" MouseUp="BtnAvatars_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Person" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Avatars" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                    <ListViewItem x:Name="BtnSabers" Height="60" MouseUp="BtnSabers_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="SwordCross" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Sabers" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False">
+                    <ListViewItem x:Name="BtnNotes" Height="60" MouseUp="BtnNotes_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ArrowUpBoldBox" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Notes" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                   
-
-                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
-                        
+                    <ListViewItem x:Name="BtnPlatforms" Height="60" MouseUp="BtnPlatforms_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="SkiWater" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Platforms" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem Height="60" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
+                    <ListViewItem x:Name="BtnMods" Height="60" MouseUp="BtnMods_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Spanner" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Mods" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
                 </ListView>
-                
             </StackPanel>
         </Grid>
         <StackPanel x:Name="WindowContent" Margin="{StaticResource WindowContentMargin}"/>

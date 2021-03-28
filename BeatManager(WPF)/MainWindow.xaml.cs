@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using ToastNotifications;
 using ToastNotifications.Core;
 using ToastNotifications.Lifetime;
@@ -64,9 +66,53 @@ namespace BeatManager_WPF_
             this.DragMove();
         }
 
-        private void BtnSongs_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void RemoveColoredEdgeFromNavButtons()
         {
+            var listOfButtons = NavButtonList;
+            foreach (var item in listOfButtons.Items)
+            {
+                if (item.GetType() == typeof(ListViewItem) && ((ListViewItem) item).Name.StartsWith("Btn"))
+                {
+                    var button = (ListViewItem) item;
+                    button.BorderThickness = new Thickness(0, 0, 0, 0);
+                }
+            }
+        }
+
+        private void BtnSongs_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            RemoveColoredEdgeFromNavButtons();
             BtnSongs.BorderThickness = new Thickness(0, 0, 2, 0);
+        }
+
+        private void BtnPlaylists_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BtnAvatars_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BtnSabers_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BtnNotes_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BtnPlatforms_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BtnMods_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

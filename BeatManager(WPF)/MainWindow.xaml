@@ -44,7 +44,7 @@
     <Grid Background="#FF0E0E0E">
         
         
-        <Grid x:Name="TopBar" Height="50" VerticalAlignment="Top" Background="#FF191919" MouseLeftButtonDown="TopBar_MouseLeftButtonDown" >
+        <Grid x:Name="TopBar" Height="{StaticResource TopBarHeight}" VerticalAlignment="Top" Background="#FF191919" MouseLeftButtonDown="TopBar_MouseLeftButtonDown" >
             
             
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -135,6 +135,7 @@
                 
             </StackPanel>
         </Grid>
+        <StackPanel x:Name="WindowContent" Margin="{StaticResource WindowContentMargin}"/>
 
 
     </Grid>

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Models;
+using BeatManager_WPF_.UserControls;
 using ToastNotifications;
 using ToastNotifications.Core;
 using ToastNotifications.Lifetime;
@@ -72,7 +73,7 @@ namespace BeatManager_WPF_
             this.DragMove();
         }
 
-        private void AddBorderToButton(Button btn)
+        private void AddBorderToButton(ListViewItem btn)
         {
             var listOfButtons = NavButtonList;
             foreach (var item in listOfButtons.Items)
@@ -89,7 +90,13 @@ namespace BeatManager_WPF_
 
         private void BtnSongs_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            AddBorderToButton((Button) sender);
+            AddBorderToButton((ListViewItem) sender);
+            var songsControl = new Songs(_config)
+            {
+                Width = this.WindowContent.Width,
+                Height = this.WindowContent.Height
+            };
+            WindowContent.Children.Add(songsControl);
         }
 
         private void BtnPlaylists_OnMouseUp(object sender, MouseButtonEventArgs e)

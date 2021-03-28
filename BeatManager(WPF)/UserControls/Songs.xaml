@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="BeatManager_WPF_.UserControls.Songs"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
+             xmlns:materialextensions="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Name="UI">
+    <Grid Margin="5">
+        <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
+            <TabItem Header="Local Songs">
+                <StackPanel>
+                    <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" MaxHeight="600">
+                        <ItemsControl x:Name="ItemsControlLocalSongs" ItemsSource="{Binding Items, ElementName=UI}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="5" VerticalAlignment="Top" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <ProgressBar x:Name="LocalSongsProgressBar" HorizontalAlignment="Stretch" IsIndeterminate="True" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Online Songs">
+
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

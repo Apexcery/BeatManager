@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using BeatManager_WPF_.Enums;
+using BeatManager_WPF_.Models;
 using ToastNotifications;
 using ToastNotifications.Core;
 using ToastNotifications.Lifetime;
@@ -12,20 +14,24 @@ namespace BeatManager_WPF_
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly Config _config;
+
+        public MainWindow(Config config)
         {
+            _config = config;
+
             InitializeComponent();
         }
 
-        public MainWindow(string notifMessage) : this()
+        public MainWindow(Config config, string notifMessage, NotificationSeverityEnum severity) : this(config)
         {
             if (!string.IsNullOrEmpty(notifMessage))
             {
-                this.Loaded += (o, args) => ShowNotification(o, args, notifMessage);
+                this.Loaded += (o, args) => ShowNotification(o, args, notifMessage, severity);
             }
         }
 
-        private void ShowNotification(object sender, RoutedEventArgs e, string message)
+        private void ShowNotification(object sender, RoutedEventArgs e, string message, NotificationSeverityEnum severity)
         {
             var notifier = new Notifier(cfg =>
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Models;
 using Newtonsoft.Json;
 using Application = System.Windows.Application;
@@ -35,16 +36,21 @@ namespace BeatManager_WPF_
             }
         }
 
-        private void StartChangeWindowTimer(int seconds, string notifMessage = null)
+        private void StartChangeWindowTimer(int seconds, string notifMessage = null, NotificationSeverityEnum? severity = null)
         {
-            _dispatchTimer.Tick += new EventHandler((o, args) => ChangeWindow(o, args, notifMessage));
+            _dispatchTimer.Tick += new EventHandler((o, args) => ChangeWindow(o, args, notifMessage, severity));
             _dispatchTimer.Interval = new TimeSpan(0, 0, seconds);
             _dispatchTimer.Start();
         }
 
-        private void ChangeWindow(object sender, EventArgs e, string notifMessage = null)
+        private void ChangeWindow(object sender, EventArgs e, string notifMessage = null, NotificationSeverityEnum? severity = null)
         {
-            var main = new MainWindow(notifMessage);
+            MainWindow main;
+            if (notifMessage == null || severity == null)
+                main = new MainWindow(_config);
+            else
+                main = new MainWindow(_config, notifMessage, (NotificationSeverityEnum) severity);
+
             Application.Current.MainWindow = main;
             this.Close();
             main.Show();
@@ -123,7 +129,7 @@ namespace BeatManager_WPF_
 
             File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
 
-            StartChangeWindowTimer(0, "Root directory saved successfully.");
+            StartChangeWindowTimer(0, "Root directory saved successfully.", NotificationSeverityEnum.Success);
         }
     }
 }

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
              xmlns:materialextensions="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="UI"
@@ -14,8 +15,7 @@
         <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
             <TabItem x:Name="LocalTabHeader" Header="Local Songs">
                 <StackPanel>
-                    <TextBlock x:Name="TxtNumLocalSongsFound" Text="# Songs Found" Foreground="White" HorizontalAlignment="Center" Padding="2" Margin="0, 5, 0, 0" Visibility="Hidden" />
-                    <Grid Margin="0, 0, 0, 5">
+                    <Grid Margin="0, 5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="7*"/>
@@ -31,12 +31,12 @@
                                             <materialDesign:PopupBox.ToggleContent>
                                                 <materialDesign:PackIcon Kind="Warning" Foreground="White" />
                                             </materialDesign:PopupBox.ToggleContent>
-                                            <StackPanel Width="150">
-                                                <Button Content="Easy" />
-                                                <Button Content="Normal" />
-                                                <Button Content="Hard" />
-                                                <Button Content="Expert" />
-                                                <Button Content="Expert+" />
+                                            <StackPanel x:Name="LocalSongsDifficultyFilters" Width="150">
+                                                <Button x:Name="LocalSongsDifficultyFilter_Easy" Content="Easy" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_Normal" Content="Normal" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_Hard" Content="Hard" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_Expert" Content="Expert" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_ExpertPlus" Content="Expert+" />
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </StackPanel>
@@ -47,11 +47,11 @@
                                             <materialDesign:PopupBox.ToggleContent>
                                                 <materialDesign:PackIcon Kind="FastForward" Foreground="White" />
                                             </materialDesign:PopupBox.ToggleContent>
-                                            <StackPanel Width="150">
-                                                <Button Content="0-99" />
-                                                <Button Content="100-149" />
-                                                <Button Content="150-199" />
-                                                <Button Content="200+" />
+                                            <StackPanel x:Name="LocalSongsBPMFilters" Width="150">
+                                                <Button x:Name="LocalSongsBPMFilter_0_99" Content="0-99" />
+                                                <Button x:Name="LocalSongsBPMFilter_100_149" Content="100-149" />
+                                                <Button x:Name="LocalSongsBPMFilter_150_199" Content="150-199" />
+                                                <Button x:Name="LocalSongsBPMFilter_200" Content="200+" />
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </StackPanel>
@@ -62,12 +62,12 @@
                                             <materialDesign:PopupBox.ToggleContent>
                                                 <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
                                             </materialDesign:PopupBox.ToggleContent>
-                                            <StackPanel Width="150">
-                                                <Button Content="Sort by Name ▲" />
-                                                <Button Content="Sort by Artist" />
-                                                <Button Content="Sort by Difficulty" />
-                                                <Button Content="Sort by BPM" />
-                                                <Button Content="Sort by Date Acquired" />
+                                            <StackPanel x:Name="LocalSongsSortFilters" Width="175">
+                                                <Button x:Name="LocalSongsSortFilter_Name" Content="Sort by Name" Tag="Sort by Name" />
+                                                <Button x:Name="LocalSongsSortFilter_Artist" Content="Sort by Artist" Tag="Sort by Artist" />
+                                                <Button x:Name="LocalSongsSortFilter_Difficulty" Content="Sort by Difficulty" Tag="Sort by Difficulty" />
+                                                <Button x:Name="LocalSongsSortFilter_BPM" Content="Sort by BPM" Tag="Sort by BPM" />
+                                                <Button x:Name="LocalSongsSortFilter_Date" Content="Sort by Date Acquired" Tag="Sort by Date Acquired" />
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </StackPanel>
@@ -95,7 +95,21 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </ScrollViewer>
-                    <ProgressBar x:Name="LocalSongsProgressBar" HorizontalAlignment="Stretch" IsIndeterminate="True" />
+                    <Grid x:Name="LocalSongsProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+                        <fa:ImageAwesome Foreground="White" Icon="Spinner" Spin="True" Height="48" Width="48" />
+                    </Grid>
+                    <StackPanel x:Name="LocalSongsPageButtons" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0, 0, 0, 10" Visibility="Visible">
+                        <Button x:Name="LocalSongsPageButtonBack" Click="LocalSongsPageButtonBack_OnClick" IsEnabled="False">
+                            <materialDesign:PackIcon Kind="Rewind" />
+                        </Button>
+                        <StackPanel>
+                            <TextBlock x:Name="TxtLocalSongsCurrentPage" Text="Page: 1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 5, 5, 0" FontSize="14"></TextBlock>
+                            <TextBlock x:Name="TxtLocalSongsCurrentCount" Text="(25 out of 100)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 5, 5" FontSize="10"></TextBlock>
+                        </StackPanel>
+                        <Button x:Name="LocalSongsPageButtonForward" Click="LocalSongsPageButtonForward_OnClick">
+                            <materialDesign:PackIcon Kind="FastForward" />
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem x:Name="OnlineTabHeader" Header="Online Songs">

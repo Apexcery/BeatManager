@@ -182,6 +182,8 @@ namespace BeatManager_WPF_.UserControls
                             case LocalSongsFilter.SortFilter.SortDirection.Descending:
                                 filteredSongs = filteredSongs.OrderByDescending(x => x.SongName).ToList();
                                 break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
                         }
                         break;
                     case LocalSongsFilter.SortFilter.SortOptions.Artist:
@@ -193,6 +195,8 @@ namespace BeatManager_WPF_.UserControls
                             case LocalSongsFilter.SortFilter.SortDirection.Descending:
                                 filteredSongs = filteredSongs.OrderByDescending(x => x.Artist).ToList();
                                 break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
                         }
                         break;
                     case LocalSongsFilter.SortFilter.SortOptions.Difficulty:
@@ -204,6 +208,8 @@ namespace BeatManager_WPF_.UserControls
                             case LocalSongsFilter.SortFilter.SortDirection.Descending:
                                 filteredSongs = filteredSongs.OrderByDescending(x => x.Difficulties.Select(z => z.Rank).Min()).ToList();
                                 break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
                         }
                         break;
                     case LocalSongsFilter.SortFilter.SortOptions.BPM:
@@ -215,6 +221,8 @@ namespace BeatManager_WPF_.UserControls
                             case LocalSongsFilter.SortFilter.SortDirection.Descending:
                                 filteredSongs = filteredSongs.OrderByDescending(x => x.BPM).ToList();
                                 break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
                         }
                         break;
                     case LocalSongsFilter.SortFilter.SortOptions.Date:
@@ -226,8 +234,12 @@ namespace BeatManager_WPF_.UserControls
                             case LocalSongsFilter.SortFilter.SortDirection.Descending:
                                 filteredSongs = filteredSongs.OrderByDescending(x => x.DateAcquired).ToList();
                                 break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
                         }
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortOptions));
                 }
             }
 

@@ -14,57 +14,65 @@
         <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
             <TabItem x:Name="LocalTabHeader" Header="Local Songs">
                 <StackPanel>
-                    <Grid x:Name="SongsFilterPanel" Margin="0, 5">
-                        <UniformGrid x:Name="SongsFilterButtons" HorizontalAlignment="Left" Width="150" MaxHeight="50" Rows="1">
-                            <Grid Margin="1, 0" ToolTip="Filter by difficulty.">
-                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
-                                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                                        <materialDesign:PopupBox.ToggleContent>
-                                            <materialDesign:PackIcon Kind="Warning" Foreground="White" />
-                                        </materialDesign:PopupBox.ToggleContent>
-                                        <StackPanel Width="150">
-                                            <Button Content="Easy" />
-                                            <Button Content="Normal" />
-                                            <Button Content="Hard" />
-                                            <Button Content="Expert" />
-                                            <Button Content="Expert+" />
-                                        </StackPanel>
-                                    </materialDesign:PopupBox>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Margin="1, 0" ToolTip="Filter by BPM.">
-                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
-                                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                                        <materialDesign:PopupBox.ToggleContent>
-                                            <materialDesign:PackIcon Kind="FastForward" Foreground="White" />
-                                        </materialDesign:PopupBox.ToggleContent>
-                                        <StackPanel Width="150">
-                                            <Button Content="0-99" />
-                                            <Button Content="100-149" />
-                                            <Button Content="150-199" />
-                                            <Button Content="200+" />
-                                        </StackPanel>
-                                    </materialDesign:PopupBox>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Margin="1, 0" ToolTip="Sort By:">
-                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
-                                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                                        <materialDesign:PopupBox.ToggleContent>
-                                            <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
-                                        </materialDesign:PopupBox.ToggleContent>
-                                        <StackPanel Width="150">
-                                            <Button Content="Sort by Name ▲" />
-                                            <Button Content="Sort by Artist" />
-                                            <Button Content="Sort by Difficulty" />
-                                            <Button Content="Sort by BPM" />
-                                            <Button Content="Sort by Date Acquired" />
-                                        </StackPanel>
-                                    </materialDesign:PopupBox>
-                                </StackPanel>
-                            </Grid>
-                        </UniformGrid>
-                        <Grid x:Name="SongsFilterSearch" HorizontalAlignment="Right" Width="250" MaxHeight="50">
+                    <Grid Margin="0, 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="7*"/>
+                            <ColumnDefinition Width="7*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Filters: " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Padding="2" />
+                        <Grid Grid.Column="1" x:Name="SongsFilterPanel">
+                            <UniformGrid x:Name="SongsFilterButtons" HorizontalAlignment="Left" Width="150" MaxHeight="50" Rows="1">
+                                <Grid Margin="1, 0" ToolTip="Filter by difficulty.">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
+                                        <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
+                                            <materialDesign:PopupBox.ToggleContent>
+                                                <materialDesign:PackIcon Kind="Warning" Foreground="White" />
+                                            </materialDesign:PopupBox.ToggleContent>
+                                            <StackPanel Width="150">
+                                                <Button Content="Easy" />
+                                                <Button Content="Normal" />
+                                                <Button Content="Hard" />
+                                                <Button Content="Expert" />
+                                                <Button Content="Expert+" />
+                                            </StackPanel>
+                                        </materialDesign:PopupBox>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Margin="1, 0" ToolTip="Filter by BPM.">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
+                                        <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
+                                            <materialDesign:PopupBox.ToggleContent>
+                                                <materialDesign:PackIcon Kind="FastForward" Foreground="White" />
+                                            </materialDesign:PopupBox.ToggleContent>
+                                            <StackPanel Width="150">
+                                                <Button Content="0-99" />
+                                                <Button Content="100-149" />
+                                                <Button Content="150-199" />
+                                                <Button Content="200+" />
+                                            </StackPanel>
+                                        </materialDesign:PopupBox>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Margin="1, 0" ToolTip="Sort By:">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
+                                        <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
+                                            <materialDesign:PopupBox.ToggleContent>
+                                                <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
+                                            </materialDesign:PopupBox.ToggleContent>
+                                            <StackPanel Width="150">
+                                                <Button Content="Sort by Name ▲" />
+                                                <Button Content="Sort by Artist" />
+                                                <Button Content="Sort by Difficulty" />
+                                                <Button Content="Sort by BPM" />
+                                                <Button Content="Sort by Date Acquired" />
+                                            </StackPanel>
+                                        </materialDesign:PopupBox>
+                                    </StackPanel>
+                                </Grid>
+                            </UniformGrid>
+                        </Grid>
+                        <Grid Grid.Column="2" x:Name="SongsFilterSearch" HorizontalAlignment="Right" Width="250" MaxHeight="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="4*"/>
                                 <ColumnDefinition Width="1*"/>

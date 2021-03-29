@@ -28,14 +28,12 @@ namespace BeatManager_WPF_.UserControls
 
             InitializeComponent();
 
-            Task.Run(() => LoadSongs(new LocalSongsFilter()));
-
             var difficultyFilterButtons = LocalSongsDifficultyFilters;
             foreach (Button button in difficultyFilterButtons.Children)
             {
                 var difficulty = button.Name[(button.Name.IndexOf('_') + 1)..];
 
-                Enum.TryParse(difficulty, true, out DifficultyFilter difficultyEnum);
+                Enum.TryParse(difficulty, true, out LocalSongsFilter.DifficultyFilter difficultyEnum);
 
                 button.Click += (o, args) => LocalSongsDifficultyFilter_OnClick(o, args, difficultyEnum);
             }
@@ -55,7 +53,33 @@ namespace BeatManager_WPF_.UserControls
                 button.Click += (o, args) => LocalSongsBPMFilter_OnClick(o, args, actualRange);
             }
 
+            var sortFilterButtons = LocalSongsSortFilters;
+            foreach (Button button in sortFilterButtons.Children)
+            {
+                var sortOption = button.Name[(button.Name.IndexOf('_') + 1)..];
+                
+                Enum.TryParse(sortOption, true, out LocalSongsFilter.SortFilter.SortOptions sortOptionEnum);
+
+                button.Click += (o, args) => LocalSongsSortFilter_OnClick(o, args, sortOptionEnum, button);
+            }
+
+            SetDefaultSort();
+
+            Task.Run(() => LoadSongs(LocalFilter));
+
             this.Loaded += SetGridMaxHeight;
+        }
+
+        private void SetDefaultSort()
+        {
+            var sortByNameButton = LocalSongsSortFilter_Name;
+            sortByNameButton.Content = sortByNameButton.Tag + " ▲";
+
+            LocalFilter.Sort = new LocalSongsFilter.SortFilter
+            {
+                Direction = LocalSongsFilter.SortFilter.SortDirection.Ascending,
+                Option = LocalSongsFilter.SortFilter.SortOptions.Name
+            };
         }
 
         private void SetGridMaxHeight(object sender, RoutedEventArgs e)
@@ -74,13 +98,14 @@ namespace BeatManager_WPF_.UserControls
 
             if (Items.Count > 0)
             {
-                Trace.WriteLine("--=[ Clearing Items ]=--");
+                Trace.WriteLine("--=[ Clearing Items ]=--\n");
                 Items.Clear();
             }
 
             Trace.WriteLine($"--=[ Search Query: {filter.SearchQuery} ]=--");
             Trace.WriteLine($"--=[ Difficulty Filter: {filter.Difficulty} ]=--");
             Trace.WriteLine($"--=[ BPM Range Filter: {filter.BpmRange?.Start}-{filter.BpmRange?.End} ]=--");
+            Trace.WriteLine($"--=[ Sorting By: {filter.Sort?.Option?.ToString()}-{filter.Sort?.Direction?.ToString()} ]=--");
 
             var rootDir = _config.BeatSaberLocation;
 
@@ -107,12 +132,15 @@ namespace BeatManager_WPF_.UserControls
                     Artist = songInfo.SongAuthorName,
                     Mapper = songInfo.LevelAuthorName,
                     FullImagePath = $"{songDir}/{songInfo.CoverImageFilename}",
-                    Difficulties = songInfo.DifficultyBeatmapSets
-                        .First(x => x.BeatmapCharacteristicName.Equals("Standard")).DifficultyBeatmaps
-                        .Select(x => x.Difficulty).ToList(),
+                    Difficulties = songInfo.DifficultyBeatmapSets.SelectMany(x => x.DifficultyBeatmaps).Select(x => new SongInfoViewModel.Difficulty
+                    {
+                        Rank = x.DifficultyRank,
+                        Name = x.Difficulty
+                    }).ToList(),
                     BPM = songInfo.BeatsPerMinute,
 
-                    FullSongDir = songDir
+                    FullSongDir = songDir,
+                    DateAcquired = File.GetCreationTimeUtc(infoFilePath)
                 };
 
                 allLocalSongs.Add(songInfoViewModel);
@@ -131,7 +159,7 @@ namespace BeatManager_WPF_.UserControls
 
             if (filter.Difficulty != null)
             {
-                filteredSongs = filteredSongs.Where(x => x.Difficulties.Select(z => z.ToLower()).Contains(filter.Difficulty.ToString()?.ToLower())).ToList();
+                filteredSongs = filteredSongs.Where(x => x.Difficulties.Select(z => z.Name.ToLower()).Contains(filter.Difficulty.ToString()?.ToLower())).ToList();
             }
 
             if (filter.BpmRange != null)
@@ -139,7 +167,69 @@ namespace BeatManager_WPF_.UserControls
                 filteredSongs = filteredSongs.Where(x => x.BPM >= filter.BpmRange.Value.Start.Value && x.BPM <= filter.BpmRange.Value.End.Value).ToList();
             }
 
-            filteredSongs = filteredSongs.OrderBy(x => x.SongName).DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
+            filteredSongs = filteredSongs.DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
+
+            if (filter.Sort?.Option != null && filter.Sort.Direction != null)
+            {
+                switch (filter.Sort.Option)
+                {
+                    case LocalSongsFilter.SortFilter.SortOptions.Name:
+                        switch (filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.SongName).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.SongName).ToList();
+                                break;
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.Artist:
+                        switch (filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.Artist).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.Artist).ToList();
+                                break;
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.Difficulty:
+                        switch (filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.Difficulties.Select(z => z.Rank).Min()).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.Difficulties.Select(z => z.Rank).Min()).ToList();
+                                break;
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.BPM:
+                        switch (filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.BPM).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.BPM).ToList();
+                                break;
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.Date:
+                        switch (filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.DateAcquired).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.DateAcquired).ToList();
+                                break;
+                        }
+                        break;
+                }
+            }
 
             var numSongs = filteredSongs.Count;
 
@@ -217,7 +307,7 @@ namespace BeatManager_WPF_.UserControls
             LoadSongs(LocalFilter);
         }
 
-        private void LocalSongsDifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultyFilter? difficulty)
+        private void LocalSongsDifficultyFilter_OnClick(object sender, RoutedEventArgs e, LocalSongsFilter.DifficultyFilter? difficulty)
         {
             LocalFilter.Difficulty = difficulty;
             LoadSongs(LocalFilter);
@@ -227,6 +317,43 @@ namespace BeatManager_WPF_.UserControls
         {
             LocalFilter.BpmRange = actualRange;
             LoadSongs(LocalFilter);
+        }
+
+        private void LocalSongsSortFilter_OnClick(object sender, RoutedEventArgs args, LocalSongsFilter.SortFilter.SortOptions sortOptionEnum, Button buttonClicked)
+        {
+            RemoveSymbolFromSortButtons();
+
+            if (LocalFilter.Sort?.Option == sortOptionEnum)
+            {
+                if (LocalFilter.Sort.Direction == LocalSongsFilter.SortFilter.SortDirection.Ascending)
+                {
+                    LocalFilter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Descending;
+                    buttonClicked.Content = buttonClicked.Tag + " ▼";
+                }
+                else
+                {
+                    LocalFilter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Ascending;
+                    buttonClicked.Content = buttonClicked.Tag + " ▲";
+                }
+            }
+            else
+            {
+                LocalFilter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Ascending;
+                buttonClicked.Content = buttonClicked.Tag + " ▲";
+            }
+
+            LocalFilter.Sort.Option = sortOptionEnum;
+
+            LoadSongs(LocalFilter);
+        }
+
+        private void RemoveSymbolFromSortButtons()
+        {
+            var sortFilterButtons = LocalSongsSortFilters;
+            foreach (Button button in sortFilterButtons.Children)
+            {
+                button.Content = button.Tag;
+            }
         }
     }
 }

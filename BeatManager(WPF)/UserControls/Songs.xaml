@@ -62,12 +62,12 @@
                                             <materialDesign:PopupBox.ToggleContent>
                                                 <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
                                             </materialDesign:PopupBox.ToggleContent>
-                                            <StackPanel Width="150">
-                                                <Button Content="Sort by Name ▲" />
-                                                <Button Content="Sort by Artist" />
-                                                <Button Content="Sort by Difficulty" />
-                                                <Button Content="Sort by BPM" />
-                                                <Button Content="Sort by Date Acquired" />
+                                            <StackPanel x:Name="LocalSongsSortFilters" Width="175">
+                                                <Button x:Name="LocalSongsSortFilter_Name" Content="Sort by Name" Tag="Sort by Name" />
+                                                <Button x:Name="LocalSongsSortFilter_Artist" Content="Sort by Artist" Tag="Sort by Artist" />
+                                                <Button x:Name="LocalSongsSortFilter_Difficulty" Content="Sort by Difficulty" Tag="Sort by Difficulty" />
+                                                <Button x:Name="LocalSongsSortFilter_BPM" Content="Sort by BPM" Tag="Sort by BPM" />
+                                                <Button x:Name="LocalSongsSortFilter_Date" Content="Sort by Date Acquired" Tag="Sort by Date Acquired" />
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </StackPanel>

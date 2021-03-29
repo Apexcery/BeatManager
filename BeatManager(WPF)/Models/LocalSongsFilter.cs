@@ -11,14 +11,36 @@ namespace BeatManager_WPF_.Models
         public string SearchQuery { get; set; } = null;
         public DifficultyFilter? Difficulty { get; set; } = null;
         public Range? BpmRange { get; set; } = null;
-    }
+        public SortFilter Sort { get; set; } = null;
 
-    public enum DifficultyFilter
-    {
-        Easy,
-        Normal,
-        Hard,
-        Expert,
-        ExpertPlus
+        public enum DifficultyFilter
+        {
+            Easy,
+            Normal,
+            Hard,
+            Expert,
+            ExpertPlus
+        }
+
+        public class SortFilter
+        {
+            public SortDirection? Direction { get; set; } = null;
+            public SortOptions? Option { get; set; } = null;
+
+            public enum SortDirection
+            {
+                Ascending,
+                Descending
+            }
+
+            public enum SortOptions
+            {
+                Name,
+                Artist,
+                Difficulty,
+                BPM,
+                Date
+            }
+        }
     }
 }

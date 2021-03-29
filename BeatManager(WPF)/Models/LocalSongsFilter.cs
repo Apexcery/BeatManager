@@ -10,6 +10,7 @@ namespace BeatManager_WPF_.Models
     {
         public string SearchQuery { get; set; } = null;
         public DifficultyFilter? Difficulty { get; set; } = null;
+        public Range? BpmRange { get; set; } = null;
     }
 
     public enum DifficultyFilter

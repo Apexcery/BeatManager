@@ -7,12 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
-using MaterialDesignThemes.Wpf;
 using MoreLinq;
 using Newtonsoft.Json;
 
@@ -33,14 +30,29 @@ namespace BeatManager_WPF_.UserControls
 
             Task.Run(() => LoadSongs(new LocalSongsFilter()));
 
-            var stackPanel = LocalSongsDifficultyFilters;
-            foreach (Button button in stackPanel.Children)
+            var difficultyFilterButtons = LocalSongsDifficultyFilters;
+            foreach (Button button in difficultyFilterButtons.Children)
             {
-                var difficulty = button.Name.Substring(button.Name.IndexOf('_') + 1);
+                var difficulty = button.Name[(button.Name.IndexOf('_') + 1)..];
 
                 Enum.TryParse(difficulty, true, out DifficultyFilter difficultyEnum);
 
                 button.Click += (o, args) => LocalSongsDifficultyFilter_OnClick(o, args, difficultyEnum);
+            }
+
+            var bpmFilterButtons = LocalSongsBPMFilters;
+            foreach (Button button in bpmFilterButtons.Children)
+            {
+                var range = button.Name[(button.Name.IndexOf('_') + 1)..].Split('_');
+                
+                var lowerRange = int.Parse(range[0]);
+                
+                var hasUpperRange = range.Length > 1;
+                var upperRange = hasUpperRange ? int.Parse(range[1]) : int.MaxValue;
+
+                var actualRange = new Range(new Index(lowerRange), new Index(upperRange));
+
+                button.Click += (o, args) => LocalSongsBPMFilter_OnClick(o, args, actualRange);
             }
 
             this.Loaded += SetGridMaxHeight;
@@ -68,6 +80,7 @@ namespace BeatManager_WPF_.UserControls
 
             Trace.WriteLine($"--=[ Search Query: {filter.SearchQuery} ]=--");
             Trace.WriteLine($"--=[ Difficulty Filter: {filter.Difficulty} ]=--");
+            Trace.WriteLine($"--=[ BPM Range Filter: {filter.BpmRange?.Start}-{filter.BpmRange?.End} ]=--");
 
             var rootDir = _config.BeatSaberLocation;
 
@@ -85,6 +98,8 @@ namespace BeatManager_WPF_.UserControls
                     continue;
 
                 var songInfo = JsonConvert.DeserializeObject<SongInfo>(await File.ReadAllTextAsync(infoFilePath));
+                if (songInfo == null)
+                    continue;
 
                 var songInfoViewModel = new SongInfoViewModel
                 {
@@ -105,11 +120,6 @@ namespace BeatManager_WPF_.UserControls
 
             var filteredSongs = allLocalSongs;
 
-            if (filter.Difficulty != null)
-            {
-                filteredSongs = filteredSongs.Where(x => x.Difficulties.Select(z => z.ToLower()).Contains(filter.Difficulty.ToString()?.ToLower())).ToList();
-            }
-
             if (!string.IsNullOrEmpty(filter.SearchQuery))
             {
                 var tempList = filteredSongs;
@@ -117,6 +127,16 @@ namespace BeatManager_WPF_.UserControls
                 filteredSongs = tempList.Where(x => x.SongName.ToLower().Contains(filter.SearchQuery.ToLower())).ToList();
                 filteredSongs = filteredSongs.Concat(tempList.Where(x => x.Artist.ToLower().Contains(filter.SearchQuery.ToLower()))).ToList();
                 filteredSongs = filteredSongs.Concat(tempList.Where(x => x.Mapper.ToLower().Contains(filter.SearchQuery.ToLower()))).ToList();
+            }
+
+            if (filter.Difficulty != null)
+            {
+                filteredSongs = filteredSongs.Where(x => x.Difficulties.Select(z => z.ToLower()).Contains(filter.Difficulty.ToString()?.ToLower())).ToList();
+            }
+
+            if (filter.BpmRange != null)
+            {
+                filteredSongs = filteredSongs.Where(x => x.BPM >= filter.BpmRange.Value.Start.Value && x.BPM <= filter.BpmRange.Value.End.Value).ToList();
             }
 
             filteredSongs = filteredSongs.OrderBy(x => x.SongName).DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
@@ -192,12 +212,6 @@ namespace BeatManager_WPF_.UserControls
         private void BtnLocalSongsSearch_OnClick(object sender, RoutedEventArgs e)
         {
             var searchQuery = TxtLocalSongsSearch.Text;
-            if (string.IsNullOrEmpty(searchQuery))
-            {
-                LocalFilter.SearchQuery = null;
-                LoadSongs(LocalFilter);
-                return;
-            }
 
             LocalFilter.SearchQuery = searchQuery;
             LoadSongs(LocalFilter);
@@ -206,6 +220,12 @@ namespace BeatManager_WPF_.UserControls
         private void LocalSongsDifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultyFilter? difficulty)
         {
             LocalFilter.Difficulty = difficulty;
+            LoadSongs(LocalFilter);
+        }
+
+        private void LocalSongsBPMFilter_OnClick(object sender, RoutedEventArgs args, in Range actualRange)
+        {
+            LocalFilter.BpmRange = actualRange;
             LoadSongs(LocalFilter);
         }
     }

@@ -47,11 +47,11 @@
                                             <materialDesign:PopupBox.ToggleContent>
                                                 <materialDesign:PackIcon Kind="FastForward" Foreground="White" />
                                             </materialDesign:PopupBox.ToggleContent>
-                                            <StackPanel Width="150">
-                                                <Button Content="0-99" />
-                                                <Button Content="100-149" />
-                                                <Button Content="150-199" />
-                                                <Button Content="200+" />
+                                            <StackPanel x:Name="LocalSongsBPMFilters" Width="150">
+                                                <Button x:Name="LocalSongsBPMFilter_0_99" Content="0-99" />
+                                                <Button x:Name="LocalSongsBPMFilter_100_149" Content="100-149" />
+                                                <Button x:Name="LocalSongsBPMFilter_150_199" Content="150-199" />
+                                                <Button x:Name="LocalSongsBPMFilter_200" Content="200+" />
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </StackPanel>

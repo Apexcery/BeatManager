@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
 using MoreLinq;
 using Newtonsoft.Json;
+using Image = System.Drawing.Image;
 
 namespace BeatManager_WPF_.UserControls
 {
@@ -24,7 +26,7 @@ namespace BeatManager_WPF_.UserControls
 
         public int CurrentPageNum = 1;
         public int MaxPageNum = 1;
-        public int PageCount = 25;
+        public int NumOnPage = 25;
 
         public Songs(Config config)
         {
@@ -69,9 +71,13 @@ namespace BeatManager_WPF_.UserControls
 
             SetDefaultSort();
 
-            Task.Run(() => LoadSongs(LocalFilter));
-
+            this.Loaded += LoadSongGrid;
             this.Loaded += SetGridMaxHeight;
+        }
+
+        private async void LoadSongGrid(object sender, RoutedEventArgs args)
+        {
+            await LoadSongs(LocalFilter);
         }
 
         private void SetDefaultSort()
@@ -96,7 +102,6 @@ namespace BeatManager_WPF_.UserControls
             Application.Current.Dispatcher.Invoke(delegate
             {
                 LocalSongsProgressBar.Visibility = Visibility.Visible;
-                TxtNumLocalSongsFound.Visibility = Visibility.Hidden;
                 LocalSongsPageButtons.Visibility = Visibility.Hidden;
                 GridLocalSongs.Visibility = Visibility.Hidden;
             });
@@ -151,7 +156,7 @@ namespace BeatManager_WPF_.UserControls
                 allLocalSongs.Add(songInfoViewModel);
             }
 
-            var result = (double) allLocalSongs.Count / PageCount;
+            var result = (double) allLocalSongs.Count / NumOnPage;
             MaxPageNum = (int) Math.Ceiling(result);
 
             var filteredSongs = allLocalSongs;
@@ -254,45 +259,52 @@ namespace BeatManager_WPF_.UserControls
             var numSongs = filteredSongs.Count;
 
             var toSkip = CurrentPageNum > 1;
-            filteredSongs = filteredSongs.Skip(toSkip ? (CurrentPageNum - 1) * PageCount : 0).Take(PageCount).ToList();
+            filteredSongs = filteredSongs.Skip(toSkip ? (CurrentPageNum - 1) * NumOnPage : 0).Take(NumOnPage).ToList();
 
-            Application.Current.Dispatcher.Invoke(delegate
+            await Application.Current.Dispatcher.Invoke(async delegate
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanel = GenerateSongInfoPanel(song);
+                    var songInfoPanel = await GenerateSongInfoPanel(song);
                     Items.Add(songInfoPanel);
                 }
 
-                TxtNumLocalSongsFound.Text = $"{numSongs} Songs Found";
                 TxtLocalSongsCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";
 
-                LocalSongsProgressBar.Visibility = Visibility.Hidden;
-                TxtNumLocalSongsFound.Visibility = Visibility.Visible;
+                var lowerBound = ((NumOnPage * CurrentPageNum) - NumOnPage) + 1;
+                var upperBound = new[] {NumOnPage * CurrentPageNum, numSongs}.Min();
+                TxtLocalSongsCurrentCount.Text = $"({lowerBound} to {upperBound}) out of {numSongs}";
+
+                LocalSongsProgressBar.Visibility = Visibility.Collapsed;
                 LocalSongsPageButtons.Visibility = Visibility.Visible;
                 GridLocalSongs.Visibility = Visibility.Visible;
             });
         }
 
-        private SongTile GenerateSongInfoPanel(SongInfoViewModel song)
+        private async Task<SongTile> GenerateSongInfoPanel(SongInfoViewModel song)
         {
-            var tile = new SongTile
+            var tile = new SongTile();
+
+            tile.Dispatcher.Invoke(() =>
             {
-                SongTileImage =
+                tile = new SongTile
                 {
-                    Source = new BitmapImage(new Uri(song.FullImagePath))
-                },
-                SongTileName =
-                {
-                    Text = song.SongName
-                },
-                SongTileArtist =
-                {
-                    Text = song.Artist
-                },
-                ToolTip = song.SongName
-            };
-            
+                    SongTileImage =
+                    {
+                        Source = new BitmapImage(new Uri(song.FullImagePath))
+                    },
+                    SongTileName =
+                    {
+                        Text = song.SongName
+                    },
+                    SongTileArtist =
+                    {
+                        Text = song.Artist
+                    },
+                    ToolTip = song.SongName
+                };
+            });
+
             return tile;
         }
 
@@ -301,7 +313,6 @@ namespace BeatManager_WPF_.UserControls
             var mainWindow = Application.Current.MainWindow;
             var tabHeader = LocalTabHeader;
             var filterPanel = LocalSongsButtonFilterPanel;
-            var numLocalSongsText = TxtNumLocalSongsFound;
             var pagePanel = LocalSongsPageButtons;
 
             var maxHeight =
@@ -312,9 +323,6 @@ namespace BeatManager_WPF_.UserControls
                 tabHeader.Margin.Bottom -
                 UI.Padding.Top -
                 UI.Padding.Bottom -
-                numLocalSongsText.ActualHeight -
-                numLocalSongsText.Margin.Top -
-                numLocalSongsText.Margin.Bottom -
                 filterPanel.ActualHeight -
                 filterPanel.Margin.Top -
                 filterPanel.Margin.Bottom -

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
              xmlns:materialextensions="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="UI"
@@ -14,8 +15,7 @@
         <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
             <TabItem x:Name="LocalTabHeader" Header="Local Songs">
                 <StackPanel>
-                    <TextBlock x:Name="TxtNumLocalSongsFound" Text="# Songs Found" Foreground="White" HorizontalAlignment="Center" Padding="2" Margin="0, 5, 0, 0" Visibility="Hidden" />
-                    <Grid Margin="0, 0, 0, 5">
+                    <Grid Margin="0, 5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="7*"/>
@@ -95,12 +95,17 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </ScrollViewer>
-                    <ProgressBar x:Name="LocalSongsProgressBar" HorizontalAlignment="Stretch" IsIndeterminate="True" />
-                    <StackPanel x:Name="LocalSongsPageButtons" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0, 0, 0, 10" Visibility="Hidden">
+                    <Grid x:Name="LocalSongsProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+                        <fa:ImageAwesome Foreground="White" Icon="Spinner" Spin="True" Height="48" Width="48" />
+                    </Grid>
+                    <StackPanel x:Name="LocalSongsPageButtons" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0, 0, 0, 10" Visibility="Visible">
                         <Button x:Name="LocalSongsPageButtonBack" Click="LocalSongsPageButtonBack_OnClick" IsEnabled="False">
                             <materialDesign:PackIcon Kind="Rewind" />
                         </Button>
-                        <TextBlock x:Name="TxtLocalSongsCurrentPage" Text="Page: 1" Foreground="White" VerticalAlignment="Center" Margin="5" FontSize="14"></TextBlock>
+                        <StackPanel>
+                            <TextBlock x:Name="TxtLocalSongsCurrentPage" Text="Page: 1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 5, 5, 0" FontSize="14"></TextBlock>
+                            <TextBlock x:Name="TxtLocalSongsCurrentCount" Text="(25 out of 100)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 5, 5" FontSize="10"></TextBlock>
+                        </StackPanel>
                         <Button x:Name="LocalSongsPageButtonForward" Click="LocalSongsPageButtonForward_OnClick">
                             <materialDesign:PackIcon Kind="FastForward" />
                         </Button>

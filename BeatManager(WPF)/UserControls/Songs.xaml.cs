@@ -22,6 +22,10 @@ namespace BeatManager_WPF_.UserControls
 
         public LocalSongsFilter LocalFilter = new LocalSongsFilter();
 
+        public int CurrentPageNum = 1;
+        public int MaxPageNum = 1;
+        public int PageCount = 25;
+
         public Songs(Config config)
         {
             _config = config;
@@ -93,6 +97,7 @@ namespace BeatManager_WPF_.UserControls
             {
                 LocalSongsProgressBar.Visibility = Visibility.Visible;
                 TxtNumLocalSongsFound.Visibility = Visibility.Hidden;
+                LocalSongsPageButtons.Visibility = Visibility.Hidden;
                 GridLocalSongs.Visibility = Visibility.Hidden;
             });
 
@@ -145,6 +150,9 @@ namespace BeatManager_WPF_.UserControls
 
                 allLocalSongs.Add(songInfoViewModel);
             }
+
+            var result = (double) allLocalSongs.Count / PageCount;
+            MaxPageNum = (int) Math.Ceiling(result);
 
             var filteredSongs = allLocalSongs;
 
@@ -245,7 +253,8 @@ namespace BeatManager_WPF_.UserControls
 
             var numSongs = filteredSongs.Count;
 
-            filteredSongs = filteredSongs.Take(25).ToList();
+            var toSkip = CurrentPageNum > 1;
+            filteredSongs = filteredSongs.Skip(toSkip ? (CurrentPageNum - 1) * PageCount : 0).Take(PageCount).ToList();
 
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -256,9 +265,11 @@ namespace BeatManager_WPF_.UserControls
                 }
 
                 TxtNumLocalSongsFound.Text = $"{numSongs} Songs Found";
+                TxtLocalSongsCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";
 
                 LocalSongsProgressBar.Visibility = Visibility.Hidden;
                 TxtNumLocalSongsFound.Visibility = Visibility.Visible;
+                LocalSongsPageButtons.Visibility = Visibility.Visible;
                 GridLocalSongs.Visibility = Visibility.Visible;
             });
         }
@@ -291,6 +302,7 @@ namespace BeatManager_WPF_.UserControls
             var tabHeader = LocalTabHeader;
             var filterPanel = LocalSongsButtonFilterPanel;
             var numLocalSongsText = TxtNumLocalSongsFound;
+            var pagePanel = LocalSongsPageButtons;
 
             var maxHeight =
                 mainWindow.ActualHeight -
@@ -306,6 +318,9 @@ namespace BeatManager_WPF_.UserControls
                 filterPanel.ActualHeight -
                 filterPanel.Margin.Top -
                 filterPanel.Margin.Bottom -
+                pagePanel.ActualHeight -
+                pagePanel.Margin.Top -
+                pagePanel.Margin.Bottom -
                 5; // Minus an extra 5 for slight bottom margin.
 
             return maxHeight;
@@ -366,6 +381,38 @@ namespace BeatManager_WPF_.UserControls
             {
                 button.Content = button.Tag;
             }
+        }
+
+        private void LocalSongsPageButtonBack_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum > 1)
+                CurrentPageNum--;
+            else
+                return;
+
+            LoadSongs(LocalFilter);
+
+            if (CurrentPageNum == 1)
+                LocalSongsPageButtonBack.IsEnabled = false;
+
+            if (CurrentPageNum < MaxPageNum)
+                LocalSongsPageButtonForward.IsEnabled = true;
+        }
+
+        private void LocalSongsPageButtonForward_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum < MaxPageNum)
+                CurrentPageNum++;
+            else
+                return;
+
+            LoadSongs(LocalFilter);
+
+            if (CurrentPageNum == MaxPageNum)
+                LocalSongsPageButtonForward.IsEnabled = false;
+
+            if (CurrentPageNum > 1)
+                LocalSongsPageButtonBack.IsEnabled = true;
         }
     }
 }

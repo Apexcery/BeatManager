@@ -96,6 +96,15 @@
                         </ItemsControl>
                     </ScrollViewer>
                     <ProgressBar x:Name="LocalSongsProgressBar" HorizontalAlignment="Stretch" IsIndeterminate="True" />
+                    <StackPanel x:Name="LocalSongsPageButtons" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0, 0, 0, 10" Visibility="Hidden">
+                        <Button x:Name="LocalSongsPageButtonBack" Click="LocalSongsPageButtonBack_OnClick" IsEnabled="False">
+                            <materialDesign:PackIcon Kind="Rewind" />
+                        </Button>
+                        <TextBlock x:Name="TxtLocalSongsCurrentPage" Text="Page: 1" Foreground="White" VerticalAlignment="Center" Margin="5" FontSize="14"></TextBlock>
+                        <Button x:Name="LocalSongsPageButtonForward" Click="LocalSongsPageButtonForward_OnClick">
+                            <materialDesign:PackIcon Kind="FastForward" />
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem x:Name="OnlineTabHeader" Header="Online Songs">

@@ -14,8 +14,8 @@
     <Grid>
         <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
             <TabItem x:Name="LocalTabHeader" Header="Local Songs">
-                <StackPanel>
-                    <Grid Margin="0, 5">
+                <DockPanel>
+                    <Grid Margin="0, 5" DockPanel.Dock="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="7*"/>
@@ -86,7 +86,7 @@
                             </TextBlock>
                         </Grid>
                     </Grid>
-                    <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" Margin="0, 0, 0, 5" >
+                    <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" Margin="0, 0, 0, 5" DockPanel.Dock="Top" >
                         <ItemsControl x:Name="ItemsControlLocalSongs" ItemsSource="{Binding Items, ElementName=UI}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -95,22 +95,22 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </ScrollViewer>
-                    <Grid x:Name="LocalSongsProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+                    <Grid x:Name="LocalSongsProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center" DockPanel.Dock="Top">
                         <fa:ImageAwesome Foreground="White" Icon="Spinner" Spin="True" Height="48" Width="48" />
                     </Grid>
-                    <StackPanel x:Name="LocalSongsPageButtons" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0, 0, 0, 10" Visibility="Visible">
+                    <StackPanel x:Name="LocalSongsPageButtons" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0, 0, 0, 10" DockPanel.Dock="Bottom">
                         <Button x:Name="LocalSongsPageButtonBack" Click="LocalSongsPageButtonBack_OnClick" IsEnabled="False">
                             <materialDesign:PackIcon Kind="Rewind" />
                         </Button>
                         <StackPanel>
-                            <TextBlock x:Name="TxtLocalSongsCurrentPage" Text="Page: 1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 5, 5, 0" FontSize="14"></TextBlock>
-                            <TextBlock x:Name="TxtLocalSongsCurrentCount" Text="(25 out of 100)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 5, 5" FontSize="10"></TextBlock>
+                            <TextBlock x:Name="TxtLocalSongsCurrentPage" Text="Page: 1 / 10" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 5, 5, 0" FontSize="14"></TextBlock>
+                            <TextBlock x:Name="TxtLocalSongsCurrentCount" Text="(25 out of 100)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 5, 5" FontSize="12"></TextBlock>
                         </StackPanel>
                         <Button x:Name="LocalSongsPageButtonForward" Click="LocalSongsPageButtonForward_OnClick">
                             <materialDesign:PackIcon Kind="FastForward" />
                         </Button>
                     </StackPanel>
-                </StackPanel>
+                </DockPanel>
             </TabItem>
             <TabItem x:Name="OnlineTabHeader" Header="Online Songs">
 

@@ -316,7 +316,7 @@ namespace BeatManager_WPF_.UserControls
             var pagePanel = LocalSongsPageButtons;
 
             var maxHeight =
-                mainWindow.ActualHeight -
+                mainWindow?.ActualHeight ?? 720 -
                 (double) Application.Current.Resources["TopBarHeight"] -
                 tabHeader.ActualHeight -
                 tabHeader.Margin.Top -

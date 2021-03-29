@@ -20,13 +20,13 @@ namespace BeatManager_WPF_.UserControls
     public partial class Songs : UserControl
     {
         private readonly Config _config;
-        public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
+        public ObservableCollection<SongTile> LocalItems { get; set; } = new ObservableCollection<SongTile>();
 
         public LocalSongsFilter LocalFilter = new LocalSongsFilter();
 
-        public int CurrentPageNum = 1;
-        public int MaxPageNum = 1;
-        public int NumOnPage = 25;
+        public int LocalCurrentPageNum = 1;
+        public int LocalMaxPageNum = 1;
+        public int LocalNumOnPage = 25;
 
         public Songs(Config config)
         {
@@ -34,8 +34,8 @@ namespace BeatManager_WPF_.UserControls
 
             InitializeComponent();
 
-            var difficultyFilterButtons = LocalSongsDifficultyFilters;
-            foreach (Button button in difficultyFilterButtons.Children)
+            var localDifficultyFilterButtons = LocalSongsDifficultyFilters;
+            foreach (Button button in localDifficultyFilterButtons.Children)
             {
                 var difficulty = button.Name[(button.Name.IndexOf('_') + 1)..];
 
@@ -44,8 +44,8 @@ namespace BeatManager_WPF_.UserControls
                 button.Click += (o, args) => LocalSongsDifficultyFilter_OnClick(o, args, difficultyEnum);
             }
 
-            var bpmFilterButtons = LocalSongsBPMFilters;
-            foreach (Button button in bpmFilterButtons.Children)
+            var localBpmFilterButtons = LocalSongsBPMFilters;
+            foreach (Button button in localBpmFilterButtons.Children)
             {
                 var range = button.Name[(button.Name.IndexOf('_') + 1)..].Split('_');
                 
@@ -59,8 +59,8 @@ namespace BeatManager_WPF_.UserControls
                 button.Click += (o, args) => LocalSongsBPMFilter_OnClick(o, args, actualRange);
             }
 
-            var sortFilterButtons = LocalSongsSortFilters;
-            foreach (Button button in sortFilterButtons.Children)
+            var localSortFilterButtons = LocalSongsSortFilters;
+            foreach (Button button in localSortFilterButtons.Children)
             {
                 var sortOption = button.Name[(button.Name.IndexOf('_') + 1)..];
                 
@@ -71,19 +71,14 @@ namespace BeatManager_WPF_.UserControls
 
             SetDefaultSort();
 
-            this.Loaded += LoadSongGrid;
+            this.Loaded += LoadLocalSongGrid;
             this.Loaded += SetGridMaxHeight;
         }
-
-        private async void LoadSongGrid(object sender, RoutedEventArgs args)
-        {
-            await LoadSongs(LocalFilter);
-        }
-
+        
         private void SetDefaultSort()
         {
-            var sortByNameButton = LocalSongsSortFilter_Name;
-            sortByNameButton.Content = sortByNameButton.Tag + " ▲";
+            var localSortByNameButton = LocalSongsSortFilter_Name;
+            localSortByNameButton.Content = localSortByNameButton.Tag + " ▲";
 
             LocalFilter.Sort = new LocalSongsFilter.SortFilter
             {
@@ -94,10 +89,44 @@ namespace BeatManager_WPF_.UserControls
 
         private void SetGridMaxHeight(object sender, RoutedEventArgs e)
         {
-            GridLocalSongs.MaxHeight = CalculateMaxGridHeight();
+            GridLocalSongs.MaxHeight = CalculateLocalMaxGridHeight();
         }
 
-        private async Task LoadSongs(LocalSongsFilter filter)
+        private async Task<SongTile> GenerateSongInfoPanel(SongInfoViewModel song)
+        {
+            var tile = new SongTile();
+
+            tile.Dispatcher.Invoke(() =>
+            {
+                tile = new SongTile
+                {
+                    SongTileImage =
+                    {
+                        Source = new BitmapImage(new Uri(song.FullImagePath))
+                    },
+                    SongTileName =
+                    {
+                        Text = song.SongName
+                    },
+                    SongTileArtist =
+                    {
+                        Text = song.Artist
+                    },
+                    ToolTip = song.SongName
+                };
+            });
+
+            return tile;
+        }
+        
+        #region Local Songs
+
+        private async void LoadLocalSongGrid(object sender, RoutedEventArgs args)
+        {
+            await LoadLocalSongs(LocalFilter);
+        }
+
+        private async Task LoadLocalSongs(LocalSongsFilter filter)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -106,10 +135,10 @@ namespace BeatManager_WPF_.UserControls
                 GridLocalSongs.Visibility = Visibility.Hidden;
             });
 
-            if (Items.Count > 0)
+            if (LocalItems.Count > 0)
             {
                 Trace.WriteLine("--=[ Clearing Items ]=--\n");
-                Items.Clear();
+                LocalItems.Clear();
             }
 
             Trace.WriteLine($"--=[ Search Query: {filter.SearchQuery} ]=--");
@@ -126,7 +155,7 @@ namespace BeatManager_WPF_.UserControls
             foreach (var songDir in songDirs)
             {
                 var files = Directory.GetFiles(songDir);
-                
+
                 var infoFilePath = files.FirstOrDefault(x =>
                     x.EndsWith("info.dat", StringComparison.InvariantCultureIgnoreCase));
                 if (string.IsNullOrEmpty(infoFilePath))
@@ -156,8 +185,8 @@ namespace BeatManager_WPF_.UserControls
                 allLocalSongs.Add(songInfoViewModel);
             }
 
-            var result = (double) allLocalSongs.Count / NumOnPage;
-            MaxPageNum = (int) Math.Ceiling(result);
+            var result = (double)allLocalSongs.Count / LocalNumOnPage;
+            LocalMaxPageNum = (int)Math.Ceiling(result);
 
             var filteredSongs = allLocalSongs;
 
@@ -258,21 +287,21 @@ namespace BeatManager_WPF_.UserControls
 
             var numSongs = filteredSongs.Count;
 
-            var toSkip = CurrentPageNum > 1;
-            filteredSongs = filteredSongs.Skip(toSkip ? (CurrentPageNum - 1) * NumOnPage : 0).Take(NumOnPage).ToList();
+            var toSkip = LocalCurrentPageNum > 1;
+            filteredSongs = filteredSongs.Skip(toSkip ? (LocalCurrentPageNum - 1) * LocalNumOnPage : 0).Take(LocalNumOnPage).ToList();
 
             await Application.Current.Dispatcher.Invoke(async delegate
             {
                 foreach (var song in filteredSongs)
                 {
                     var songInfoPanel = await GenerateSongInfoPanel(song);
-                    Items.Add(songInfoPanel);
+                    LocalItems.Add(songInfoPanel);
                 }
 
-                TxtLocalSongsCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";
+                TxtLocalSongsCurrentPage.Text = $"Page {LocalCurrentPageNum} / {LocalMaxPageNum}";
 
-                var lowerBound = ((NumOnPage * CurrentPageNum) - NumOnPage) + 1;
-                var upperBound = new[] {NumOnPage * CurrentPageNum, numSongs}.Min();
+                var lowerBound = ((LocalNumOnPage * LocalCurrentPageNum) - LocalNumOnPage) + 1;
+                var upperBound = new[] { LocalNumOnPage * LocalCurrentPageNum, numSongs }.Min();
                 TxtLocalSongsCurrentCount.Text = $"({lowerBound} to {upperBound}) out of {numSongs}";
 
                 LocalSongsProgressBar.Visibility = Visibility.Collapsed;
@@ -281,34 +310,7 @@ namespace BeatManager_WPF_.UserControls
             });
         }
 
-        private async Task<SongTile> GenerateSongInfoPanel(SongInfoViewModel song)
-        {
-            var tile = new SongTile();
-
-            tile.Dispatcher.Invoke(() =>
-            {
-                tile = new SongTile
-                {
-                    SongTileImage =
-                    {
-                        Source = new BitmapImage(new Uri(song.FullImagePath))
-                    },
-                    SongTileName =
-                    {
-                        Text = song.SongName
-                    },
-                    SongTileArtist =
-                    {
-                        Text = song.Artist
-                    },
-                    ToolTip = song.SongName
-                };
-            });
-
-            return tile;
-        }
-
-        private double CalculateMaxGridHeight()
+        private double CalculateLocalMaxGridHeight()
         {
             var mainWindow = Application.Current.MainWindow;
             var tabHeader = LocalTabHeader;
@@ -317,7 +319,7 @@ namespace BeatManager_WPF_.UserControls
 
             var maxHeight =
                 mainWindow?.ActualHeight ?? 720 -
-                (double) Application.Current.Resources["TopBarHeight"] -
+                (double)Application.Current.Resources["TopBarHeight"] -
                 tabHeader.ActualHeight -
                 tabHeader.Margin.Top -
                 tabHeader.Margin.Bottom -
@@ -339,24 +341,24 @@ namespace BeatManager_WPF_.UserControls
             var searchQuery = TxtLocalSongsSearch.Text;
 
             LocalFilter.SearchQuery = searchQuery;
-            LoadSongs(LocalFilter);
+            LoadLocalSongs(LocalFilter);
         }
 
         private void LocalSongsDifficultyFilter_OnClick(object sender, RoutedEventArgs e, LocalSongsFilter.DifficultyFilter? difficulty)
         {
             LocalFilter.Difficulty = difficulty;
-            LoadSongs(LocalFilter);
+            LoadLocalSongs(LocalFilter);
         }
 
         private void LocalSongsBPMFilter_OnClick(object sender, RoutedEventArgs args, in Range actualRange)
         {
             LocalFilter.BpmRange = actualRange;
-            LoadSongs(LocalFilter);
+            LoadLocalSongs(LocalFilter);
         }
 
         private void LocalSongsSortFilter_OnClick(object sender, RoutedEventArgs args, LocalSongsFilter.SortFilter.SortOptions sortOptionEnum, Button buttonClicked)
         {
-            RemoveSymbolFromSortButtons();
+            RemoveSymbolFromLocalSortButtons();
 
             if (LocalFilter.Sort?.Option == sortOptionEnum)
             {
@@ -379,10 +381,10 @@ namespace BeatManager_WPF_.UserControls
 
             LocalFilter.Sort.Option = sortOptionEnum;
 
-            LoadSongs(LocalFilter);
+            LoadLocalSongs(LocalFilter);
         }
 
-        private void RemoveSymbolFromSortButtons()
+        private void RemoveSymbolFromLocalSortButtons()
         {
             var sortFilterButtons = LocalSongsSortFilters;
             foreach (Button button in sortFilterButtons.Children)
@@ -393,34 +395,36 @@ namespace BeatManager_WPF_.UserControls
 
         private void LocalSongsPageButtonBack_OnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageNum > 1)
-                CurrentPageNum--;
+            if (LocalCurrentPageNum > 1)
+                LocalCurrentPageNum--;
             else
                 return;
 
-            LoadSongs(LocalFilter);
+            LoadLocalSongs(LocalFilter);
 
-            if (CurrentPageNum == 1)
+            if (LocalCurrentPageNum == 1)
                 LocalSongsPageButtonBack.IsEnabled = false;
 
-            if (CurrentPageNum < MaxPageNum)
+            if (LocalCurrentPageNum < LocalMaxPageNum)
                 LocalSongsPageButtonForward.IsEnabled = true;
         }
 
         private void LocalSongsPageButtonForward_OnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageNum < MaxPageNum)
-                CurrentPageNum++;
+            if (LocalCurrentPageNum < LocalMaxPageNum)
+                LocalCurrentPageNum++;
             else
                 return;
 
-            LoadSongs(LocalFilter);
+            LoadLocalSongs(LocalFilter);
 
-            if (CurrentPageNum == MaxPageNum)
+            if (LocalCurrentPageNum == LocalMaxPageNum)
                 LocalSongsPageButtonForward.IsEnabled = false;
 
-            if (CurrentPageNum > 1)
+            if (LocalCurrentPageNum > 1)
                 LocalSongsPageButtonBack.IsEnabled = true;
         }
+
+        #endregion
     }
 }

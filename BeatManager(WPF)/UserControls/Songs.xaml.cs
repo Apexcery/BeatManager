@@ -27,10 +27,10 @@ namespace BeatManager_WPF_.UserControls
 
             InitializeComponent();
 
-            Task.Run(() => LoadSongs());
+            LoadSongs();
         }
 
-        private async Task LoadSongs(string searchQuery = null)
+        private async void LoadSongs(string searchQuery = null)
         {
             var rootDir = _config.BeatSaberLocation;
 

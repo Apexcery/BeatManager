@@ -64,7 +64,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid x:Name="GridMenu" Width="{StaticResource NavWidth}" HorizontalAlignment="Left" Background="#FF212121">
+        <Grid x:Name="GridMenu" Width="{StaticResource NavWidth}" HorizontalAlignment="Left" Background="#FF212121" ZIndex="100">
             
             <StackPanel>
                 <Grid Height="150" Background="Black">
@@ -131,7 +131,7 @@
                 </ListView>
             </StackPanel>
         </Grid>
-        <StackPanel x:Name="WindowContent" Margin="{StaticResource WindowContentMargin}"/>
+        <StackPanel x:Name="WindowContent" Margin="{StaticResource WindowContentMargin}" Background="Transparent" MouseUp="WindowContent_OnMouseUp" />
 
 
     </Grid>

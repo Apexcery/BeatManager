@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Models;
@@ -60,7 +61,11 @@ namespace BeatManager_WPF_
         {
             BtnCloseMenu.Visibility = Visibility.Collapsed;
             BtnOpenMenu.Visibility = Visibility.Visible;
-            
+        }
+
+        private void WindowContent_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            BtnCloseMenu.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
 
         private void BtnPopUpExit_Click(object sender, RoutedEventArgs e)
@@ -68,10 +73,12 @@ namespace BeatManager_WPF_
             Application.Current.Shutdown();
         }
 
-        private void TopBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TopBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }
+
+        #region Nav Buttons
 
         private void AddBorderToButton(ListViewItem btn)
         {
@@ -128,5 +135,7 @@ namespace BeatManager_WPF_
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

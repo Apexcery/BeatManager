@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BeatManager_WPF_"
         mc:Ignorable="d"
-        Title="Beat Manager | Main Window" Height="720" Width="1280"
+        Title="Beat Manager | Main Window" Height="720" Width="1280" MaxHeight="720" MaxWidth="1280"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"

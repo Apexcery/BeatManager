@@ -7,12 +7,13 @@
              xmlns:materialextensions="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Name="UI">
-    <Grid Margin="5">
+             Name="UI"
+             Padding="5">
+    <Grid>
         <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
-            <TabItem Header="Local Songs">
+            <TabItem x:Name="LocalTabHeader" Header="Local Songs">
                 <StackPanel>
-                    <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" MaxHeight="600">
+                    <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" >
                         <ItemsControl x:Name="ItemsControlLocalSongs" ItemsSource="{Binding Items, ElementName=UI}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -25,7 +26,7 @@
                     <ProgressBar x:Name="LocalSongsProgressBar" HorizontalAlignment="Stretch" IsIndeterminate="True" />
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Online Songs">
+            <TabItem x:Name="OnlineTabHeader" Header="Online Songs">
 
             </TabItem>
         </TabControl>

@@ -28,6 +28,13 @@ namespace BeatManager_WPF_.UserControls
             InitializeComponent();
 
             LoadSongs();
+
+            this.Loaded += SetGridMaxHeight;
+        }
+
+        private void SetGridMaxHeight(object sender, RoutedEventArgs e)
+        {
+            GridLocalSongs.MaxHeight = GetMaxGridHeight();
         }
 
         private async void LoadSongs(string searchQuery = null)
@@ -116,6 +123,16 @@ namespace BeatManager_WPF_.UserControls
             };
             
             return card;
+        }
+
+        private double GetMaxGridHeight()
+        {
+            var windowContent = (StackPanel) this.Parent;
+            var tabHeader = LocalTabHeader;
+
+            var maxHeight = Application.Current.MainWindow.Height - (double) Application.Current.Resources["TopBarHeight"] - tabHeader.ActualHeight - UI.Padding.Top - UI.Padding.Bottom;
+
+            return maxHeight;
         }
     }
 }

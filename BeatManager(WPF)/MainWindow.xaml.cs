@@ -59,13 +59,19 @@ namespace BeatManager_WPF_
 
         private void BtnCloseMenu_Click(object sender, RoutedEventArgs e)
         {
-            BtnCloseMenu.Visibility = Visibility.Collapsed;
-            BtnOpenMenu.Visibility = Visibility.Visible;
+            if (BtnCloseMenu.Visibility != Visibility.Collapsed && BtnOpenMenu.Visibility != Visibility.Visible)
+            {
+                BtnCloseMenu.Visibility = Visibility.Collapsed;
+                BtnOpenMenu.Visibility = Visibility.Visible;
+            }
         }
 
         private void WindowContent_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnCloseMenu.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            if (BtnCloseMenu.Visibility != Visibility.Collapsed && BtnOpenMenu.Visibility != Visibility.Visible)
+            {
+                BtnCloseMenu.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
         }
 
         private void BtnPopUpExit_Click(object sender, RoutedEventArgs e)

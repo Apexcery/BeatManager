@@ -14,15 +14,17 @@
         <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
             <TabItem x:Name="LocalTabHeader" Header="Local Songs">
                 <StackPanel>
-                    <Grid Margin="0, 5">
+                    <TextBlock x:Name="TxtNumLocalSongsFound" Text="# Songs Found" Foreground="White" HorizontalAlignment="Center" Padding="2" Margin="0, 5, 0, 0" Visibility="Hidden" />
+                    <Grid Margin="0, 0, 0, 5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="7*"/>
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="7*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Filters: " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Padding="2" />
-                        <Grid Grid.Column="1" x:Name="SongsFilterPanel">
-                            <UniformGrid x:Name="SongsFilterButtons" HorizontalAlignment="Left" Width="150" MaxHeight="50" Rows="1">
+                        <Grid Grid.Column="1" x:Name="LocalSongsButtonFilterPanel">
+                            <UniformGrid x:Name="LocalSongsFilterButtons" HorizontalAlignment="Left" Width="150" MaxHeight="50" Rows="1">
                                 <Grid Margin="1, 0" ToolTip="Filter by difficulty.">
                                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
                                         <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
@@ -72,19 +74,19 @@
                                 </Grid>
                             </UniformGrid>
                         </Grid>
-                        <Grid Grid.Column="2" x:Name="SongsFilterSearch" HorizontalAlignment="Right" Width="250" MaxHeight="50">
+                        <Grid Grid.Column="3" x:Name="LocalSongsFilterSearch" HorizontalAlignment="Right" Width="250" MaxHeight="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="4*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox Foreground="Black" Background="White" Grid.Column="0" FontSize="14" VerticalContentAlignment="Center" Padding="2" materialDesign:HintAssist.Hint="Search" />
-                            <Button materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}"  Grid.Column="1" Background="{StaticResource PrimaryHueMidBrush}" />
+                            <TextBox x:Name="TxtLocalSongsSearch" Foreground="Black" Background="White" Grid.Column="0" FontSize="14" VerticalContentAlignment="Center" Padding="2" materialDesign:HintAssist.Hint="Search" />
+                            <Button x:Name="BtnLocalSongsSearch" materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}" Grid.Column="1" Background="{StaticResource PrimaryHueMidBrush}" Click="BtnLocalSongsSearch_OnClick" />
                             <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False" >
                                 <materialDesign:PackIcon Kind="Search" />
                             </TextBlock>
                         </Grid>
                     </Grid>
-                    <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" >
+                    <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" Margin="0, 0, 0, 5" >
                         <ItemsControl x:Name="ItemsControlLocalSongs" ItemsSource="{Binding Items, ElementName=UI}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
 using MaterialDesignThemes.Wpf;
+using MoreLinq;
 using Newtonsoft.Json;
 
 namespace BeatManager_WPF_.UserControls
@@ -39,12 +40,22 @@ namespace BeatManager_WPF_.UserControls
 
         private async void LoadSongs(string searchQuery = null)
         {
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                LocalSongsProgressBar.Visibility = Visibility.Visible;
+                TxtNumLocalSongsFound.Visibility = Visibility.Hidden;
+                GridLocalSongs.Visibility = Visibility.Hidden;
+            });
+
+            Items.Clear();
+
             var rootDir = _config.BeatSaberLocation;
 
             var songDirs = Directory.GetDirectories($"{rootDir}/Beat Saber_Data/CustomLevels");
 
             var allLocalSongs = new List<SongInfoViewModel>();
             var filteredSongs = new List<SongInfoViewModel>();
+            var numSongs = 0;
 
             foreach (var songDir in songDirs)
             {
@@ -76,7 +87,11 @@ namespace BeatManager_WPF_.UserControls
 
             if (string.IsNullOrEmpty(searchQuery))
             {
-                filteredSongs = allLocalSongs.OrderBy(x => x.SongName).Take(25).ToList();
+                filteredSongs = allLocalSongs.OrderBy(x => x.SongName).DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
+
+                numSongs = allLocalSongs.Count;
+
+                filteredSongs = filteredSongs.Take(25).ToList();
             }
             else
             {
@@ -85,8 +100,12 @@ namespace BeatManager_WPF_.UserControls
                 filteredSongs = filteredSongs.Concat(allLocalSongs.Where(x => x.Mapper.ToLower().Contains(searchQuery.ToLower()))).ToList();
 
                 filteredSongs = filteredSongs
-                    .Take(25)
+                    .DistinctBy(x => new {x.SongName, x.Artist, x.Mapper})
                     .ToList();
+
+                numSongs = filteredSongs.Count;
+
+                filteredSongs = filteredSongs.Take(25).ToList();
             }
 
             Application.Current.Dispatcher.Invoke(delegate
@@ -97,7 +116,10 @@ namespace BeatManager_WPF_.UserControls
                     Items.Add(songInfoPanel);
                 }
 
+                TxtNumLocalSongsFound.Text = $"{numSongs} Songs Found";
+
                 LocalSongsProgressBar.Visibility = Visibility.Hidden;
+                TxtNumLocalSongsFound.Visibility = Visibility.Visible;
                 GridLocalSongs.Visibility = Visibility.Visible;
             });
         }
@@ -128,19 +150,38 @@ namespace BeatManager_WPF_.UserControls
         {
             var mainWindow = Application.Current.MainWindow;
             var tabHeader = LocalTabHeader;
-            var filterPanel = SongsFilterPanel;
+            var filterPanel = LocalSongsButtonFilterPanel;
+            var numLocalSongsText = TxtNumLocalSongsFound;
 
             var maxHeight =
-                mainWindow.Height -
+                mainWindow.ActualHeight -
                 (double) Application.Current.Resources["TopBarHeight"] -
                 tabHeader.ActualHeight -
+                tabHeader.Margin.Top -
+                tabHeader.Margin.Bottom -
                 UI.Padding.Top -
                 UI.Padding.Bottom -
+                numLocalSongsText.ActualHeight -
+                numLocalSongsText.Margin.Top -
+                numLocalSongsText.Margin.Bottom -
                 filterPanel.ActualHeight -
                 filterPanel.Margin.Top -
-                filterPanel.Margin.Bottom;
+                filterPanel.Margin.Bottom -
+                5; // Minus an extra 5 for slight bottom margin.
 
             return maxHeight;
+        }
+
+        private void BtnLocalSongsSearch_OnClick(object sender, RoutedEventArgs e)
+        {
+            var searchQuery = TxtLocalSongsSearch.Text;
+            if (string.IsNullOrEmpty(searchQuery))
+            {
+                LoadSongs();
+                return;
+            }
+
+            LoadSongs(searchQuery);
         }
     }
 }

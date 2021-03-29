@@ -28,7 +28,7 @@ namespace BeatManager_WPF_.UserControls
 
             InitializeComponent();
 
-            LoadSongs();
+            Task.Run(() => LoadSongs());
 
             this.Loaded += SetGridMaxHeight;
         }
@@ -38,7 +38,7 @@ namespace BeatManager_WPF_.UserControls
             GridLocalSongs.MaxHeight = GetMaxGridHeight();
         }
 
-        private async void LoadSongs(string searchQuery = null)
+        private async Task LoadSongs(string searchQuery = null)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -47,7 +47,8 @@ namespace BeatManager_WPF_.UserControls
                 GridLocalSongs.Visibility = Visibility.Hidden;
             });
 
-            Items.Clear();
+            if (Items.Count > 0)
+                Items.Clear();
 
             var rootDir = _config.BeatSaberLocation;
 

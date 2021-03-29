@@ -18,4 +18,9 @@
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="BMLogo.png" />
+    <Resource Include="BMSmallLogo.png" />
+  </ItemGroup>
+
 </Project>

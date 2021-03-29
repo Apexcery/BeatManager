@@ -22,13 +22,15 @@ namespace BeatManager_WPF_
         public SplashScreen(Config config)
         {
             _config = config;
-
             InitializeComponent();
             DirectoryPanel.Visibility = Visibility.Hidden;
+            
+            
 
             if (!string.IsNullOrEmpty(_config.BeatSaberLocation))
             {
                 StartChangeWindowTimer(3);
+
             }
             else
             {

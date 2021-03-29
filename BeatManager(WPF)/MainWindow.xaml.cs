@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -23,6 +24,28 @@ namespace BeatManager_WPF_
             _config = config;
 
             InitializeComponent();
+
+            InitializeStartupPage();
+        }
+
+        private void InitializeStartupPage()
+        {
+            var startupPage = _config.StartupPage;
+            var parseSuccessfully = Enum.TryParse(startupPage, true, out Config.Page startupPageEnum);
+
+            if (!parseSuccessfully)
+                return;
+
+            switch (startupPageEnum)
+            {
+                case Config.Page.Songs:
+                    BtnSongs.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+                    {
+                        RoutedEvent = Mouse.MouseUpEvent,
+                        Source = this,
+                    });
+                    break;
+            }
         }
 
         public MainWindow(Config config, string notifMessage, NotificationSeverityEnum severity) : this(config)

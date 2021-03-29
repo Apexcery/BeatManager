@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:BeatManager_WPF_"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="BeatManager_WPF_.SplashScreen"
         mc:Ignorable="d"
-        Title="SplashScreen" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Black">
-    <Grid Background="#FF0C0C0C">
+        Title="SplashScreen" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
 
+
+    <Grid Background="#FF0C0C0C">
         <StackPanel x:Name="DirectoryPanel" Width="1000" Height="100" Orientation="Vertical" VerticalAlignment="Bottom">
             <Label Content="Please select your Beat Saber Directory" HorizontalAlignment="Center" Margin="20,0,0,0" FontSize="22"/>
             <StackPanel Orientation="Horizontal">
-
                 <Grid Width="1000">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -24,13 +24,12 @@
                     <TextBlock Text="BROWSE" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False"/>
                     <Button x:Name="BtnSave" materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}"  Grid.Column="2" IsEnabled="False" Background="{StaticResource PrimaryHueMidBrush}" Click="BtnSave_OnClick"/>
                     <TextBlock Text="SAVE" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False"/>
-                    <TextBox x:Name="TxtRootDirectory" IsReadOnly="True" Foreground="Black" Background="White" Grid.Column="1"></TextBox>
+                    <TextBox x:Name="TxtRootDirectory" IsReadOnly="True" Foreground="Black" Background="White" Grid.Column="1" FontSize="16"></TextBox>
                 </Grid>
             </StackPanel>
-
-
         </StackPanel>
-
+        <Image x:Name="image" HorizontalAlignment="Left" Height="352" Margin="244,156,0,0" VerticalAlignment="Top" Width="835" Source="/BMLogo.png"/>
 
     </Grid>
+
 </Window>

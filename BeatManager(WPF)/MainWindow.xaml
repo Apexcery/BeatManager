@@ -19,14 +19,14 @@
         <Storyboard x:Key="MenuOpen">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
                 <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="200"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="200"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
         <Storyboard x:Key="MenuClose">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
                 <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="60"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
@@ -40,16 +40,16 @@
             <BeginStoryboard Storyboard="{StaticResource MenuClose}"/>
         </EventTrigger>
     </Window.Triggers>
-    
+
     <Grid Background="#FF0E0E0E">
-        
-        
+
+
         <Grid x:Name="TopBar" Height="{StaticResource TopBarHeight}" VerticalAlignment="Top" Background="#FF191919" MouseLeftButtonDown="TopBar_MouseLeftButtonDown" >
-            
-            
+
+
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
                 <materialDesign:PopupBox HorizontalAlignment="Right" Margin="10" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                    
+
                     <StackPanel Width="150">
                         <Button Content="Test"/>
                         <Button Content="Test"  />
@@ -60,15 +60,16 @@
                     </StackPanel>
 
                 </materialDesign:PopupBox>
-                
+
             </StackPanel>
         </Grid>
 
         <Grid x:Name="GridMenu" Width="{StaticResource NavWidth}" HorizontalAlignment="Left" Background="#FF212121">
-            
+
             <StackPanel>
                 <Grid Height="150" Background="Black">
-                    <TextBlock Text="Beat Manager" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                    <!-- <TextBlock Text="Beat Manager" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>-->
+                    <Image Source="/BMSmallLogo.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                     <Button x:Name="BtnCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="BtnCloseMenu_Click">
                         <materialDesign:PackIcon Foreground="White" Kind="ArrowLeft"/>
                     </Button>
@@ -129,6 +130,7 @@
                         </StackPanel>
                     </ListViewItem>
                 </ListView>
+                
             </StackPanel>
         </Grid>
         <StackPanel x:Name="WindowContent" Margin="{StaticResource WindowContentMargin}"/>

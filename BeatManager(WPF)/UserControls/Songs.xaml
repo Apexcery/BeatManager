@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
              xmlns:materialextensions="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="UI"
@@ -13,6 +14,68 @@
         <TabControl Style="{StaticResource MaterialDesignTabControl}" materialextensions:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
             <TabItem x:Name="LocalTabHeader" Header="Local Songs">
                 <StackPanel>
+                    <Grid x:Name="SongsFilterPanel" Margin="0, 5">
+                        <UniformGrid x:Name="SongsFilterButtons" HorizontalAlignment="Left" Width="150" MaxHeight="50" Rows="1">
+                            <Grid Margin="1, 0" ToolTip="Filter by difficulty.">
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
+                                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
+                                        <materialDesign:PopupBox.ToggleContent>
+                                            <materialDesign:PackIcon Kind="Warning" Foreground="White" />
+                                        </materialDesign:PopupBox.ToggleContent>
+                                        <StackPanel Width="150">
+                                            <Button Content="Easy" />
+                                            <Button Content="Normal" />
+                                            <Button Content="Hard" />
+                                            <Button Content="Expert" />
+                                            <Button Content="Expert+" />
+                                        </StackPanel>
+                                    </materialDesign:PopupBox>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Margin="1, 0" ToolTip="Filter by BPM.">
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
+                                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
+                                        <materialDesign:PopupBox.ToggleContent>
+                                            <materialDesign:PackIcon Kind="FastForward" Foreground="White" />
+                                        </materialDesign:PopupBox.ToggleContent>
+                                        <StackPanel Width="150">
+                                            <Button Content="0-99" />
+                                            <Button Content="100-149" />
+                                            <Button Content="150-199" />
+                                            <Button Content="200+" />
+                                        </StackPanel>
+                                    </materialDesign:PopupBox>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Margin="1, 0" ToolTip="Sort By:">
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}">
+                                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
+                                        <materialDesign:PopupBox.ToggleContent>
+                                            <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
+                                        </materialDesign:PopupBox.ToggleContent>
+                                        <StackPanel Width="150">
+                                            <Button Content="Sort by Name ▲" />
+                                            <Button Content="Sort by Artist" />
+                                            <Button Content="Sort by Difficulty" />
+                                            <Button Content="Sort by BPM" />
+                                            <Button Content="Sort by Date Acquired" />
+                                        </StackPanel>
+                                    </materialDesign:PopupBox>
+                                </StackPanel>
+                            </Grid>
+                        </UniformGrid>
+                        <Grid x:Name="SongsFilterSearch" HorizontalAlignment="Right" Width="250" MaxHeight="50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Foreground="Black" Background="White" Grid.Column="0" FontSize="14" VerticalContentAlignment="Center" Padding="2" materialDesign:HintAssist.Hint="Search" />
+                            <Button materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}"  Grid.Column="1" Background="{StaticResource PrimaryHueMidBrush}" />
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False" >
+                                <materialDesign:PackIcon Kind="Search" />
+                            </TextBlock>
+                        </Grid>
+                    </Grid>
                     <ScrollViewer x:Name="GridLocalSongs" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" >
                         <ItemsControl x:Name="ItemsControlLocalSongs" ItemsSource="{Binding Items, ElementName=UI}">
                             <ItemsControl.ItemsPanel>
@@ -22,7 +85,6 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </ScrollViewer>
-
                     <ProgressBar x:Name="LocalSongsProgressBar" HorizontalAlignment="Stretch" IsIndeterminate="True" />
                 </StackPanel>
             </TabItem>

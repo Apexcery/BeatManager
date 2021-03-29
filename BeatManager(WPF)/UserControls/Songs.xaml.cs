@@ -19,7 +19,7 @@ namespace BeatManager_WPF_.UserControls
     public partial class Songs : UserControl
     {
         private readonly Config _config;
-        public ObservableCollection<Card> Items { get; set; } = new ObservableCollection<Card>();
+        public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
 
         public Songs(Config config)
         {
@@ -102,35 +102,43 @@ namespace BeatManager_WPF_.UserControls
             });
         }
 
-        private Card GenerateSongInfoPanel(SongInfoViewModel song)
+        private SongTile GenerateSongInfoPanel(SongInfoViewModel song)
         {
-            var card = new Card
+            var tile = new SongTile
             {
-                UniformCornerRadius = 0,
-                Effect = new DropShadowEffect
-                {
-                    BlurRadius = 2,
-                    ShadowDepth = 2,
-                    Color = Colors.DimGray
-                },
-                Width = 150,
-                Height = 150,
-                Content = new Image
+                SongTileImage =
                 {
                     Source = new BitmapImage(new Uri(song.FullImagePath))
+                },
+                SongTileName =
+                {
+                    Text = song.SongName
+                },
+                SongTileArtist =
+                {
+                    Text = song.Artist
                 },
                 ToolTip = song.SongName
             };
             
-            return card;
+            return tile;
         }
 
         private double GetMaxGridHeight()
         {
-            var windowContent = (StackPanel) this.Parent;
+            var mainWindow = Application.Current.MainWindow;
             var tabHeader = LocalTabHeader;
+            var filterPanel = SongsFilterPanel;
 
-            var maxHeight = Application.Current.MainWindow.Height - (double) Application.Current.Resources["TopBarHeight"] - tabHeader.ActualHeight - UI.Padding.Top - UI.Padding.Bottom;
+            var maxHeight =
+                mainWindow.Height -
+                (double) Application.Current.Resources["TopBarHeight"] -
+                tabHeader.ActualHeight -
+                UI.Padding.Top -
+                UI.Padding.Bottom -
+                filterPanel.ActualHeight -
+                filterPanel.Margin.Top -
+                filterPanel.Margin.Bottom;
 
             return maxHeight;
         }

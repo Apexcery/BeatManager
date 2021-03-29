@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="BMLogo.png" />
-    <Resource Include="BMSmallLogo.png" />
+    <Resource Include="Resources\Images\BMLogo.png" />
+    <Resource Include="Resources\Images\BMSmallLogo.png" />
   </ItemGroup>
 
 </Project>

@@ -68,8 +68,7 @@
             
             <StackPanel>
                 <Grid Height="150" Background="Black">
-                    <!-- <TextBlock Text="Beat Manager" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>-->
-                    <Image Source="/BMSmallLogo.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
+                    <Image Source="/Resources/Images/BMSmallLogo.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                     <Button x:Name="BtnCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="BtnCloseMenu_Click">
                         <materialDesign:PackIcon Foreground="White" Kind="ArrowLeft"/>
                     </Button>

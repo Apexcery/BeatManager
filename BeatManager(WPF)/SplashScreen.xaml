@@ -28,7 +28,7 @@
                 </Grid>
             </StackPanel>
         </StackPanel>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="352" Margin="244,156,0,0" VerticalAlignment="Top" Width="835" Source="/BMLogo.png"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="352" Margin="244,156,0,0" VerticalAlignment="Top" Width="835" Source="/Resources/Images/BMLogo.png"/>
 
     </Grid>
 

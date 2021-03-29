@@ -31,12 +31,12 @@
                                             <materialDesign:PopupBox.ToggleContent>
                                                 <materialDesign:PackIcon Kind="Warning" Foreground="White" />
                                             </materialDesign:PopupBox.ToggleContent>
-                                            <StackPanel Width="150">
-                                                <Button Content="Easy" />
-                                                <Button Content="Normal" />
-                                                <Button Content="Hard" />
-                                                <Button Content="Expert" />
-                                                <Button Content="Expert+" />
+                                            <StackPanel x:Name="LocalSongsDifficultyFilters" Width="150">
+                                                <Button x:Name="LocalSongsDifficultyFilter_Easy" Content="Easy" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_Normal" Content="Normal" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_Hard" Content="Hard" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_Expert" Content="Expert" />
+                                                <Button x:Name="LocalSongsDifficultyFilter_ExpertPlus" Content="Expert+" />
                                             </StackPanel>
                                         </materialDesign:PopupBox>
                                     </StackPanel>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,23 +23,35 @@ namespace BeatManager_WPF_.UserControls
         private readonly Config _config;
         public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
 
+        public LocalSongsFilter LocalFilter = new LocalSongsFilter();
+
         public Songs(Config config)
         {
             _config = config;
 
             InitializeComponent();
 
-            Task.Run(() => LoadSongs());
+            Task.Run(() => LoadSongs(new LocalSongsFilter()));
+
+            var stackPanel = LocalSongsDifficultyFilters;
+            foreach (Button button in stackPanel.Children)
+            {
+                var difficulty = button.Name.Substring(button.Name.IndexOf('_') + 1);
+
+                Enum.TryParse(difficulty, true, out DifficultyFilter difficultyEnum);
+
+                button.Click += (o, args) => LocalSongsDifficultyFilter_OnClick(o, args, difficultyEnum);
+            }
 
             this.Loaded += SetGridMaxHeight;
         }
 
         private void SetGridMaxHeight(object sender, RoutedEventArgs e)
         {
-            GridLocalSongs.MaxHeight = GetMaxGridHeight();
+            GridLocalSongs.MaxHeight = CalculateMaxGridHeight();
         }
 
-        private async Task LoadSongs(string searchQuery = null)
+        private async Task LoadSongs(LocalSongsFilter filter)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -48,15 +61,19 @@ namespace BeatManager_WPF_.UserControls
             });
 
             if (Items.Count > 0)
+            {
+                Trace.WriteLine("--=[ Clearing Items ]=--");
                 Items.Clear();
+            }
+
+            Trace.WriteLine($"--=[ Search Query: {filter.SearchQuery} ]=--");
+            Trace.WriteLine($"--=[ Difficulty Filter: {filter.Difficulty} ]=--");
 
             var rootDir = _config.BeatSaberLocation;
 
             var songDirs = Directory.GetDirectories($"{rootDir}/Beat Saber_Data/CustomLevels");
 
             var allLocalSongs = new List<SongInfoViewModel>();
-            var filteredSongs = new List<SongInfoViewModel>();
-            var numSongs = 0;
 
             foreach (var songDir in songDirs)
             {
@@ -67,7 +84,7 @@ namespace BeatManager_WPF_.UserControls
                 if (string.IsNullOrEmpty(infoFilePath))
                     continue;
 
-                var songInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(infoFilePath));
+                var songInfo = JsonConvert.DeserializeObject<SongInfo>(await File.ReadAllTextAsync(infoFilePath));
 
                 var songInfoViewModel = new SongInfoViewModel
                 {
@@ -86,28 +103,27 @@ namespace BeatManager_WPF_.UserControls
                 allLocalSongs.Add(songInfoViewModel);
             }
 
-            if (string.IsNullOrEmpty(searchQuery))
+            var filteredSongs = allLocalSongs;
+
+            if (filter.Difficulty != null)
             {
-                filteredSongs = allLocalSongs.OrderBy(x => x.SongName).DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
-
-                numSongs = allLocalSongs.Count;
-
-                filteredSongs = filteredSongs.Take(25).ToList();
+                filteredSongs = filteredSongs.Where(x => x.Difficulties.Select(z => z.ToLower()).Contains(filter.Difficulty.ToString()?.ToLower())).ToList();
             }
-            else
+
+            if (!string.IsNullOrEmpty(filter.SearchQuery))
             {
-                filteredSongs = allLocalSongs.Where(x => x.SongName.ToLower().Contains(searchQuery.ToLower())).ToList();
-                filteredSongs = filteredSongs.Concat(allLocalSongs.Where(x => x.Artist.ToLower().Contains(searchQuery.ToLower()))).ToList();
-                filteredSongs = filteredSongs.Concat(allLocalSongs.Where(x => x.Mapper.ToLower().Contains(searchQuery.ToLower()))).ToList();
+                var tempList = filteredSongs;
 
-                filteredSongs = filteredSongs
-                    .DistinctBy(x => new {x.SongName, x.Artist, x.Mapper})
-                    .ToList();
-
-                numSongs = filteredSongs.Count;
-
-                filteredSongs = filteredSongs.Take(25).ToList();
+                filteredSongs = tempList.Where(x => x.SongName.ToLower().Contains(filter.SearchQuery.ToLower())).ToList();
+                filteredSongs = filteredSongs.Concat(tempList.Where(x => x.Artist.ToLower().Contains(filter.SearchQuery.ToLower()))).ToList();
+                filteredSongs = filteredSongs.Concat(tempList.Where(x => x.Mapper.ToLower().Contains(filter.SearchQuery.ToLower()))).ToList();
             }
+
+            filteredSongs = filteredSongs.OrderBy(x => x.SongName).DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
+
+            var numSongs = filteredSongs.Count;
+
+            filteredSongs = filteredSongs.Take(25).ToList();
 
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -147,7 +163,7 @@ namespace BeatManager_WPF_.UserControls
             return tile;
         }
 
-        private double GetMaxGridHeight()
+        private double CalculateMaxGridHeight()
         {
             var mainWindow = Application.Current.MainWindow;
             var tabHeader = LocalTabHeader;
@@ -178,11 +194,19 @@ namespace BeatManager_WPF_.UserControls
             var searchQuery = TxtLocalSongsSearch.Text;
             if (string.IsNullOrEmpty(searchQuery))
             {
-                LoadSongs();
+                LocalFilter.SearchQuery = null;
+                LoadSongs(LocalFilter);
                 return;
             }
 
-            LoadSongs(searchQuery);
+            LocalFilter.SearchQuery = searchQuery;
+            LoadSongs(LocalFilter);
+        }
+
+        private void LocalSongsDifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultyFilter? difficulty)
+        {
+            LocalFilter.Difficulty = difficulty;
+            LoadSongs(LocalFilter);
         }
     }
 }

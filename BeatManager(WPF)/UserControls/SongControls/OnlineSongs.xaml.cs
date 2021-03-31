@@ -1,31 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Models.BeatSaverAPI;
+using BeatManager_WPF_.Models.SongFilterModels;
 using BeatManager_WPF_.ViewModels;
 
 namespace BeatManager_WPF_.UserControls.SongControls
 {
-    public partial class OnlineSongs : UserControl
+    public partial class OnlineSongs : UserControl, INotifyPropertyChanged
     {
         private readonly Config _config;
         private readonly IBeatSaverAPI _beatSaverApi;
 
         public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
 
-        public LocalSongsFilter Filter = new LocalSongsFilter();
+        public OnlineSongsFilter Filter = new OnlineSongsFilter();
 
         public int CurrentPageNum = 1;
         public int MaxPageNum = 1;
         public int NumOnPage = 25;
+
+        private bool _hasPreviousPage;
+        public bool HasPreviousPage
+        {
+            get
+            {
+                _hasPreviousPage = CurrentPageNum > 1;
+
+                return _hasPreviousPage;
+            }
+            set
+            {
+                _hasPreviousPage = value;
+                this.OnPropertyChanged("HasPreviousPage");
+            }
+        }
+
+        private bool _hasNextPage;
+        public bool HasNextPage
+        {
+            get
+            {
+                _hasNextPage = CurrentPageNum < MaxPageNum;
+
+                return _hasNextPage;
+            }
+            set 
+            {
+                _hasNextPage = value;
+                this.OnPropertyChanged("HasNextPage");
+            }
+        }
 
         public OnlineSongs(Config config, IBeatSaverAPI beatSaverApi)
         {
@@ -33,13 +69,14 @@ namespace BeatManager_WPF_.UserControls.SongControls
             _beatSaverApi = beatSaverApi;
 
             InitializeComponent();
+            this.DataContext = this;
 
             var difficultyFilterButtons = DifficultyFilters;
             foreach (Button button in difficultyFilterButtons.Children)
             {
                 var difficulty = button.Name[(button.Name.IndexOf('_') + 1)..];
 
-                Enum.TryParse(difficulty, true, out LocalSongsFilter.DifficultyFilter difficultyEnum);
+                Enum.TryParse(difficulty, true, out DifficultiesEnum difficultyEnum);
 
                 button.Click += (o, args) => DifficultyFilter_OnClick(o, args, difficultyEnum);
             }
@@ -64,7 +101,7 @@ namespace BeatManager_WPF_.UserControls.SongControls
             {
                 var sortOption = button.Name[(button.Name.IndexOf('_') + 1)..];
 
-                Enum.TryParse(sortOption, true, out LocalSongsFilter.SortFilter.SortOptions sortOptionEnum);
+                Enum.TryParse(sortOption, true, out MapsSortOption sortOptionEnum);
 
                 button.Click += (o, args) => SortFilter_OnClick(o, args, sortOptionEnum, button);
             }
@@ -118,10 +155,11 @@ namespace BeatManager_WPF_.UserControls.SongControls
             Trace.WriteLine($"--=[ Online Search Query: {Filter.SearchQuery} ]=--");
             Trace.WriteLine($"--=[ Online Difficulty Filter: {Filter.Difficulty} ]=--");
             Trace.WriteLine($"--=[ Online BPM Range Filter: {Filter.BpmRange?.Start}-{Filter.BpmRange?.End} ]=--");
-            Trace.WriteLine($"--=[ Online Sorting By: {Filter.Sort?.Option?.ToString()}-{Filter.Sort?.Direction?.ToString()} ]=--");
+            Trace.WriteLine($"--=[ Online Sorting By: {Filter.Sort.Option} (Descending) ]=--");
 
 
-            var songs = _beatSaverApi.GetMaps(MapsSortOption.Rating).Result;
+            var songs = _beatSaverApi.GetMaps(Filter.Sort.Option).Result;
+            MaxPageNum = songs.LastPage;
 
             var allOnlineSongs = new List<SongInfoViewModel>();
 
@@ -137,7 +175,7 @@ namespace BeatManager_WPF_.UserControls.SongControls
                 });
             }
 
-            var numSongs = allOnlineSongs.Count;
+            var numSongs = songs.TotalSongs;
 
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -156,6 +194,9 @@ namespace BeatManager_WPF_.UserControls.SongControls
                 ProgressBar.Visibility = Visibility.Collapsed;
                 PageButtons.Visibility = Visibility.Visible;
                 GridSongs.Visibility = Visibility.Visible;
+
+                this.OnPropertyChanged("HasPreviousPage");
+                this.OnPropertyChanged("HasNextPage");
             });
         }
 
@@ -186,7 +227,7 @@ namespace BeatManager_WPF_.UserControls.SongControls
             return tile;
         }
 
-        private void DifficultyFilter_OnClick(object sender, RoutedEventArgs e, LocalSongsFilter.DifficultyFilter? difficulty)
+        private void DifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultiesEnum? difficulty)
         {
             Filter.Difficulty = difficulty;
             LoadSongs();
@@ -198,35 +239,37 @@ namespace BeatManager_WPF_.UserControls.SongControls
             LoadSongs();
         }
 
-        private void SortFilter_OnClick(object sender, RoutedEventArgs args, LocalSongsFilter.SortFilter.SortOptions sortOptionEnum, Button buttonClicked)
+        private void SortFilter_OnClick(object sender, RoutedEventArgs args, MapsSortOption sortOptionEnum, Button buttonClicked)
         {
-            RemoveSymbolFromLocalSortButtons();
+            RemoveSymbolFromSortButtons();
 
-            if (Filter.Sort.Option == sortOptionEnum)
-            {
-                if (Filter.Sort.Direction == LocalSongsFilter.SortFilter.SortDirection.Ascending)
-                {
-                    Filter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Descending;
-                    buttonClicked.Content = buttonClicked.Tag + " ▼";
-                }
-                else
-                {
-                    Filter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Ascending;
-                    buttonClicked.Content = buttonClicked.Tag + " ▲";
-                }
-            }
-            else
-            {
-                Filter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Ascending;
-                buttonClicked.Content = buttonClicked.Tag + " ▲";
-            }
+            // if (Filter.Sort.Option == sortOptionEnum)
+            // {
+            //     if (Filter.Sort.Direction == OnlineSongsFilter.SortFilter.SortDirection.Ascending)
+            //     {
+            //         Filter.Sort.Direction = OnlineSongsFilter.SortFilter.SortDirection.Descending;
+            //         buttonClicked.Content = buttonClicked.Tag + " ▼";
+            //     }
+            //     else
+            //     {
+            //         Filter.Sort.Direction = OnlineSongsFilter.SortFilter.SortDirection.Ascending;
+            //         buttonClicked.Content = buttonClicked.Tag + " ▲";
+            //     }
+            // }
+            // else
+            // {
+            //     Filter.Sort.Direction = OnlineSongsFilter.SortFilter.SortDirection.Ascending;
+            //     buttonClicked.Content = buttonClicked.Tag + " ▲";
+            // }
+
+            buttonClicked.Content = buttonClicked.Tag + " ▼";
 
             Filter.Sort.Option = sortOptionEnum;
 
             LoadSongs();
         }
 
-        private void RemoveSymbolFromLocalSortButtons()
+        private void RemoveSymbolFromSortButtons()
         {
             var sortFilterButtons = SortFilters;
             foreach (Button button in sortFilterButtons.Children)
@@ -237,34 +280,27 @@ namespace BeatManager_WPF_.UserControls.SongControls
 
         private void PageButtonBack_OnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageNum > 1)
-                CurrentPageNum--;
-            else
+            if (CurrentPageNum <= 1)
                 return;
 
+            CurrentPageNum--;
             LoadSongs();
-
-            if (CurrentPageNum == 1)
-                PageButtonBack.IsEnabled = false;
-
-            if (CurrentPageNum < MaxPageNum)
-                PageButtonForward.IsEnabled = true;
         }
 
         private void PageButtonForward_OnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageNum < MaxPageNum)
-                CurrentPageNum++;
-            else
+            if (CurrentPageNum >= MaxPageNum)
                 return;
 
+            CurrentPageNum++;
             LoadSongs();
+        }
 
-            if (CurrentPageNum == MaxPageNum)
-                PageButtonForward.IsEnabled = false;
-
-            if (CurrentPageNum > 1)
-                PageButtonBack.IsEnabled = true;
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

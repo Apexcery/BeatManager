@@ -22,7 +22,7 @@ namespace BeatManager_WPF_.Services
 
         public async Task<Maps> GetMaps(MapsSortOption sortOption, int page = 1)
         {
-            var response = await _client.GetAsync($"maps/{sortOption}/{page}");
+            var response = await _client.GetAsync($"maps/{sortOption}/{page}").ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
                 return null;

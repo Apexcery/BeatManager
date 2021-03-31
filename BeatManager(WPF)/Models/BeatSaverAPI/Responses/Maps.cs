@@ -16,10 +16,10 @@ namespace BeatManager_WPF_.Models.BeatSaverAPI.Responses
         public int LastPage { get; set; }
 
         [JsonProperty("prevPage")]
-        public int PrevPage { get; set; }
+        public int? PrevPage { get; set; }
 
         [JsonProperty("nextPage")]
-        public int NextPage { get; set; }
+        public int? NextPage { get; set; }
 
         public class Difficulties
         {
@@ -66,10 +66,10 @@ namespace BeatManager_WPF_.Models.BeatSaverAPI.Responses
             public int Length { get; set; }
 
             [JsonProperty("njs")]
-            public int Njs { get; set; }
+            public double Njs { get; set; }
 
             [JsonProperty("njsOffset")]
-            public int NjsOffset { get; set; }
+            public double NjsOffset { get; set; }
 
             [JsonProperty("bombs")]
             public int Bombs { get; set; }
@@ -99,7 +99,7 @@ namespace BeatManager_WPF_.Models.BeatSaverAPI.Responses
             public int Obstacles { get; set; }
 
             [JsonProperty("njs")]
-            public int Njs { get; set; }
+            public double Njs { get; set; }
 
             [JsonProperty("njsOffset")]
             public double NjsOffset { get; set; }
@@ -123,7 +123,7 @@ namespace BeatManager_WPF_.Models.BeatSaverAPI.Responses
             public int Obstacles { get; set; }
 
             [JsonProperty("njs")]
-            public int Njs { get; set; }
+            public double Njs { get; set; }
 
             [JsonProperty("njsOffset")]
             public double NjsOffset { get; set; }
@@ -147,7 +147,7 @@ namespace BeatManager_WPF_.Models.BeatSaverAPI.Responses
             public int Obstacles { get; set; }
 
             [JsonProperty("njs")]
-            public int Njs { get; set; }
+            public double Njs { get; set; }
 
             [JsonProperty("njsOffset")]
             public double NjsOffset { get; set; }
@@ -171,10 +171,10 @@ namespace BeatManager_WPF_.Models.BeatSaverAPI.Responses
             public int Obstacles { get; set; }
 
             [JsonProperty("njs")]
-            public int Njs { get; set; }
+            public double Njs { get; set; }
 
             [JsonProperty("njsOffset")]
-            public int NjsOffset { get; set; }
+            public double NjsOffset { get; set; }
         }
 
         public class Characteristic

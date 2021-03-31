@@ -51,11 +51,11 @@
                             <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
                         </materialDesign:PopupBox.ToggleContent>
                         <StackPanel x:Name="SortFilters" Width="175">
-                            <Button x:Name="SortFilter_Name" Content="Sort by Name ▲" Tag="Sort by Name" />
-                            <Button x:Name="SortFilter_Artist" Content="Sort by Artist" Tag="Sort by Artist" />
-                            <Button x:Name="SortFilter_Difficulty" Content="Sort by Difficulty" Tag="Sort by Difficulty" />
-                            <Button x:Name="SortFilter_BPM" Content="Sort by BPM" Tag="Sort by BPM" />
-                            <Button x:Name="SortFilter_Date" Content="Sort by Date Acquired" Tag="Sort by Date Acquired" />
+                            <Button x:Name="SortFilter_Hot" Content="Sort by Hot ▼" Tag="Sort by Hot" />
+                            <Button x:Name="SortFilter_Rating" Content="Sort by Rating" Tag="Sort by Rating" />
+                            <Button x:Name="SortFilter_Latest" Content="Sort by Latest" Tag="Sort by Latest" />
+                            <Button x:Name="SortFilter_Downloads" Content="Sort by No. Downloads" Tag="Sort by No. Downloads" />
+                            <Button x:Name="SortFilter_Plays" Content="Sort by No. Plays" Tag="Sort by No. Plays" />
                         </StackPanel>
                     </materialDesign:PopupBox>
                 </StackPanel>
@@ -81,14 +81,14 @@
             Height="50"
             Margin="0,0,0,5">
             <StackPanel x:Name="PageButtons" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0, 0, 0, 5" DockPanel.Dock="Bottom">
-                <Button x:Name="PageButtonBack" IsEnabled="False" Click="PageButtonBack_OnClick">
+                <Button x:Name="PageButtonBack" IsEnabled="{Binding HasPreviousPage}" Click="PageButtonBack_OnClick">
                     <materialDesign:PackIcon Kind="Rewind" />
                 </Button>
                 <StackPanel>
                     <TextBlock x:Name="TxtCurrentPage" Text="Page: 1 / 10" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0" FontSize="14"></TextBlock>
                     <TextBlock x:Name="TxtCurrentCount" Text="(25 out of 100)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0" FontSize="12"></TextBlock>
                 </StackPanel>
-                <Button x:Name="PageButtonForward" Click="PageButtonForward_OnClick">
+                <Button x:Name="PageButtonForward" IsEnabled="{Binding HasNextPage}" Click="PageButtonForward_OnClick">
                     <materialDesign:PackIcon Kind="FastForward" />
                 </Button>
             </StackPanel>

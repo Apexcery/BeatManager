@@ -27,7 +27,7 @@ namespace BeatManager_WPF_.UserControls.SongControls
 
         public OnlineSongsFilter Filter = new OnlineSongsFilter();
 
-        public int CurrentPageNum = 1;
+        public int CurrentPageNum = 0;
         public int MaxPageNum = 1;
         public int NumOnPage = 25;
 
@@ -158,7 +158,7 @@ namespace BeatManager_WPF_.UserControls.SongControls
             Trace.WriteLine($"--=[ Online Sorting By: {Filter.Sort.Option} (Descending) ]=--");
 
 
-            var songs = _beatSaverApi.GetMaps(Filter.Sort.Option).Result;
+            var songs = _beatSaverApi.GetMaps(Filter.Sort.Option, CurrentPageNum).Result;
             MaxPageNum = songs.LastPage;
 
             var allOnlineSongs = new List<SongInfoViewModel>();
@@ -185,10 +185,10 @@ namespace BeatManager_WPF_.UserControls.SongControls
                     Items.Add(songInfoPanel);
                 }
 
-                TxtCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";
+                TxtCurrentPage.Text = $"Page {CurrentPageNum + 1} / {MaxPageNum + 1}";
 
-                var lowerBound = ((NumOnPage * CurrentPageNum) - NumOnPage) + 1;
-                var upperBound = new[] { NumOnPage * CurrentPageNum, numSongs }.Min();
+                var lowerBound = (CurrentPageNum * NumOnPage) + 1;
+                var upperBound = Math.Min(NumOnPage * (CurrentPageNum + 1), numSongs);
                 TxtCurrentCount.Text = $"({lowerBound} to {upperBound}) out of {numSongs}";
 
                 ProgressBar.Visibility = Visibility.Collapsed;
@@ -243,25 +243,6 @@ namespace BeatManager_WPF_.UserControls.SongControls
         {
             RemoveSymbolFromSortButtons();
 
-            // if (Filter.Sort.Option == sortOptionEnum)
-            // {
-            //     if (Filter.Sort.Direction == OnlineSongsFilter.SortFilter.SortDirection.Ascending)
-            //     {
-            //         Filter.Sort.Direction = OnlineSongsFilter.SortFilter.SortDirection.Descending;
-            //         buttonClicked.Content = buttonClicked.Tag + " ▼";
-            //     }
-            //     else
-            //     {
-            //         Filter.Sort.Direction = OnlineSongsFilter.SortFilter.SortDirection.Ascending;
-            //         buttonClicked.Content = buttonClicked.Tag + " ▲";
-            //     }
-            // }
-            // else
-            // {
-            //     Filter.Sort.Direction = OnlineSongsFilter.SortFilter.SortDirection.Ascending;
-            //     buttonClicked.Content = buttonClicked.Tag + " ▲";
-            // }
-
             buttonClicked.Content = buttonClicked.Tag + " ▼";
 
             Filter.Sort.Option = sortOptionEnum;
@@ -276,6 +257,15 @@ namespace BeatManager_WPF_.UserControls.SongControls
             {
                 button.Content = button.Tag;
             }
+        }
+
+        private void PageButtonFirst_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum <= 1)
+                return;
+
+            CurrentPageNum = 1;
+            LoadSongs();
         }
 
         private void PageButtonBack_OnClick(object sender, RoutedEventArgs e)
@@ -293,6 +283,15 @@ namespace BeatManager_WPF_.UserControls.SongControls
                 return;
 
             CurrentPageNum++;
+            LoadSongs();
+        }
+
+        private void PageButtonLast_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum >= MaxPageNum)
+                return;
+
+            CurrentPageNum = MaxPageNum;
             LoadSongs();
         }
 

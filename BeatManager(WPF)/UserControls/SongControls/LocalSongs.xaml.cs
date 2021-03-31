@@ -71,7 +71,7 @@ namespace BeatManager_WPF_.UserControls.SongControls
                 button.Click += (o, args) => SortFilter_OnClick(o, args, sortOptionEnum, button);
             }
 
-            Task task = Task.Run((Action) LoadSongs);
+            Task task = Task.Run(LoadSongs);
 
             this.Loaded += SetGridMaxHeight;
         }

@@ -13,7 +13,7 @@ namespace BeatManager_WPF_.Services
 {
     public class BeatSaverAPI : IBeatSaverAPI
     {
-        private HttpClient _client;
+        private readonly HttpClient _client;
 
         public BeatSaverAPI(HttpClient client)
         {

@@ -398,6 +398,15 @@ namespace BeatManager_WPF_.UserControls.SongControls
             }
         }
 
+        private void PageButtonFirst_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum <= 1)
+                return;
+
+            CurrentPageNum = 1;
+            LoadSongs();
+        }
+
         private void PageButtonBack_OnClick(object sender, RoutedEventArgs e)
         {
             if (CurrentPageNum <= 1)
@@ -413,6 +422,15 @@ namespace BeatManager_WPF_.UserControls.SongControls
                 return;
 
             CurrentPageNum++;
+            LoadSongs();
+        }
+
+        private void PageButtonLast_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum >= MaxPageNum)
+                return;
+
+            CurrentPageNum = MaxPageNum;
             LoadSongs();
         }
 

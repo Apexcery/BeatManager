@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using BeatManager_WPF_.Enums;
+using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.UserControls;
 using ToastNotifications;
@@ -18,10 +19,12 @@ namespace BeatManager_WPF_
     public partial class MainWindow : Window
     {
         private readonly Config _config;
+        private readonly IBeatSaverAPI _beatSaverApi;
 
-        public MainWindow(Config config)
+        public MainWindow(Config config, IBeatSaverAPI beatSaverApi)
         {
             _config = config;
+            _beatSaverApi = beatSaverApi;
 
             InitializeComponent();
 
@@ -48,7 +51,7 @@ namespace BeatManager_WPF_
             }
         }
 
-        public MainWindow(Config config, string notifMessage, NotificationSeverityEnum severity) : this(config)
+        public MainWindow(Config config, IBeatSaverAPI beatSaverApi, string notifMessage, NotificationSeverityEnum severity) : this(config, beatSaverApi)
         {
             if (!string.IsNullOrEmpty(notifMessage))
             {
@@ -127,7 +130,7 @@ namespace BeatManager_WPF_
         private void BtnSongs_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             AddBorderToButton((ListViewItem) sender);
-            var songsControl = new Songs(_config)
+            var songsControl = new Songs(_config, _beatSaverApi)
             {
                 Width = this.WindowContent.Width,
                 Height = this.WindowContent.Height

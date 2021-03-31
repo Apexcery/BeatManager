@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using BeatManager_WPF_.Enums;
+using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using Newtonsoft.Json;
 using Application = System.Windows.Application;
@@ -17,11 +18,14 @@ namespace BeatManager_WPF_
     public partial class SplashScreen : Window
     {
         private readonly Config _config;
+        private readonly IBeatSaverAPI _beatSaverApi;
+
         readonly DispatcherTimer _dispatchTimer = new DispatcherTimer();
 
-        public SplashScreen(Config config)
+        public SplashScreen(Config config, IBeatSaverAPI beatSaverApi)
         {
             _config = config;
+            _beatSaverApi = beatSaverApi;
             InitializeComponent();
             DirectoryPanel.Visibility = Visibility.Hidden;
             
@@ -49,9 +53,9 @@ namespace BeatManager_WPF_
         {
             MainWindow main;
             if (notifMessage == null || severity == null)
-                main = new MainWindow(_config);
+                main = new MainWindow(_config, _beatSaverApi);
             else
-                main = new MainWindow(_config, notifMessage, (NotificationSeverityEnum) severity);
+                main = new MainWindow(_config, _beatSaverApi, notifMessage, (NotificationSeverityEnum) severity);
 
             Application.Current.MainWindow = main;
             this.Close();

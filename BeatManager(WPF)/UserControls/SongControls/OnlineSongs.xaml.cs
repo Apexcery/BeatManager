@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,7 +34,7 @@ namespace BeatManager_WPF_.UserControls.SongControls
         {
             get
             {
-                _hasPreviousPage = CurrentPageNum > 1;
+                _hasPreviousPage = CurrentPageNum > 0;
 
                 return _hasPreviousPage;
             }
@@ -261,16 +259,16 @@ namespace BeatManager_WPF_.UserControls.SongControls
 
         private void PageButtonFirst_OnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageNum <= 1)
+            if (CurrentPageNum <= 0)
                 return;
 
-            CurrentPageNum = 1;
+            CurrentPageNum = 0;
             LoadSongs();
         }
 
         private void PageButtonBack_OnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageNum <= 1)
+            if (CurrentPageNum <= 0)
                 return;
 
             CurrentPageNum--;

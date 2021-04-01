@@ -69,30 +69,30 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
             InitializeComponent();
             this.DataContext = this;
 
-            var difficultyFilterButtons = DifficultyFilters;
-            foreach (Button button in difficultyFilterButtons.Children)
-            {
-                var difficulty = button.Name[(button.Name.IndexOf('_') + 1)..];
-
-                Enum.TryParse(difficulty, true, out DifficultiesEnum difficultyEnum);
-
-                button.Click += (o, args) => DifficultyFilter_OnClick(o, args, difficultyEnum);
-            }
-
-            var bpmFilterButtons = BPMFilters;
-            foreach (Button button in bpmFilterButtons.Children)
-            {
-                var range = button.Name[(button.Name.IndexOf('_') + 1)..].Split('_');
-
-                var lowerRange = int.Parse(range[0]);
-
-                var hasUpperRange = range.Length > 1;
-                var upperRange = hasUpperRange ? int.Parse(range[1]) : int.MaxValue;
-
-                var actualRange = new Range(new Index(lowerRange), new Index(upperRange));
-
-                button.Click += (o, args) => BPMFilter_OnClick(o, args, actualRange);
-            }
+            // var difficultyFilterButtons = DifficultyFilters;
+            // foreach (Button button in difficultyFilterButtons.Children)
+            // {
+            //     var difficulty = button.Name[(button.Name.IndexOf('_') + 1)..];
+            //
+            //     Enum.TryParse(difficulty, true, out DifficultiesEnum difficultyEnum);
+            //
+            //     button.Click += (o, args) => DifficultyFilter_OnClick(o, args, difficultyEnum);
+            // }
+            //
+            // var bpmFilterButtons = BPMFilters;
+            // foreach (Button button in bpmFilterButtons.Children)
+            // {
+            //     var range = button.Name[(button.Name.IndexOf('_') + 1)..].Split('_');
+            //
+            //     var lowerRange = int.Parse(range[0]);
+            //
+            //     var hasUpperRange = range.Length > 1;
+            //     var upperRange = hasUpperRange ? int.Parse(range[1]) : int.MaxValue;
+            //
+            //     var actualRange = new Range(new Index(lowerRange), new Index(upperRange));
+            //
+            //     button.Click += (o, args) => BPMFilter_OnClick(o, args, actualRange);
+            // }
 
             var sortFilterButtons = SortFilters;
             foreach (Button button in sortFilterButtons.Children)

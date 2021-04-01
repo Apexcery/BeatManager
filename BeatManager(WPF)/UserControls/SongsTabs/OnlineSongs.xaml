@@ -17,39 +17,39 @@
                 DockPanel.Dock="Left"
                 Rows="1">
                 <TextBlock Text="Filters: " HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White"></TextBlock>
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="0" Margin="2.5">
-                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                        <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Kind="Warning" Foreground="White" />
-                        </materialDesign:PopupBox.ToggleContent>
-                        <StackPanel x:Name="DifficultyFilters" Width="150">
-                            <Button x:Name="DifficultyFilter_Easy" Content="Easy" />
-                            <Button x:Name="DifficultyFilter_Normal" Content="Normal" />
-                            <Button x:Name="DifficultyFilter_Hard" Content="Hard" />
-                            <Button x:Name="DifficultyFilter_Expert" Content="Expert" />
-                            <Button x:Name="DifficultyFilter_ExpertPlus" Content="Expert+" />
-                        </StackPanel>
-                    </materialDesign:PopupBox>
-                </StackPanel>
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="1" Margin="2.5">
-                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                        <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Kind="FastForward" Foreground="White" />
-                        </materialDesign:PopupBox.ToggleContent>
-                        <StackPanel x:Name="BPMFilters" Width="150">
-                            <Button x:Name="BPMFilter_0_99" Content="0-99" />
-                            <Button x:Name="BPMFilter_100_149" Content="100-149" />
-                            <Button x:Name="BPMFilter_150_199" Content="150-199" />
-                            <Button x:Name="BPMFilter_200" Content="200+" />
-                        </StackPanel>
-                    </materialDesign:PopupBox>
-                </StackPanel>
+                <!-- <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="0" Margin="2.5"> -->
+                <!--     <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White"> -->
+                <!--         <materialDesign:PopupBox.ToggleContent> -->
+                <!--             <materialDesign:PackIcon Kind="Warning" Foreground="White" /> -->
+                <!--         </materialDesign:PopupBox.ToggleContent> -->
+                <!--         <StackPanel x:Name="DifficultyFilters" Width="150"> -->
+                <!--             <Button x:Name="DifficultyFilter_Easy" Content="Easy" /> -->
+                <!--             <Button x:Name="DifficultyFilter_Normal" Content="Normal" /> -->
+                <!--             <Button x:Name="DifficultyFilter_Hard" Content="Hard" /> -->
+                <!--             <Button x:Name="DifficultyFilter_Expert" Content="Expert" /> -->
+                <!--             <Button x:Name="DifficultyFilter_ExpertPlus" Content="Expert+" /> -->
+                <!--         </StackPanel> -->
+                <!--     </materialDesign:PopupBox> -->
+                <!-- </StackPanel> -->
+                <!-- <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="1" Margin="2.5"> -->
+                <!--     <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White"> -->
+                <!--         <materialDesign:PopupBox.ToggleContent> -->
+                <!--             <materialDesign:PackIcon Kind="FastForward" Foreground="White" /> -->
+                <!--         </materialDesign:PopupBox.ToggleContent> -->
+                <!--         <StackPanel x:Name="BPMFilters" Width="150"> -->
+                <!--             <Button x:Name="BPMFilter_0_99" Content="0-99" /> -->
+                <!--             <Button x:Name="BPMFilter_100_149" Content="100-149" /> -->
+                <!--             <Button x:Name="BPMFilter_150_199" Content="150-199" /> -->
+                <!--             <Button x:Name="BPMFilter_200" Content="200+" /> -->
+                <!--         </StackPanel> -->
+                <!--     </materialDesign:PopupBox> -->
+                <!-- </StackPanel> -->
                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="2" Margin="2.5">
                     <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
                         <materialDesign:PopupBox.ToggleContent>
                             <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
                         </materialDesign:PopupBox.ToggleContent>
-                        <StackPanel x:Name="SortFilters" Width="175">
+                        <StackPanel x:Name="SortFilters" Width="200">
                             <Button x:Name="SortFilter_Hot" Content="Sort by Hot ▼" Tag="Sort by Hot" />
                             <Button x:Name="SortFilter_Rating" Content="Sort by Rating" Tag="Sort by Rating" />
                             <Button x:Name="SortFilter_Latest" Content="Sort by Latest" Tag="Sort by Latest" />

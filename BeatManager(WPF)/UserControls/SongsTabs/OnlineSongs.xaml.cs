@@ -151,8 +151,8 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
             }
 
             Trace.WriteLine($"--=[ Online Search Query: {Filter.SearchQuery} ]=--");
-            Trace.WriteLine($"--=[ Online Difficulty Filter: {Filter.Difficulty} ]=--");
-            Trace.WriteLine($"--=[ Online BPM Range Filter: {Filter.BpmRange?.Start}-{Filter.BpmRange?.End} ]=--");
+            // Trace.WriteLine($"--=[ Online Difficulty Filter: {Filter.Difficulty} ]=--");
+            // Trace.WriteLine($"--=[ Online BPM Range Filter: {Filter.BpmRange?.Start}-{Filter.BpmRange?.End} ]=--");
             Trace.WriteLine($"--=[ Online Sorting By: {Filter.Sort.Option} (Descending) ]=--");
 
 
@@ -225,17 +225,17 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
             return tile;
         }
 
-        private void DifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultiesEnum? difficulty)
-        {
-            Filter.Difficulty = difficulty;
-            LoadSongs();
-        }
-
-        private void BPMFilter_OnClick(object sender, RoutedEventArgs args, in Range actualRange)
-        {
-            Filter.BpmRange = actualRange;
-            LoadSongs();
-        }
+        // private void DifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultiesEnum? difficulty)
+        // {
+        //     Filter.Difficulty = difficulty;
+        //     LoadSongs();
+        // }
+        //
+        // private void BPMFilter_OnClick(object sender, RoutedEventArgs args, in Range actualRange)
+        // {
+        //     Filter.BpmRange = actualRange;
+        //     LoadSongs();
+        // }
 
         private void SortFilter_OnClick(object sender, RoutedEventArgs args, MapsSortOption sortOptionEnum, Button buttonClicked)
         {

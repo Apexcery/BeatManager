@@ -14,7 +14,7 @@ using BeatManager_WPF_.Models.BeatSaverAPI;
 using BeatManager_WPF_.Models.SongFilterModels;
 using BeatManager_WPF_.ViewModels;
 
-namespace BeatManager_WPF_.UserControls.SongControls
+namespace BeatManager_WPF_.UserControls.SongsTabs
 {
     public partial class OnlineSongs : UserControl, INotifyPropertyChanged
     {

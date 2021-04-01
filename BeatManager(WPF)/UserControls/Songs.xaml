@@ -6,7 +6,6 @@
              xmlns:materialextensions="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
-             xmlns:songControls="clr-namespace:BeatManager_WPF_.UserControls.SongControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="UI"

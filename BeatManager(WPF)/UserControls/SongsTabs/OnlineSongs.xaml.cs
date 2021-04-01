@@ -157,7 +157,6 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
 
 
             var songs = _beatSaverApi.GetMaps(Filter.Sort.Option, CurrentPageNum).Result;
-            MaxPageNum = songs.LastPage;
 
             var allOnlineSongs = new List<SongInfoViewModel>();
 
@@ -174,6 +173,9 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
             }
 
             var numSongs = songs.TotalSongs;
+
+            var pageResult = (double)numSongs / NumOnPage;
+            MaxPageNum = ((int) Math.Ceiling(pageResult)) - 1;
 
             Application.Current.Dispatcher.Invoke(delegate
             {

@@ -67,8 +67,8 @@
                     <ColumnDefinition Width="4*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBox Foreground="Black" Background="White" Grid.Column="0" FontSize="14" VerticalContentAlignment="Center" Padding="2" Margin="5" materialDesign:HintAssist.Hint="Search" />
-                <Button x:Name="BtnSearch" materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}" Grid.Column="1" Background="{StaticResource PrimaryHueMidBrush}" />
+                <TextBox x:Name="TxtSearch" Foreground="Black" Background="White" Grid.Column="0" FontSize="14" VerticalContentAlignment="Center" Padding="2" Margin="5" materialDesign:HintAssist.Hint="Search" />
+                <Button x:Name="BtnSearch" materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}" Grid.Column="1" Background="{StaticResource PrimaryHueMidBrush}" Click="BtnSearch_OnClick" />
                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False" >
                     <materialDesign:PackIcon Kind="Search" />
                 </TextBlock>

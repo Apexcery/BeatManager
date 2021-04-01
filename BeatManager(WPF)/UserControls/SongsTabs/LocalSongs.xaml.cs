@@ -194,9 +194,6 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
                 allSongs.Add(songInfoViewModel);
             }
 
-            var result = (double)allSongs.Count / NumOnPage;
-            MaxPageNum = (int)Math.Ceiling(result);
-
             var filteredSongs = allSongs;
 
             if (!string.IsNullOrEmpty(Filter.SearchQuery))
@@ -295,6 +292,9 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
             }
 
             var numSongs = filteredSongs.Count;
+
+            var pageResult = (double)numSongs / NumOnPage;
+            MaxPageNum = (int)Math.Ceiling(pageResult);
 
             var toSkip = CurrentPageNum > 1;
             filteredSongs = filteredSongs.Skip(toSkip ? (CurrentPageNum - 1) * NumOnPage : 0).Take(NumOnPage).ToList();
@@ -431,6 +431,14 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
                 return;
 
             CurrentPageNum = MaxPageNum;
+            LoadSongs();
+        }
+
+        private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
+        {
+            var query = TxtSearch.Text;
+            Filter.SearchQuery = query;
+
             LoadSongs();
         }
 

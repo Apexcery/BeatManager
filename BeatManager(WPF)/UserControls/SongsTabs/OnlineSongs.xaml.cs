@@ -11,6 +11,7 @@ using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Models.BeatSaverAPI;
+using BeatManager_WPF_.Models.BeatSaverAPI.Responses;
 using BeatManager_WPF_.Models.SongFilterModels;
 using BeatManager_WPF_.ViewModels;
 
@@ -155,8 +156,17 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
             // Trace.WriteLine($"--=[ Online BPM Range Filter: {Filter.BpmRange?.Start}-{Filter.BpmRange?.End} ]=--");
             Trace.WriteLine($"--=[ Online Sorting By: {Filter.Sort.Option} (Descending) ]=--");
 
+            Maps songs;
 
-            var songs = _beatSaverApi.GetMaps(Filter.Sort.Option, CurrentPageNum).Result;
+            if (string.IsNullOrEmpty(Filter.SearchQuery))
+            {
+                songs = _beatSaverApi.GetMaps(Filter.Sort.Option, CurrentPageNum).Result;
+            }
+            else
+            {
+                RemoveSymbolFromSortButtons(); // Limitation on beatsaver doesn't allow searching and sorting at the same time.
+                songs = _beatSaverApi.SearchMaps(Filter.SearchQuery, CurrentPageNum).Result;
+            }
 
             var allOnlineSongs = new List<SongInfoViewModel>();
 
@@ -292,6 +302,15 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
                 return;
 
             CurrentPageNum = MaxPageNum;
+            LoadSongs();
+        }
+
+        private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
+        {
+            var query = TxtSearch.Text;
+            Filter.SearchQuery = query;
+            CurrentPageNum = 0;
+
             LoadSongs();
         }
 

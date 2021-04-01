@@ -438,6 +438,7 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
         {
             var query = TxtSearch.Text;
             Filter.SearchQuery = query;
+            CurrentPageNum = 1;
 
             LoadSongs();
         }

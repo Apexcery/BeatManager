@@ -13,7 +13,8 @@ namespace BeatManager_WPF_.Models
 
         public enum Page
         {
-            Songs
+            Songs,
+            Playlists
         }
     }
 }

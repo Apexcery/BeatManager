@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Beat Manager | Main Window" Height="720" Width="1280" MaxHeight="720" MaxWidth="1280"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -78,16 +79,15 @@
                     </Button>
                 </Grid>
                 <ListView x:Name="NavButtonList" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    
-                    
-                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" >
+
+                    <ListViewItem x:Name="BtnSongs" Height="60" MouseUp="BtnSongs_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" IsEnabled="{Binding IsReady}" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Music" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Songs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
                         </StackPanel>
                     </ListViewItem>
 
-                    <ListViewItem x:Name="BtnPlaylists" Height="60" MouseUp="BtnPlaylists_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" ToolTip="Feature Coming Soon!" ToolTipService.ShowOnDisabled="True" IsEnabled="False" >
+                    <ListViewItem x:Name="BtnPlaylists" Height="60" MouseUp="BtnPlaylists_OnMouseUp" SnapsToDevicePixels="True" BorderBrush="{DynamicResource PrimaryHueMidBrush}" IsEnabled="{Binding IsReady}" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="MusicBox" Width="25" Height="25" VerticalAlignment="Center" Margin="10"/>
                             <TextBlock Text="Playlists" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="30 10"/>
@@ -132,8 +132,21 @@
                 
             </StackPanel>
         </Grid>
-        <StackPanel x:Name="WindowContent" Margin="{StaticResource WindowContentMargin}" Background="Transparent" MouseUp="WindowContent_OnMouseUp" />
-
-
+        <DockPanel x:Name="WindowContent" Margin="{StaticResource WindowContentMargin}" Background="Transparent" MouseUp="WindowContent_OnMouseUp">
+            <Grid x:Name="ProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsReady}" Value="True">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Setter Property="Width" Value="0"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <fa:ImageAwesome Foreground="White" Icon="Spinner" Spin="True" Height="48" Width="48" />
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>

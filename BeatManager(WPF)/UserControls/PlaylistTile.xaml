@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="BeatManager_WPF_.UserControls.PlaylistTile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="150">
+    <Grid>
+        <Border BorderBrush="Gray" BorderThickness="0.5">
+            <Grid>
+                <Image x:Name="PlaylistTileImage" VerticalAlignment="Stretch" />
+                <Border Padding="5" VerticalAlignment="Bottom" Height="50">
+                    <Border.Background>
+                        <SolidColorBrush Color="White" Opacity="0.6"></SolidColorBrush>
+                    </Border.Background>
+                    <UniformGrid Columns="1" Rows="2">
+                        <TextBlock x:Name="PlaylistTileName" Text="Name: " Foreground="Black" />
+                        <TextBlock x:Name="PlaylistTileAuthor" Text="Author: " Foreground="Black" FontSize="11" />
+                    </UniformGrid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

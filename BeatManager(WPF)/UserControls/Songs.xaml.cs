@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Collections.Generic;
+using System.Windows.Controls;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.UserControls.SongsTabs;
@@ -9,11 +10,13 @@ namespace BeatManager_WPF_.UserControls
     {
         private readonly Config _config;
         private readonly IBeatSaverAPI _beatSaverApi;
+        private readonly List<Playlist> _playlists;
 
-        public Songs(Config config, IBeatSaverAPI beatSaverApi)
+        public Songs(Config config, IBeatSaverAPI beatSaverApi, List<Playlist> playlists)
         {
             _config = config;
             _beatSaverApi = beatSaverApi;
+            _playlists = playlists;
 
             InitializeComponent();
 

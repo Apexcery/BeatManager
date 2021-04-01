@@ -1,13 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.UserControls;
+using Newtonsoft.Json;
 using ToastNotifications;
 using ToastNotifications.Core;
 using ToastNotifications.Lifetime;
@@ -16,10 +23,23 @@ using ToastNotifications.Position;
 
 namespace BeatManager_WPF_
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private readonly Config _config;
         private readonly IBeatSaverAPI _beatSaverApi;
+
+        private bool _isReady;
+        public bool IsReady
+        {
+            get => _isReady;
+            set
+            {
+                _isReady = value;
+                OnPropertyChanged("IsReady");
+            }
+        }
+
+        private readonly List<Playlist> _playlists = new List<Playlist>();
 
         public MainWindow(Config config, IBeatSaverAPI beatSaverApi)
         {
@@ -27,8 +47,28 @@ namespace BeatManager_WPF_
             _beatSaverApi = beatSaverApi;
 
             InitializeComponent();
+            this.DataContext = this;
 
-            InitializeStartupPage();
+            Task.WhenAll(Task.Run(LoadPlaylists)).ContinueWith((t) =>
+            {
+                IsReady = true;
+                InitializeStartupPage();
+            });
+        }
+
+        private void LoadPlaylists()
+        {
+            var playlistFiles = Directory.GetFiles($"{_config.BeatSaberLocation}/Playlists");
+
+            foreach (var playlistDir in playlistFiles)
+            {
+                var playlist = JsonConvert.DeserializeObject<Playlist>(File.ReadAllText(playlistDir));
+
+                if (playlist == null)
+                    continue;
+
+                _playlists.Add(playlist);
+            }
         }
 
         private void InitializeStartupPage()
@@ -39,16 +79,26 @@ namespace BeatManager_WPF_
             if (!parseSuccessfully)
                 return;
 
-            switch (startupPageEnum)
+            Application.Current.Dispatcher.Invoke(delegate
             {
-                case Config.Page.Songs:
-                    BtnSongs.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
-                    {
-                        RoutedEvent = Mouse.MouseUpEvent,
-                        Source = this,
-                    });
-                    break;
-            }
+                switch (startupPageEnum)
+                {
+                    case Config.Page.Songs:
+                        BtnSongs.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+                        {
+                            RoutedEvent = Mouse.MouseUpEvent,
+                            Source = this,
+                        });
+                        break;
+                    case Config.Page.Playlists:
+                        BtnPlaylists.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+                        {
+                            RoutedEvent = Mouse.MouseUpEvent,
+                            Source = this,
+                        });
+                        break;
+                }
+            });
         }
 
         public MainWindow(Config config, IBeatSaverAPI beatSaverApi, string notifMessage, NotificationSeverityEnum severity) : this(config, beatSaverApi)
@@ -127,10 +177,16 @@ namespace BeatManager_WPF_
             btn.BorderThickness = new Thickness(0, 0, 2, 0);
         }
 
+        private void ClearWindowContent()
+        {
+            WindowContent.Children.Clear();
+        }
+
         private void BtnSongs_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             AddBorderToButton((ListViewItem) sender);
-            var songsControl = new Songs(_config, _beatSaverApi)
+            ClearWindowContent();
+            var songsControl = new Songs(_config, _beatSaverApi, _playlists)
             {
                 Width = this.WindowContent.Width,
                 Height = this.WindowContent.Height
@@ -140,7 +196,14 @@ namespace BeatManager_WPF_
 
         private void BtnPlaylists_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            AddBorderToButton((ListViewItem)sender);
+            ClearWindowContent();
+            var playlistsControl = new Playlists(_config, _beatSaverApi, _playlists)
+            {
+                Width = this.WindowContent.Width,
+                Height = this.WindowContent.Height
+            };
+            WindowContent.Children.Add(playlistsControl);
         }
 
         private void BtnAvatars_OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -169,5 +232,12 @@ namespace BeatManager_WPF_
         }
 
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

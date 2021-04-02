@@ -66,52 +66,48 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
             var imageString = base64Image != _playlist.Image ? base64Image : _playlist.Image;
 
-            string title;
+            var titleString = "";
             if (!string.IsNullOrEmpty(TxtName.Text) && TxtName.Text != _playlist.PlaylistTitle)
             {
-                title = TxtName.Text;
+                titleString = TxtName.Text;
             }
             else
             {
-                title = string.IsNullOrEmpty(_playlist.PlaylistTitle) ? $"New Playlist - {DateTime.UtcNow}" : _playlist.PlaylistTitle;
+                titleString = string.IsNullOrEmpty(_playlist.PlaylistTitle) ? $"New Playlist - {DateTime.UtcNow}" : _playlist.PlaylistTitle;
             }
 
-            var author = "";
+            var authorString = "";
             if (!string.IsNullOrEmpty(TxtAuthor.Text) && TxtAuthor.Text != _playlist.PlaylistAuthor)
             {
-                author = TxtAuthor.Text;
+                authorString = TxtAuthor.Text;
             }
             else
             {
                 if (!string.IsNullOrEmpty(_playlist.PlaylistAuthor))
                 {
-                    author = _playlist.PlaylistTitle;
+                    authorString = _playlist.PlaylistTitle;
                 }
             }
 
-            var desc = "";
+            var descString = "";
             if (!string.IsNullOrEmpty(TxtDesc.Text) && TxtDesc.Text != _playlist.PlaylistDescription)
             {
-                desc = TxtDesc.Text;
+                descString = TxtDesc.Text;
             }
             else
             {
                 if (!string.IsNullOrEmpty(_playlist.PlaylistDescription))
                 {
-                    desc = _playlist.PlaylistDescription;
+                    descString = _playlist.PlaylistDescription;
                 }
             }
-
-            var titleString = title;
-            var authorString = author;
-            var descString = desc;
             
             var editedPlaylist = new Playlist
             {
                 Image = imageString,
-                PlaylistTitle = titleString,
-                PlaylistAuthor = authorString,
-                PlaylistDescription = descString,
+                PlaylistTitle = titleString.Trim(),
+                PlaylistAuthor = authorString.Trim(),
+                PlaylistDescription = descString.Trim(),
                 Songs = _playlist.Songs
             };
 

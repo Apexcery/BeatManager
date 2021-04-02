@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -34,11 +35,10 @@ namespace BeatManager_WPF_.UserControls.Playlists
             image.EndInit();
 
             PlaylistTileImage.Source = image;
-            PlaylistTileName.Text = _playlist.PlaylistTitle;
-            PlaylistTileAuthor.Text = _playlist.PlaylistAuthor;
-            ToolTip = _playlist.PlaylistTitle;
+            PlaylistTileName.Text = Regex.Replace(_playlist.PlaylistTitle, @"\r\n?|\n", " ");
+            PlaylistTileAuthor.Text = Regex.Replace(_playlist.PlaylistAuthor, @"\r\n?|\n", " ");
+            ToolTip = Regex.Replace(_playlist.PlaylistTitle, @"\r\n?|\n", " ");
         }
-
 
         private void PlaylistTile_OnMouseUp(object sender, MouseButtonEventArgs e)
         {

@@ -96,8 +96,8 @@ namespace BeatManager_WPF_.UserControls.Playlists
             {
                 foreach (var playlist in _playlists.OrderBy(x => x.PlaylistTitle))
                 {
-                    var songInfoPanel = GeneratePlaylistTile(playlist);
-                    Items.Add(songInfoPanel);
+                    var playlistInfoTile = GeneratePlaylistTile(playlist);
+                    Items.Add(playlistInfoTile);
                 }
 
                 TxtCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";

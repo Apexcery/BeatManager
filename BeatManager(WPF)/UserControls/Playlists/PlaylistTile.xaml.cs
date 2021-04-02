@@ -1,15 +1,55 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using BeatManager_WPF_.Models;
 
 namespace BeatManager_WPF_.UserControls.Playlists
 {
-    /// <summary>
-    /// Interaction logic for PlaylistTile.xaml
-    /// </summary>
     public partial class PlaylistTile : UserControl
     {
-        public PlaylistTile()
+        private readonly Config _config;
+        private readonly Playlist _playlist;
+
+        public PlaylistTile(Config config, Playlist playlist)
         {
+            _config = config;
+            _playlist = playlist;
+
             InitializeComponent();
+
+            this.Loaded += LoadContent;
+        }
+
+        private void LoadContent(object sender, RoutedEventArgs e)
+        {
+            var base64 = _playlist.Image.Substring(_playlist.Image.IndexOf(',') + 1);
+            var byteBuffer = Convert.FromBase64String(base64);
+            var stream = new MemoryStream(byteBuffer, 0, byteBuffer.Length);
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = stream;
+            image.EndInit();
+
+            PlaylistTileImage.Source = image;
+            PlaylistTileName.Text = _playlist.PlaylistTitle;
+            PlaylistTileAuthor.Text = _playlist.PlaylistAuthor;
+            ToolTip = _playlist.PlaylistTitle;
+        }
+
+
+        private void PlaylistTile_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var playlistDetails = new PlaylistDetails(_config, _playlist);
+
+            var windowContent = ((MainWindow) Application.Current.MainWindow)?.WindowContent;
+            if (windowContent == null)
+                return;
+
+            windowContent.Children.Clear();
+            windowContent.Children.Add(playlistDetails);
         }
     }
 }

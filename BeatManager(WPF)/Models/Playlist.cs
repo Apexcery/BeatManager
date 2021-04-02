@@ -20,6 +20,9 @@ namespace BeatManager_WPF_.Models
         [JsonProperty("songs")]
         public List<Song> Songs { get; set; }
 
+        [JsonIgnore]
+        public string FullPath { get; set; }
+
         public class Song
         {
             [JsonProperty("hash")]

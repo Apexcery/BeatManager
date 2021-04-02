@@ -12,11 +12,11 @@ namespace BeatManager_WPF_.UserControls
         private readonly IBeatSaverAPI _beatSaverApi;
         private readonly List<Playlist> _playlists;
 
-        public Songs(Config config, IBeatSaverAPI beatSaverApi, List<Playlist> playlists)
+        public Songs(Config config, IBeatSaverAPI beatSaverApi)
         {
             _config = config;
             _beatSaverApi = beatSaverApi;
-            _playlists = playlists;
+            _playlists = Globals.Playlists;
 
             InitializeComponent();
 

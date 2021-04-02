@@ -40,8 +40,6 @@ namespace BeatManager_WPF_
             }
         }
 
-        private readonly List<Playlist> _playlists = new List<Playlist>();
-
         public MainWindow(Config config, IBeatSaverAPI beatSaverApi)
         {
             _config = config;
@@ -68,7 +66,9 @@ namespace BeatManager_WPF_
                 if (playlist == null)
                     continue;
 
-                _playlists.Add(playlist);
+                playlist.FullPath = playlistDir;
+
+                Globals.Playlists.Add(playlist);
             }
         }
 
@@ -106,11 +106,16 @@ namespace BeatManager_WPF_
         {
             if (!string.IsNullOrEmpty(notifMessage))
             {
-                this.Loaded += (o, args) => ShowNotification(o, args, notifMessage, severity);
+                this.Loaded += (o, args) => ShowNotificationOnLoad(o, args, notifMessage, severity);
             }
         }
 
-        private void ShowNotification(object sender, RoutedEventArgs e, string message, NotificationSeverityEnum severity)
+        private void ShowNotificationOnLoad(object sender, RoutedEventArgs e, string message, NotificationSeverityEnum severity)
+        {
+            ShowNotification(message, severity);
+        }
+
+        public static void ShowNotification(string message, NotificationSeverityEnum severity)
         {
             var notifier = new Notifier(cfg =>
             {
@@ -124,7 +129,21 @@ namespace BeatManager_WPF_
                 cfg.Dispatcher = Application.Current.Dispatcher;
             });
 
-            notifier.ShowSuccess(message, new MessageOptions { ShowCloseButton = true });
+            switch (severity)
+            {
+                case NotificationSeverityEnum.Success:
+                    notifier.ShowSuccess(message, new MessageOptions { ShowCloseButton = true });
+                    break;
+                case NotificationSeverityEnum.Info:
+                    notifier.ShowInformation(message, new MessageOptions { ShowCloseButton = true });
+                    break;
+                case NotificationSeverityEnum.Warning:
+                    notifier.ShowWarning(message, new MessageOptions { ShowCloseButton = true });
+                    break;
+                case NotificationSeverityEnum.Error:
+                    notifier.ShowError(message, new MessageOptions { ShowCloseButton = true });
+                    break;
+            }
         }
 
         private void BtnOpenMenu_Click(object sender, RoutedEventArgs e)
@@ -187,7 +206,7 @@ namespace BeatManager_WPF_
         {
             AddBorderToButton((ListViewItem) sender);
             ClearWindowContent();
-            var songsControl = new Songs(_config, _beatSaverApi, _playlists)
+            var songsControl = new Songs(_config, _beatSaverApi)
             {
                 Width = this.WindowContent.Width,
                 Height = this.WindowContent.Height
@@ -199,7 +218,7 @@ namespace BeatManager_WPF_
         {
             AddBorderToButton((ListViewItem)sender);
             ClearWindowContent();
-            var playlistsControl = new Playlists(_config, _beatSaverApi, _playlists)
+            var playlistsControl = new Playlists(_config, _beatSaverApi)
             {
                 Width = this.WindowContent.Width,
                 Height = this.WindowContent.Height

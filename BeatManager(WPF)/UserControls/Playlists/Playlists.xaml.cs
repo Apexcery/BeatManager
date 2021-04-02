@@ -60,11 +60,11 @@ namespace BeatManager_WPF_.UserControls.Playlists
             }
         }
 
-        public Playlists(Config config, IBeatSaverAPI beatSaverApi, List<Playlist> playlists)
+        public Playlists(Config config, IBeatSaverAPI beatSaverApi)
         {
             _config = config;
             _beatSaverApi = beatSaverApi;
-            _playlists = playlists;
+            _playlists = Globals.Playlists;
 
             InitializeComponent();
             this.DataContext = this;
@@ -92,7 +92,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
             var pageResult = (double)numPlaylists / NumOnPage;
             MaxPageNum = (int)Math.Ceiling(pageResult);
 
-            Application.Current.Dispatcher.Invoke(delegate
+            this.Dispatcher.Invoke(delegate
             {
                 foreach (var playlist in _playlists.OrderBy(x => x.PlaylistTitle))
                 {
@@ -117,35 +117,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private PlaylistTile GeneratePlaylistTile(Playlist playlist)
         {
-            var tile = new PlaylistTile();
-
-            var base64 = playlist.Image.Substring(playlist.Image.IndexOf(',') + 1);
-            var byteBuffer = Convert.FromBase64String(base64);
-            var stream = new MemoryStream(byteBuffer, 0, byteBuffer.Length);
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = stream;
-            image.EndInit();
-
-            tile.Dispatcher.Invoke(() =>
-            {
-                tile = new PlaylistTile
-                {
-                    PlaylistTileImage =
-                    {
-                        Source = image
-                    },
-                    PlaylistTileName =
-                    {
-                        Text = playlist.PlaylistTitle
-                    },
-                    PlaylistTileAuthor =
-                    {
-                        Text = playlist.PlaylistAuthor
-                    },
-                    ToolTip = playlist.PlaylistTitle
-                };
-            });
+            var tile = new PlaylistTile(_config, playlist);
 
             return tile;
         }

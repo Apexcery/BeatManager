@@ -16,7 +16,7 @@ using BeatManager_WPF_.ViewModels;
 using MoreLinq;
 using Newtonsoft.Json;
 
-namespace BeatManager_WPF_.UserControls.SongsTabs
+namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
 {
     public partial class LocalSongs : UserControl, INotifyPropertyChanged
     {

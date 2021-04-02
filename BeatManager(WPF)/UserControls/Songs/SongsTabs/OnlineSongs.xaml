@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BeatManager_WPF_.UserControls.SongsTabs.LocalSongs"
+﻿<UserControl x:Class="BeatManager_WPF_.UserControls.Songs.SongsTabs.OnlineSongs"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,44 +17,44 @@
                 DockPanel.Dock="Left"
                 Rows="1">
                 <TextBlock Text="Filters: " HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White"></TextBlock>
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="0" Margin="2.5">
-                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                        <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Kind="Warning" Foreground="White" />
-                        </materialDesign:PopupBox.ToggleContent>
-                        <StackPanel x:Name="DifficultyFilters" Width="150">
-                            <Button x:Name="DifficultyFilter_Easy" Content="Easy" />
-                            <Button x:Name="DifficultyFilter_Normal" Content="Normal" />
-                            <Button x:Name="DifficultyFilter_Hard" Content="Hard" />
-                            <Button x:Name="DifficultyFilter_Expert" Content="Expert" />
-                            <Button x:Name="DifficultyFilter_ExpertPlus" Content="Expert+" />
-                        </StackPanel>
-                    </materialDesign:PopupBox>
-                </StackPanel>
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="1" Margin="2.5">
-                    <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
-                        <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Kind="FastForward" Foreground="White" />
-                        </materialDesign:PopupBox.ToggleContent>
-                        <StackPanel x:Name="BPMFilters" Width="150">
-                            <Button x:Name="BPMFilter_0_99" Content="0-99" />
-                            <Button x:Name="BPMFilter_100_149" Content="100-149" />
-                            <Button x:Name="BPMFilter_150_199" Content="150-199" />
-                            <Button x:Name="BPMFilter_200" Content="200+" />
-                        </StackPanel>
-                    </materialDesign:PopupBox>
-                </StackPanel>
+                <!-- <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="0" Margin="2.5"> -->
+                <!--     <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White"> -->
+                <!--         <materialDesign:PopupBox.ToggleContent> -->
+                <!--             <materialDesign:PackIcon Kind="Warning" Foreground="White" /> -->
+                <!--         </materialDesign:PopupBox.ToggleContent> -->
+                <!--         <StackPanel x:Name="DifficultyFilters" Width="150"> -->
+                <!--             <Button x:Name="DifficultyFilter_Easy" Content="Easy" /> -->
+                <!--             <Button x:Name="DifficultyFilter_Normal" Content="Normal" /> -->
+                <!--             <Button x:Name="DifficultyFilter_Hard" Content="Hard" /> -->
+                <!--             <Button x:Name="DifficultyFilter_Expert" Content="Expert" /> -->
+                <!--             <Button x:Name="DifficultyFilter_ExpertPlus" Content="Expert+" /> -->
+                <!--         </StackPanel> -->
+                <!--     </materialDesign:PopupBox> -->
+                <!-- </StackPanel> -->
+                <!-- <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="1" Margin="2.5"> -->
+                <!--     <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White"> -->
+                <!--         <materialDesign:PopupBox.ToggleContent> -->
+                <!--             <materialDesign:PackIcon Kind="FastForward" Foreground="White" /> -->
+                <!--         </materialDesign:PopupBox.ToggleContent> -->
+                <!--         <StackPanel x:Name="BPMFilters" Width="150"> -->
+                <!--             <Button x:Name="BPMFilter_0_99" Content="0-99" /> -->
+                <!--             <Button x:Name="BPMFilter_100_149" Content="100-149" /> -->
+                <!--             <Button x:Name="BPMFilter_150_199" Content="150-199" /> -->
+                <!--             <Button x:Name="BPMFilter_200" Content="200+" /> -->
+                <!--         </StackPanel> -->
+                <!--     </materialDesign:PopupBox> -->
+                <!-- </StackPanel> -->
                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Background="{StaticResource PrimaryHueMidBrush}" Grid.Column="2" Margin="2.5">
                     <materialDesign:PopupBox HorizontalAlignment="Right" Margin="15, 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
                         <materialDesign:PopupBox.ToggleContent>
                             <materialDesign:PackIcon Kind="SortVariant" Foreground="White" />
                         </materialDesign:PopupBox.ToggleContent>
-                        <StackPanel x:Name="SortFilters" Width="175">
-                            <Button x:Name="SortFilter_Name" Content="Sort by Name ▲" Tag="Sort by Name" />
-                            <Button x:Name="SortFilter_Artist" Content="Sort by Artist" Tag="Sort by Artist" />
-                            <Button x:Name="SortFilter_Difficulty" Content="Sort by Difficulty" Tag="Sort by Difficulty" />
-                            <Button x:Name="SortFilter_BPM" Content="Sort by BPM" Tag="Sort by BPM" />
-                            <Button x:Name="SortFilter_Date" Content="Sort by Date Acquired" Tag="Sort by Date Acquired" />
+                        <StackPanel x:Name="SortFilters" Width="200">
+                            <Button x:Name="SortFilter_Hot" Content="Sort by Hot ▼" Tag="Sort by Hot" />
+                            <Button x:Name="SortFilter_Rating" Content="Sort by Rating" Tag="Sort by Rating" />
+                            <Button x:Name="SortFilter_Latest" Content="Sort by Latest" Tag="Sort by Latest" />
+                            <Button x:Name="SortFilter_Downloads" Content="Sort by No. Downloads" Tag="Sort by No. Downloads" />
+                            <Button x:Name="SortFilter_Plays" Content="Sort by No. Plays" Tag="Sort by No. Plays" />
                         </StackPanel>
                     </materialDesign:PopupBox>
                 </StackPanel>

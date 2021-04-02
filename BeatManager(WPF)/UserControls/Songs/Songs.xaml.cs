@@ -2,9 +2,9 @@
 using System.Windows.Controls;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
-using BeatManager_WPF_.UserControls.SongsTabs;
+using BeatManager_WPF_.UserControls.Songs.SongsTabs;
 
-namespace BeatManager_WPF_.UserControls
+namespace BeatManager_WPF_.UserControls.Songs
 {
     public partial class Songs : UserControl
     {

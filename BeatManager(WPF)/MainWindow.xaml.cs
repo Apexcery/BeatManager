@@ -15,6 +15,7 @@ using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.UserControls;
 using BeatManager_WPF_.UserControls.Playlists;
+using BeatManager_WPF_.UserControls.Songs;
 using Newtonsoft.Json;
 using ToastNotifications;
 using ToastNotifications.Core;

@@ -1,8 +1,6 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Effects;
 
-namespace BeatManager_WPF_.UserControls
+namespace BeatManager_WPF_.UserControls.Songs
 {
     public partial class SongTile : UserControl
     {

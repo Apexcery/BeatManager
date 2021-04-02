@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,9 +11,8 @@ using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Models.SongFilterModels;
-using Image = System.Drawing.Image;
 
-namespace BeatManager_WPF_.UserControls
+namespace BeatManager_WPF_.UserControls.Playlists
 {
     public partial class Playlists : UserControl, INotifyPropertyChanged
     {

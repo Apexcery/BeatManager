@@ -125,6 +125,10 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
             File.WriteAllText(editedPlaylist.FullPath, JsonConvert.SerializeObject(editedPlaylist));
             Globals.Playlists.Add(editedPlaylist);
+
+            TxtName.Text = TxtName.Text.Trim();
+            TxtAuthor.Text = TxtAuthor.Text.Trim();
+            TxtDesc.Text = TxtDesc.Text.Trim();
         }
     }
 }

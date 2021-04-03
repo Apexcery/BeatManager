@@ -351,12 +351,14 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
 
         private void DifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultiesEnum? difficulty)
         {
+            CurrentPageNum = 1;
             Filter.Difficulty = difficulty;
             LoadSongs();
         }
 
         private void BPMFilter_OnClick(object sender, RoutedEventArgs args, in Range actualRange)
         {
+            CurrentPageNum = 1;
             Filter.BpmRange = actualRange;
             LoadSongs();
         }
@@ -364,7 +366,9 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
         private void SortFilter_OnClick(object sender, RoutedEventArgs args, LocalSongsFilter.SortFilter.SortOptions sortOptionEnum, Button buttonClicked)
         {
             RemoveSymbolFromSortButtons();
-            
+
+            CurrentPageNum = 1;
+
             if (Filter.Sort.Option == sortOptionEnum)
             {
                 if (Filter.Sort.Direction == LocalSongsFilter.SortFilter.SortDirection.Ascending)

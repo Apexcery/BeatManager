@@ -117,7 +117,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private PlaylistTile GeneratePlaylistTile(Playlist playlist)
         {
-            var tile = new PlaylistTile(_config, playlist);
+            var tile = new PlaylistTile(_config, _beatSaverApi, playlist);
 
             return tile;
         }

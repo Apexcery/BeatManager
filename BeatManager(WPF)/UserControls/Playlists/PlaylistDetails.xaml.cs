@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Enums;
+using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
+using BeatManager_WPF_.UserControls.Songs;
+using BeatManager_WPF_.ViewModels;
 using Newtonsoft.Json;
 
 namespace BeatManager_WPF_.UserControls.Playlists
@@ -14,11 +19,17 @@ namespace BeatManager_WPF_.UserControls.Playlists
     public partial class PlaylistDetails : UserControl
     {
         private readonly Config _config;
+        private readonly IBeatSaverAPI _beatSaverAPI;
         private readonly Playlist _playlist;
 
-        public PlaylistDetails(Config config, Playlist playlist)
+        public ObservableCollection<SongRowTile> Songs { get; set; } = new ObservableCollection<SongRowTile>();
+
+        private int CurrentPage = 1;
+
+        public PlaylistDetails(Config config, IBeatSaverAPI beatSaverAPI, Playlist playlist)
         {
             _config = config;
+            _beatSaverAPI = beatSaverAPI;
             _playlist = playlist;
 
             InitializeComponent();
@@ -40,6 +51,22 @@ namespace BeatManager_WPF_.UserControls.Playlists
             TxtName.Text = _playlist.PlaylistTitle;
             TxtAuthor.Text = _playlist.PlaylistAuthor;
             TxtDesc.Text = _playlist.PlaylistDescription;
+
+            LoadSongs();
+        }
+
+        private void LoadSongs()
+        {
+            var songs = _playlist.Songs.OrderBy(x => x.Hash).Skip(CurrentPage - 1 * 10).Take(10);
+
+            foreach (var hash in songs.Select(x => x.Hash))
+            {
+                var songInfo = Globals.LocalSongs.FirstOrDefault(x => x.Hash.Equals(hash, StringComparison.InvariantCultureIgnoreCase));
+                if (songInfo == null)
+                    continue;
+
+                Songs.Add(new SongRowTile(songInfo, _playlist));
+            }
         }
 
         private void BtnSave_OnClick(object sender, RoutedEventArgs e)
@@ -129,6 +156,20 @@ namespace BeatManager_WPF_.UserControls.Playlists
             TxtName.Text = TxtName.Text.Trim();
             TxtAuthor.Text = TxtAuthor.Text.Trim();
             TxtDesc.Text = TxtDesc.Text.Trim();
+
+            MainWindow.ShowNotification("Playlist saved successfully.", NotificationSeverityEnum.Success);
+        }
+
+        private void ImgPlaylist_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            ImgPlaylistOverlayColor.Visibility = Visibility.Visible;
+            ImgPlaylistOverlayIcon.Visibility = Visibility.Visible;
+        }
+
+        private void ImgPlaylist_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            ImgPlaylistOverlayColor.Visibility = Visibility.Hidden;
+            ImgPlaylistOverlayIcon.Visibility = Visibility.Hidden;
         }
     }
 }

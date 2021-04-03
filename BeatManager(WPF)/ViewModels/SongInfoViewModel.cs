@@ -14,6 +14,7 @@ namespace BeatManager_WPF_.ViewModels
 
         public string FullSongDir { get; set; }
         public DateTime DateAcquired { get; set; }
+        public string Hash { get; set; }
 
         public class Difficulty
         {

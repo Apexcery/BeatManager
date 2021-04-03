@@ -42,5 +42,20 @@ namespace BeatManager_WPF_.Services
 
             return maps;
         }
+
+        public async Task<Map> GetByHash(string hash)
+        {
+            if (string.IsNullOrEmpty(hash))
+                return null;
+
+            var response = await _client.GetAsync($"maps/by-hash/{hash}").ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var map = JsonConvert.DeserializeObject<Map>(await response.Content.ReadAsStringAsync());
+
+            return map;
+        }
     }
 }

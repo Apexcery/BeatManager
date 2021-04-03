@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -159,8 +161,6 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
 
             var songDirs = Directory.GetDirectories($"{rootDir}/Beat Saber_Data/CustomLevels");
 
-            var allSongs = new List<SongInfoViewModel>();
-
             foreach (var songDir in songDirs)
             {
                 var files = Directory.GetFiles(songDir);
@@ -173,6 +173,18 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 var songInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(infoFilePath));
                 if (songInfo == null)
                     continue;
+
+                var stringToHash = File.ReadAllText(infoFilePath);
+                foreach (var diffSet in songInfo.DifficultyBeatmapSets)
+                {
+                    foreach (var diff in diffSet.DifficultyBeatmaps)
+                    {
+                        var diffPath = $"{songDir}/{diff.BeatmapFilename}";
+                        stringToHash += File.ReadAllText(diffPath);
+                    }
+                }
+                var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
+                var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
 
                 var songInfoViewModel = new SongInfoViewModel
                 {
@@ -188,13 +200,14 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                     BPM = songInfo.BeatsPerMinute,
 
                     FullSongDir = songDir,
-                    DateAcquired = File.GetCreationTimeUtc(infoFilePath)
+                    DateAcquired = File.GetCreationTimeUtc(infoFilePath),
+                    Hash = hashString
                 };
 
-                allSongs.Add(songInfoViewModel);
+                Globals.LocalSongs.Add(songInfoViewModel);
             }
 
-            var filteredSongs = allSongs;
+            var filteredSongs = Globals.LocalSongs;
 
             if (!string.IsNullOrEmpty(Filter.SearchQuery))
             {

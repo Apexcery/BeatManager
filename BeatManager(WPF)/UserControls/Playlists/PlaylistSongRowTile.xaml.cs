@@ -40,7 +40,8 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private void BtnRemoveFromPlaylist_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to remove this song?", "Are you sure?", MessageBoxButton.YesNo) == MessageBoxResult.No)
+            var response = MessageBox.Show("Are you sure you want to remove this song?", "Are you sure?", MessageBoxButton.YesNo);
+            if (response == MessageBoxResult.No || response == MessageBoxResult.Cancel || response == MessageBoxResult.None)
                 return;
 
             var toRemove = _playlist.Songs.FirstOrDefault(x => x.Hash.Equals(_songInfo.Hash));
@@ -60,7 +61,6 @@ namespace BeatManager_WPF_.UserControls.Playlists
             }
 
             Globals.Playlists[index] = _playlist;
-
 
             File.WriteAllText(_playlist.FullPath, JsonConvert.SerializeObject(_playlist, Formatting.None));
 

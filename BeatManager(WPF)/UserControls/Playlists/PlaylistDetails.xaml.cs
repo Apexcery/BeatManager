@@ -22,7 +22,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
         private readonly IBeatSaverAPI _beatSaverAPI;
         private readonly Playlist _playlist;
 
-        public ObservableCollection<SongRowTile> Songs { get; set; } = new ObservableCollection<SongRowTile>();
+        public ObservableCollection<PlaylistSongRowTile> Songs { get; set; } = new ObservableCollection<PlaylistSongRowTile>();
 
         private int CurrentPage = 1;
 
@@ -65,8 +65,14 @@ namespace BeatManager_WPF_.UserControls.Playlists
                 if (songInfo == null)
                     continue;
 
-                Songs.Add(new SongRowTile(songInfo, _playlist));
+                Songs.Add(new PlaylistSongRowTile(songInfo, _playlist, UpdateList));
             }
+        }
+
+        public void UpdateList()
+        {
+            Songs.Clear();
+            LoadSongs();
         }
 
         private void BtnSave_OnClick(object sender, RoutedEventArgs e)

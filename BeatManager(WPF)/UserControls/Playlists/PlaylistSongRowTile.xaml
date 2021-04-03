@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BeatManager_WPF_.UserControls.Songs.SongRowTile"
+﻿<UserControl x:Class="BeatManager_WPF_.UserControls.Playlists.PlaylistSongRowTile"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -24,6 +24,22 @@
                 <Label x:Name="LblSongArtist" Content="Song Artist" FontSize="16" HorizontalAlignment="Left" />
                 <Label x:Name="LblSongMapper" Content="Song Mapper" FontSize="16" HorizontalAlignment="Left" />
             </StackPanel>
+        </Grid>
+        <Grid DockPanel.Dock="Right">
+            <fa:ImageAwesome x:Name="BtnRemoveFromPlaylist" Icon="TrashOutline" HorizontalAlignment="Right" Width="25" Height="25" Cursor="Hand" Margin="15" MouseUp="BtnRemoveFromPlaylist_OnMouseUp">
+                <fa:ImageAwesome.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <Trigger Property="fa:ImageAwesome.IsMouseOver" Value="True">
+                                <Setter Property="fa:ImageAwesome.Foreground" Value="Red" />
+                            </Trigger>
+                            <Trigger Property="fa:ImageAwesome.IsMouseOver" Value="False">
+                                <Setter Property="fa:ImageAwesome.Foreground" Value="DarkRed" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </fa:ImageAwesome.Style>
+            </fa:ImageAwesome>
         </Grid>
     </DockPanel>
 </UserControl>

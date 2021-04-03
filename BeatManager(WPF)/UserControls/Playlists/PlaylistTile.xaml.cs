@@ -40,6 +40,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
             PlaylistTileImage.Source = image;
             PlaylistTileName.Text = Regex.Replace(_playlist.PlaylistTitle, @"\r\n?|\n", " ");
             PlaylistTileAuthor.Text = Regex.Replace(_playlist.PlaylistAuthor, @"\r\n?|\n", " ");
+            PlaylistTileNumSongs.Content = _playlist.Songs.Count;
             ToolTip = Regex.Replace(_playlist.PlaylistTitle, @"\r\n?|\n", " ");
         }
 

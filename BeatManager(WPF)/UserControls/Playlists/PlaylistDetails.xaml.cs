@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,31 +11,153 @@ using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
-using BeatManager_WPF_.UserControls.Songs;
-using BeatManager_WPF_.ViewModels;
+using BeatManager_WPF_.Models.SongFilterModels;
+using MoreLinq;
 using Newtonsoft.Json;
 
 namespace BeatManager_WPF_.UserControls.Playlists
 {
-    public partial class PlaylistDetails : UserControl
+    public partial class PlaylistDetails : UserControl, INotifyPropertyChanged
     {
         private readonly Config _config;
-        private readonly IBeatSaverAPI _beatSaverAPI;
         private readonly Playlist _playlist;
 
         public ObservableCollection<PlaylistSongRowTile> Songs { get; set; } = new ObservableCollection<PlaylistSongRowTile>();
 
-        private int CurrentPage = 1;
+        public LocalSongsFilter Filter = new LocalSongsFilter();
 
-        public PlaylistDetails(Config config, IBeatSaverAPI beatSaverAPI, Playlist playlist)
+        private int CurrentPageNum = 1;
+        private int MaxPageNum = 1;
+        private int NumOnPage = 10;
+
+        private bool _hasPreviousPage;
+        public bool HasPreviousPage
+        {
+            get
+            {
+                _hasPreviousPage = CurrentPageNum > 1;
+
+                return _hasPreviousPage;
+            }
+            set
+            {
+                _hasPreviousPage = value;
+                this.OnPropertyChanged("HasPreviousPage");
+            }
+        }
+
+        private bool _hasNextPage;
+        public bool HasNextPage
+        {
+            get
+            {
+                _hasNextPage = CurrentPageNum < MaxPageNum;
+
+                return _hasNextPage;
+            }
+            set
+            {
+                _hasNextPage = value;
+                this.OnPropertyChanged("HasNextPage");
+            }
+        }
+
+        public PlaylistDetails(Config config, Playlist playlist)
         {
             _config = config;
-            _beatSaverAPI = beatSaverAPI;
             _playlist = playlist;
 
             InitializeComponent();
 
+            var difficultyFilterButtons = DifficultyFilters;
+            foreach (Button button in difficultyFilterButtons.Children)
+            {
+                var difficulty = button.Name[(button.Name.IndexOf('_') + 1)..];
+
+                Enum.TryParse(difficulty, true, out DifficultiesEnum difficultyEnum);
+
+                button.Click += (o, args) => DifficultyFilter_OnClick(o, args, difficultyEnum);
+            }
+
+            var bpmFilterButtons = BPMFilters;
+            foreach (Button button in bpmFilterButtons.Children)
+            {
+                var range = button.Name[(button.Name.IndexOf('_') + 1)..].Split('_');
+
+                var lowerRange = int.Parse(range[0]);
+
+                var hasUpperRange = range.Length > 1;
+                var upperRange = hasUpperRange ? int.Parse(range[1]) : int.MaxValue;
+
+                var actualRange = new Range(new Index(lowerRange), new Index(upperRange));
+
+                button.Click += (o, args) => BPMFilter_OnClick(o, args, actualRange);
+            }
+
+            var sortFilterButtons = SortFilters;
+            foreach (Button button in sortFilterButtons.Children)
+            {
+                var sortOption = button.Name[(button.Name.IndexOf('_') + 1)..];
+
+                Enum.TryParse(sortOption, true, out LocalSongsFilter.SortFilter.SortOptions sortOptionEnum);
+
+                button.Click += (o, args) => SortFilter_OnClick(o, args, sortOptionEnum, button);
+            }
+
             this.Loaded += LoadContent;
+        }
+
+        private void DifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultiesEnum? difficulty)
+        {
+            CurrentPageNum = 1;
+            Filter.Difficulty = difficulty;
+            LoadSongs();
+        }
+
+        private void BPMFilter_OnClick(object sender, RoutedEventArgs args, in Range actualRange)
+        {
+            CurrentPageNum = 1;
+            Filter.BpmRange = actualRange;
+            LoadSongs();
+        }
+
+        private void SortFilter_OnClick(object sender, RoutedEventArgs args, LocalSongsFilter.SortFilter.SortOptions sortOptionEnum, Button buttonClicked)
+        {
+            RemoveSymbolFromSortButtons();
+
+            CurrentPageNum = 1;
+
+            if (Filter.Sort.Option == sortOptionEnum)
+            {
+                if (Filter.Sort.Direction == LocalSongsFilter.SortFilter.SortDirection.Ascending)
+                {
+                    Filter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Descending;
+                    buttonClicked.Content = buttonClicked.Tag + " ▼";
+                }
+                else
+                {
+                    Filter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Ascending;
+                    buttonClicked.Content = buttonClicked.Tag + " ▲";
+                }
+            }
+            else
+            {
+                Filter.Sort.Direction = LocalSongsFilter.SortFilter.SortDirection.Ascending;
+                buttonClicked.Content = buttonClicked.Tag + " ▲";
+            }
+
+            Filter.Sort.Option = sortOptionEnum;
+
+            LoadSongs();
+        }
+
+        private void RemoveSymbolFromSortButtons()
+        {
+            var sortFilterButtons = SortFilters;
+            foreach (Button button in sortFilterButtons.Children)
+            {
+                button.Content = button.Tag;
+            }
         }
 
         private void LoadContent(object sender, RoutedEventArgs e)
@@ -57,21 +180,140 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private void LoadSongs()
         {
-            var songs = _playlist.Songs.OrderBy(x => x.Hash).Skip(CurrentPage - 1 * 10).Take(10);
+            Songs.Clear();
 
-            foreach (var hash in songs.Select(x => x.Hash))
+            var allSongs = _playlist.Songs.Select(x =>
+                Globals.LocalSongs.FirstOrDefault(z =>
+                    z.Hash.Equals(x.Hash, StringComparison.InvariantCultureIgnoreCase))).Where(x => x != null).ToList();
+
+            var filteredSongs = allSongs;
+
+            if (!string.IsNullOrEmpty(Filter.SearchQuery))
             {
-                var songInfo = Globals.LocalSongs.FirstOrDefault(x => x.Hash.Equals(hash, StringComparison.InvariantCultureIgnoreCase));
-                if (songInfo == null)
-                    continue;
-
-                Songs.Add(new PlaylistSongRowTile(songInfo, _playlist, UpdateList));
+                filteredSongs = filteredSongs.Where(x => x.SongName.Contains(Filter.SearchQuery, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                filteredSongs = filteredSongs.Concat(allSongs.Where(x => x.Artist.Contains(Filter.SearchQuery, StringComparison.InvariantCultureIgnoreCase))).ToList();
+                filteredSongs = filteredSongs.Concat(allSongs.Where(x => x.Mapper.Contains(Filter.SearchQuery, StringComparison.InvariantCultureIgnoreCase))).ToList();
             }
+
+            if (Filter.Difficulty != null)
+            {
+                filteredSongs = filteredSongs.Where(x => x.Difficulties.Select(z => z.Name.ToLower()).Contains(Filter.Difficulty.ToString()?.ToLower())).ToList();
+            }
+
+            if (Filter.BpmRange != null)
+            {
+                filteredSongs = filteredSongs.Where(x => x.BPM >= Filter.BpmRange.Value.Start.Value && x.BPM <= Filter.BpmRange.Value.End.Value).ToList();
+            }
+
+            filteredSongs = filteredSongs.DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
+
+            if (Filter.Sort?.Option != null && Filter.Sort.Direction != null)
+            {
+                switch (Filter.Sort.Option)
+                {
+                    case LocalSongsFilter.SortFilter.SortOptions.Name:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.SongName).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.SongName).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.Artist:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.Artist).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.Artist).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.Difficulty:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.Difficulties.Select(z => z.Rank).Min()).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.Difficulties.Select(z => z.Rank).Min()).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.BPM:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.BPM).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.BPM).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    case LocalSongsFilter.SortFilter.SortOptions.Date:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case LocalSongsFilter.SortFilter.SortDirection.Ascending:
+                                filteredSongs = filteredSongs.OrderBy(x => x.DateAcquired).ToList();
+                                break;
+                            case LocalSongsFilter.SortFilter.SortDirection.Descending:
+                                filteredSongs = filteredSongs.OrderByDescending(x => x.DateAcquired).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(LocalSongsFilter.SortFilter.SortOptions));
+                }
+            }
+
+            var numSongs = filteredSongs.Count;
+
+            var pageResult = (double)numSongs / NumOnPage;
+            MaxPageNum = (int)Math.Ceiling(pageResult);
+
+            var toSkip = CurrentPageNum > 1;
+            filteredSongs = filteredSongs.Skip(toSkip ? (CurrentPageNum - 1) * NumOnPage : 0).Take(NumOnPage).ToList();
+
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                foreach (var song in filteredSongs)
+                {
+                    var songInfoPanel = new PlaylistSongRowTile(song, _playlist, UpdateList);
+                    Songs.Add(songInfoPanel);
+                }
+
+                TxtCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";
+
+                var lowerBound = ((NumOnPage * CurrentPageNum) - NumOnPage) + 1;
+                var upperBound = new[] { NumOnPage * CurrentPageNum, numSongs }.Min();
+                TxtCurrentCount.Text = $"({lowerBound} to {upperBound}) out of {numSongs}";
+
+                // ProgressBar.Visibility = Visibility.Collapsed; //TODO: Add loading spinner to song grid.
+                // PageButtons.Visibility = Visibility.Visible;
+                // GridSongs.Visibility = Visibility.Visible;
+
+                this.OnPropertyChanged("HasPreviousPage");
+                this.OnPropertyChanged("HasNextPage");
+            });
         }
 
         public void UpdateList()
         {
-            Songs.Clear();
             LoadSongs();
         }
 
@@ -176,6 +418,58 @@ namespace BeatManager_WPF_.UserControls.Playlists
         {
             ImgPlaylistOverlayColor.Visibility = Visibility.Hidden;
             ImgPlaylistOverlayIcon.Visibility = Visibility.Hidden;
+        }
+
+        private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
+        {
+            Filter.SearchQuery = TxtSearch.Text;
+
+            Songs.Clear();
+
+            LoadSongs();
+        }
+
+        private void PageButtonFirst_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum <= 1)
+                return;
+
+            CurrentPageNum = 1;
+            LoadSongs();
+        }
+
+        private void PageButtonBack_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum <= 1)
+                return;
+
+            CurrentPageNum--;
+            LoadSongs();
+        }
+
+        private void PageButtonForward_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum >= MaxPageNum)
+                return;
+
+            CurrentPageNum++;
+            LoadSongs();
+        }
+
+        private void PageButtonLast_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPageNum >= MaxPageNum)
+                return;
+
+            CurrentPageNum = MaxPageNum;
+            LoadSongs();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

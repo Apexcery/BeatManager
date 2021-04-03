@@ -17,7 +17,6 @@ namespace BeatManager_WPF_.UserControls.Playlists
     public partial class Playlists : UserControl, INotifyPropertyChanged
     {
         private readonly Config _config;
-        private readonly IBeatSaverAPI _beatSaverApi;
         private readonly List<Playlist> _playlists;
 
         public ObservableCollection<PlaylistTile> Items { get; set; } = new ObservableCollection<PlaylistTile>();
@@ -60,10 +59,9 @@ namespace BeatManager_WPF_.UserControls.Playlists
             }
         }
 
-        public Playlists(Config config, IBeatSaverAPI beatSaverApi)
+        public Playlists(Config config)
         {
             _config = config;
-            _beatSaverApi = beatSaverApi;
             _playlists = Globals.Playlists;
 
             InitializeComponent();
@@ -117,7 +115,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private PlaylistTile GeneratePlaylistTile(Playlist playlist)
         {
-            var tile = new PlaylistTile(_config, _beatSaverApi, playlist);
+            var tile = new PlaylistTile(_config, playlist);
 
             return tile;
         }

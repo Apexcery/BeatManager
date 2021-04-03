@@ -219,7 +219,7 @@ namespace BeatManager_WPF_
         {
             AddBorderToButton((ListViewItem)sender);
             ClearWindowContent();
-            var playlistsControl = new Playlists(_config, _beatSaverApi)
+            var playlistsControl = new Playlists(_config)
             {
                 Width = this.WindowContent.Width,
                 Height = this.WindowContent.Height

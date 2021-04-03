@@ -13,13 +13,11 @@ namespace BeatManager_WPF_.UserControls.Playlists
     public partial class PlaylistTile : UserControl
     {
         private readonly Config _config;
-        private readonly IBeatSaverAPI _beatSaverAPI;
         private readonly Playlist _playlist;
 
-        public PlaylistTile(Config config, IBeatSaverAPI beatSaverAPI, Playlist playlist)
+        public PlaylistTile(Config config, Playlist playlist)
         {
             _config = config;
-            _beatSaverAPI = beatSaverAPI;
             _playlist = playlist;
 
             InitializeComponent();
@@ -46,7 +44,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private void PlaylistTile_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            var playlistDetails = new PlaylistDetails(_config, _beatSaverAPI, _playlist);
+            var playlistDetails = new PlaylistDetails(_config, _playlist);
 
             var windowContent = ((MainWindow) Application.Current.MainWindow)?.WindowContent;
             if (windowContent == null)

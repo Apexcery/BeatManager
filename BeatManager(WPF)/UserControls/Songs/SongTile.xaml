@@ -4,14 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
-             xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-             xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="BeatManager_WPF_.UserControls.SongTile"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="150"
              ClipToBounds="False" Cursor="Hand"
              x:Name="uc">
-
 
     <materialDesign:Card x:Name="tile" Background="{x:Null}" RenderTransformOrigin="0.5, 0.5" materialDesign:ShadowAssist.ShadowDepth="Depth5" >
         <materialDesign:Card.RenderTransform>

@@ -4,22 +4,152 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
+             xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+             xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="BeatManager_WPF_.UserControls.SongTile"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="150">
-    <Grid>
-        <Border BorderBrush="Gray" BorderThickness="0.5">
-            <Grid>
-                <Image x:Name="SongTileImage" />
-                <Border Padding="5" VerticalAlignment="Bottom" Height="50">
-                    <Border.Background>
-                        <SolidColorBrush Color="White" Opacity="0.6"></SolidColorBrush>
-                    </Border.Background>
-                    <UniformGrid Columns="1" Rows="2">
-                        <TextBlock x:Name="SongTileName" Text="Name: " Foreground="Black" />
-                        <TextBlock x:Name="SongTileArtist" Text="Artist: " Foreground="Black" FontSize="11" />
-                    </UniformGrid>
-                </Border>
-            </Grid>
-        </Border>
-    </Grid>
+             d:DesignHeight="150" d:DesignWidth="150"
+             ClipToBounds="False" Cursor="Hand"
+             x:Name="uc">
+
+
+    <materialDesign:Card x:Name="tile" Background="{x:Null}" RenderTransformOrigin="0.5, 0.5" materialDesign:ShadowAssist.ShadowDepth="Depth5" >
+        <materialDesign:Card.RenderTransform>
+            <ScaleTransform ScaleX="1" ScaleY="1"/>
+        </materialDesign:Card.RenderTransform>
+
+        <materialDesign:Card.Style>
+            <Style>
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="materialDesign:Card.MouseEnter">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.95"/>
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.95"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+
+                    <EventTrigger RoutedEvent="materialDesign:Card.MouseLeave">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Duration="0:0:0.6" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1"/>
+                                    <DoubleAnimation Duration="0:0:0.6" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
+        </materialDesign:Card.Style>
+
+        <Grid>
+            <Border BorderBrush="Gray" BorderThickness="0.5">
+                <Grid>
+                    <Grid.Triggers>
+                        <EventTrigger RoutedEvent="Grid.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation From="0" To="5" Duration="0:0:0.1" Storyboard.TargetName="blurEffect" Storyboard.TargetProperty="Radius"></DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="Grid.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation From="8" To="0" Duration="0:0:0.8" Storyboard.TargetName="blurEffect" Storyboard.TargetProperty="Radius"></DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Grid.Triggers>
+                    <Image x:Name="SongTileImage">
+                        <Image.Effect>
+                            <BlurEffect Radius="0" x:Name="blurEffect"/>
+                        </Image.Effect>
+                    </Image>
+
+                    <Border Padding="5" VerticalAlignment="Bottom" Height="50">
+                        <Border.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="True">
+                                        <Setter Property="Border.Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="White" Opacity="1"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="False">
+                                        <Setter Property="Border.Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="White" Opacity="0.6"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
+                        <UniformGrid Columns="1" Rows="2">
+                            <TextBlock x:Name="SongTileName" Text="Name: " Foreground="Black" />
+                            <TextBlock x:Name="SongTileArtist" Text="Artist: " Foreground="Black" FontSize="11" />
+                        </UniformGrid>
+                    </Border>
+                    
+                    <StackPanel>
+                        <Border x:Name="BtnBPM" Width="55" Height="30" HorizontalAlignment="Left" Margin="5" Padding="0" CornerRadius="15" BorderThickness="1">
+                            <Border.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="True">
+                                            <Setter Property="Border.Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="#2194f3" Opacity="1"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Border.BorderBrush">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.4"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="False">
+                                            <Setter Property="Border.Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.65"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Border.BorderBrush">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="#2194f3" Opacity="1"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+
+
+                           
+                            
+                            
+                            <StackPanel Orientation="Vertical" >
+                                <Label Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Padding="0"/>
+                                <Label Content="BPM" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
+                            </StackPanel>
+
+                        </Border>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+        </Grid>
+    </materialDesign:Card>
 </UserControl>
+
+
+

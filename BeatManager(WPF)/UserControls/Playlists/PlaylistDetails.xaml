@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BeatManager_WPF_.UserControls.Playlists"
              xmlns:localSongs="clr-namespace:BeatManager_WPF_.UserControls.Songs"
-             xmlns:behaviors="clr-namespace:BeatManager_WPF_.Behaviors"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 

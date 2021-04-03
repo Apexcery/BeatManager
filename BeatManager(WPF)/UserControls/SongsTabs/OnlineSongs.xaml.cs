@@ -216,11 +216,26 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
         {
             RemoveSymbolFromSortButtons();
 
-            CurrentPageNum = 1;
+            CurrentPageNum = 0;
 
             buttonClicked.Content = buttonClicked.Tag + " ▼";
 
             Filter.Sort.Option = sortOptionEnum;
+            Filter.SearchQuery = "";
+            TxtSearch.Text = "";
+
+            LoadSongs();
+        }
+
+        private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
+        {
+            RemoveSymbolFromSortButtons();
+
+            var query = TxtSearch.Text;
+            
+            Filter.SearchQuery = query;
+            
+            CurrentPageNum = 0;
 
             LoadSongs();
         }
@@ -267,15 +282,6 @@ namespace BeatManager_WPF_.UserControls.SongsTabs
                 return;
 
             CurrentPageNum = MaxPageNum;
-            LoadSongs();
-        }
-
-        private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
-        {
-            var query = TxtSearch.Text;
-            Filter.SearchQuery = query;
-            CurrentPageNum = 0;
-
             LoadSongs();
         }
 

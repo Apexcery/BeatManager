@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using System.Windows.Input;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
-using BeatManager_WPF_.UserControls;
 using BeatManager_WPF_.UserControls.Playlists;
 using BeatManager_WPF_.UserControls.Songs;
 using Newtonsoft.Json;
@@ -49,27 +45,18 @@ namespace BeatManager_WPF_
             InitializeComponent();
             this.DataContext = this;
 
-            Task.WhenAll(Task.Run(LoadPlaylists)).ContinueWith((t) =>
+            if (!Globals.LocalSongs.Any())
+            {
+                Task.WhenAll(Globals.LoadPlaylists(_config.BeatSaberLocation), Globals.LoadLocalSongs(_config.BeatSaberLocation)).ContinueWith((t) =>
+                {
+                    IsReady = true;
+                    InitializeStartupPage();
+                });
+            }
+            else
             {
                 IsReady = true;
                 InitializeStartupPage();
-            });
-        }
-
-        private void LoadPlaylists()
-        {
-            var playlistFiles = Directory.GetFiles($"{_config.BeatSaberLocation}/Playlists");
-
-            foreach (var playlistDir in playlistFiles)
-            {
-                var playlist = JsonConvert.DeserializeObject<Playlist>(File.ReadAllText(playlistDir));
-
-                if (playlist == null)
-                    continue;
-
-                playlist.FullPath = playlistDir;
-
-                Globals.Playlists.Add(playlist);
             }
         }
 

@@ -157,56 +157,6 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             Trace.WriteLine($"--=[ Local BPM Range Filter: {Filter.BpmRange?.Start}-{Filter.BpmRange?.End} ]=--");
             Trace.WriteLine($"--=[ Local Sorting By: {Filter.Sort?.Option?.ToString()} ({Filter.Sort?.Direction?.ToString()}) ]=--");
 
-            var rootDir = _config.BeatSaberLocation;
-
-            var songDirs = Directory.GetDirectories($"{rootDir}/Beat Saber_Data/CustomLevels");
-
-            foreach (var songDir in songDirs)
-            {
-                var files = Directory.GetFiles(songDir);
-
-                var infoFilePath = files.FirstOrDefault(x =>
-                    x.EndsWith("info.dat", StringComparison.InvariantCultureIgnoreCase));
-                if (string.IsNullOrEmpty(infoFilePath))
-                    continue;
-
-                var songInfo = JsonConvert.DeserializeObject<SongInfo>(File.ReadAllText(infoFilePath));
-                if (songInfo == null)
-                    continue;
-
-                // var stringToHash = File.ReadAllText(infoFilePath);
-                // foreach (var diffSet in songInfo.DifficultyBeatmapSets)
-                // {
-                //     foreach (var diff in diffSet.DifficultyBeatmaps)
-                //     {
-                //         var diffPath = $"{songDir}/{diff.BeatmapFilename}";
-                //         stringToHash += File.ReadAllText(diffPath);
-                //     }
-                // }
-                // var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
-                // var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
-
-                var songInfoViewModel = new SongInfoViewModel
-                {
-                    SongName = songInfo.SongName,
-                    Artist = songInfo.SongAuthorName,
-                    Mapper = songInfo.LevelAuthorName,
-                    FullImagePath = $"{songDir}/{songInfo.CoverImageFilename}",
-                    Difficulties = songInfo.DifficultyBeatmapSets.SelectMany(x => x.DifficultyBeatmaps).Select(x => new SongInfoViewModel.Difficulty
-                    {
-                        Rank = x.DifficultyRank,
-                        Name = x.Difficulty
-                    }).ToList(),
-                    BPM = songInfo.BeatsPerMinute,
-
-                    FullSongDir = songDir,
-                    DateAcquired = File.GetCreationTimeUtc(infoFilePath),
-                    // Hash = hashString
-                };
-
-                Globals.LocalSongs.Add(songInfoViewModel);
-            }
-
             var filteredSongs = Globals.LocalSongs;
 
             if (!string.IsNullOrEmpty(Filter.SearchQuery))
@@ -316,7 +266,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanel = GenerateSongInfoPanel(song);
+                    var songInfoPanel = new SongTile(song, true, LoadSongs);
                     Items.Add(songInfoPanel);
                 }
 
@@ -333,37 +283,6 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 this.OnPropertyChanged("HasPreviousPage");
                 this.OnPropertyChanged("HasNextPage");
             });
-        }
-
-        private SongTile GenerateSongInfoPanel(SongInfoViewModel song)
-        {
-            var tile = new SongTile();
-
-            tile.Dispatcher.Invoke(() =>
-            {
-                tile = new SongTile
-                {
-                    SongTileImage =
-                    {
-                        Source = new BitmapImage(new Uri(song.FullImagePath))
-                    },
-                    SongTileName =
-                    {
-                        Text = song.SongName
-                    },
-                    SongTileArtist =
-                    {
-                        Text = song.Artist
-                    },
-                    SongTileBPM =
-                    {
-                        Content = (int) song.BPM
-                    },
-                    ToolTip = song.SongName
-                };
-            });
-
-            return tile;
         }
 
         private void DifficultyFilter_OnClick(object sender, RoutedEventArgs e, DifficultiesEnum? difficulty)

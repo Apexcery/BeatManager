@@ -1,12 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
+using BeatManager_WPF_.ViewModels;
 using Newtonsoft.Json;
 using Application = System.Windows.Application;
 using Button = System.Windows.Controls.Button;
@@ -31,8 +35,10 @@ namespace BeatManager_WPF_
             
             if (!string.IsNullOrEmpty(_config.BeatSaberLocation) && ValidateDirectory(_config.BeatSaberLocation))
             {
-                StartChangeWindowTimer(3);
-
+                Task.WhenAll(Globals.LoadPlaylists(_config.BeatSaberLocation), Globals.LoadLocalSongs(_config.BeatSaberLocation)).ContinueWith((t) =>
+                {
+                    StartChangeWindowTimer();
+                });
             }
             else
             {
@@ -40,7 +46,7 @@ namespace BeatManager_WPF_
             }
         }
 
-        private void StartChangeWindowTimer(int seconds, string notifMessage = null, NotificationSeverityEnum? severity = null)
+        private void StartChangeWindowTimer(int seconds = 0, string notifMessage = null, NotificationSeverityEnum? severity = null)
         {
             _dispatchTimer.Tick += new EventHandler((o, args) => ChangeWindow(o, args, notifMessage, severity));
             _dispatchTimer.Interval = new TimeSpan(0, 0, seconds);
@@ -103,9 +109,17 @@ namespace BeatManager_WPF_
 
             var beatSaberRootDir = (string) button.Tag;
 
+            if (!ValidateDirectory(beatSaberRootDir))
+            {
+                return;
+            }
+
             if (_config.BeatSaberLocation.Equals(beatSaberRootDir))
             {
-                StartChangeWindowTimer(0);
+                Task.WhenAll(Globals.LoadPlaylists(beatSaberRootDir), Globals.LoadLocalSongs(beatSaberRootDir)).ContinueWith((t) =>
+                {
+                    StartChangeWindowTimer();
+                });
                 return;
             }
 
@@ -113,7 +127,10 @@ namespace BeatManager_WPF_
 
             File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
 
-            StartChangeWindowTimer(0, "Root directory saved successfully.", NotificationSeverityEnum.Success);
+            Task.WhenAll(Globals.LoadPlaylists(beatSaberRootDir), Globals.LoadLocalSongs(beatSaberRootDir)).ContinueWith((t) =>
+            {
+                StartChangeWindowTimer(0, "Root directory saved successfully.", NotificationSeverityEnum.Success);
+            });
         }
 
         private bool ValidateDirectory(string directory)

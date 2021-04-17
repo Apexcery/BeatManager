@@ -7,7 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="150"
-             MouseUp="PlaylistTile_OnMouseUp">
+             MouseUp="PlaylistTile_OnMouseUp" Cursor="Hand">
     <materialDesign:Card x:Name="tile" Background="{x:Null}" RenderTransformOrigin="0.5, 0.5" materialDesign:ShadowAssist.ShadowDepth="Depth5" >
         <materialDesign:Card.RenderTransform>
             <ScaleTransform ScaleX="1" ScaleY="1"/>

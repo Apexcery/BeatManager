@@ -165,7 +165,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in allOnlineSongs)
                 {
-                    var songInfoPanel = GenerateSongInfoPanel(song);
+                    var songInfoPanel = new SongTile(song, false, LoadSongs);
                     Items.Add(songInfoPanel);
                 }
 
@@ -182,37 +182,6 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 this.OnPropertyChanged("HasPreviousPage");
                 this.OnPropertyChanged("HasNextPage");
             });
-        }
-
-        private SongTile GenerateSongInfoPanel(SongInfoViewModel song)
-        {
-            var tile = new SongTile();
-
-            tile.Dispatcher.Invoke(() =>
-            {
-                tile = new SongTile
-                {
-                    SongTileImage =
-                    {
-                        Source = new BitmapImage(new Uri(song.FullImagePath))
-                    },
-                    SongTileName =
-                    {
-                        Text = song.SongName
-                    },
-                    SongTileArtist =
-                    {
-                        Text = song.Artist
-                    },
-                    SongTileBPM =
-                    {
-                        Content = (int) song.BPM
-                    },
-                    ToolTip = song.SongName
-                };
-            });
-
-            return tile;
         }
 
         private void SortFilter_OnClick(object sender, RoutedEventArgs args, MapsSortOption sortOptionEnum, Button buttonClicked)

@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
+             xmlns:local="clr-namespace:BeatManager_WPF_.UserControls.Songs"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="150"
+             d:DesignHeight="200" d:DesignWidth="200"
              ClipToBounds="False" Cursor="Hand"
              x:Name="uc">
 
@@ -136,6 +137,27 @@
                             </StackPanel>
                         </Border>
                     </StackPanel>
+
+                    <DockPanel x:Name="SongTileOptionsPanel">
+                        <DockPanel.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=tile, Path=IsMouseOver}" Value="True">
+                                        <Setter Property="DockPanel.Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=tile, Path=IsMouseOver}" Value="False">
+                                        <Setter Property="DockPanel.Visibility" Value="Hidden" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DockPanel.Style>
+                        <Grid DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </DockPanel>
                 </Grid>
             </Border>
         </Grid>

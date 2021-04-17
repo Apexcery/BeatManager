@@ -174,17 +174,17 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 if (songInfo == null)
                     continue;
 
-                var stringToHash = File.ReadAllText(infoFilePath);
-                foreach (var diffSet in songInfo.DifficultyBeatmapSets)
-                {
-                    foreach (var diff in diffSet.DifficultyBeatmaps)
-                    {
-                        var diffPath = $"{songDir}/{diff.BeatmapFilename}";
-                        stringToHash += File.ReadAllText(diffPath);
-                    }
-                }
-                var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
-                var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
+                // var stringToHash = File.ReadAllText(infoFilePath);
+                // foreach (var diffSet in songInfo.DifficultyBeatmapSets)
+                // {
+                //     foreach (var diff in diffSet.DifficultyBeatmaps)
+                //     {
+                //         var diffPath = $"{songDir}/{diff.BeatmapFilename}";
+                //         stringToHash += File.ReadAllText(diffPath);
+                //     }
+                // }
+                // var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
+                // var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
 
                 var songInfoViewModel = new SongInfoViewModel
                 {
@@ -201,7 +201,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
 
                     FullSongDir = songDir,
                     DateAcquired = File.GetCreationTimeUtc(infoFilePath),
-                    Hash = hashString
+                    // Hash = hashString
                 };
 
                 Globals.LocalSongs.Add(songInfoViewModel);

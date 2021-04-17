@@ -29,9 +29,7 @@ namespace BeatManager_WPF_
             InitializeComponent();
             DirectoryPanel.Visibility = Visibility.Hidden;
             
-            
-
-            if (!string.IsNullOrEmpty(_config.BeatSaberLocation))
+            if (!string.IsNullOrEmpty(_config.BeatSaberLocation) && ValidateDirectory(_config.BeatSaberLocation))
             {
                 StartChangeWindowTimer(3);
 
@@ -79,28 +77,8 @@ namespace BeatManager_WPF_
             {
                 var selectedPath = dialog.SelectedPath;
 
-                var exeFound = Directory.GetFiles(selectedPath).FirstOrDefault(x => x.EndsWith("Beat Saber.exe")) != null;
-                if (!exeFound)
-                {
-                    MessageBox.Show("Please check your selected directory.", "Invalid Directory");
-                    DisableSaveButton();
+                if (!ValidateDirectory(selectedPath))
                     return;
-                }
-
-                var directories = Directory.GetDirectories(selectedPath);
-                
-                if (!Directory.Exists(selectedPath + "\\Beat Saber_Data\\CustomLevels"))
-                {
-                    MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
-                    DisableSaveButton();
-                    return;
-                }
-                if (!Directory.Exists(selectedPath + "\\Playlists"))
-                {
-                    MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
-                    DisableSaveButton();
-                    return;
-                }
 
                 selectedPath = selectedPath.Replace(@"\", "/");
                 TxtRootDirectory.Text = selectedPath;
@@ -136,6 +114,40 @@ namespace BeatManager_WPF_
             File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
 
             StartChangeWindowTimer(0, "Root directory saved successfully.", NotificationSeverityEnum.Success);
+        }
+
+        private bool ValidateDirectory(string directory)
+        {
+            var directoryExists = Directory.Exists(directory);
+            if (!directoryExists)
+            {
+                MessageBox.Show("Saved directory not found.", "Invalid Directory");
+                DisableSaveButton();
+                return false;
+            }
+
+            var exeFound = Directory.GetFiles(directory).FirstOrDefault(x => x.EndsWith("Beat Saber.exe")) != null;
+            if (!exeFound)
+            {
+                MessageBox.Show("Beat Saber exe file not found.", "Invalid Directory");
+                DisableSaveButton();
+                return false;
+            }
+
+            if (!Directory.Exists(directory + "\\Beat Saber_Data\\CustomLevels"))
+            {
+                MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
+                DisableSaveButton();
+                return false;
+            }
+            if (!Directory.Exists(directory + "\\Playlists"))
+            {
+                MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
+                DisableSaveButton();
+                return false;
+            }
+
+            return true;
         }
     }
 }

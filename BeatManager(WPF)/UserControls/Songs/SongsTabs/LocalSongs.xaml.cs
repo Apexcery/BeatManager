@@ -355,6 +355,10 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                     {
                         Text = song.Artist
                     },
+                    SongTileBPM =
+                    {
+                        Content = (int) song.BPM
+                    },
                     ToolTip = song.SongName
                 };
             });

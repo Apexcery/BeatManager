@@ -131,7 +131,7 @@
                             </Border.Style>
                             
                             <StackPanel Orientation="Vertical" >
-                                <Label Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Padding="0"/>
+                                <Label x:Name="SongTileBPM" Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Padding="0"/>
                                 <Label Content="BPM" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
                             </StackPanel>
                         </Border>

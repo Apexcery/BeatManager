@@ -12,7 +12,10 @@
             x:Name="FilterPanel"
             Dock="Top"
             Height="50"
-            Margin="0">
+            Margin="0"
+            IsHitTestVisible="True"
+            Background="Transparent"
+            MouseDown="FilterPanel_OnMouseDown">
             <UniformGrid
                 DockPanel.Dock="Left"
                 Rows="1">
@@ -41,7 +44,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="TxtSearch" Foreground="Black" Background="White" Grid.Column="0" FontSize="14" VerticalContentAlignment="Center" Padding="2" Margin="5" materialDesign:HintAssist.Hint="Search" />
-                <Button x:Name="BtnSearch" materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}" Grid.Column="1" Background="{StaticResource PrimaryHueMidBrush}" Click="BtnSearch_OnClick" />
+                <Button x:Name="BtnSearch" materialDesign:ButtonAssist.CornerRadius="0" Style="{DynamicResource MaterialDesignFlatButton}" Grid.Column="1" Background="{StaticResource PrimaryHueMidBrush}" IsDefault="{Binding ElementName=TxtSearch, Path=IsFocused}" Click="BtnSearch_OnClick" />
                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" IsHitTestVisible="False" >
                     <materialDesign:PackIcon Kind="Search" />
                 </TextBlock>

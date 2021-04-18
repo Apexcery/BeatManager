@@ -14,7 +14,7 @@ namespace BeatManager_WPF_
     public static class Globals
     {
         public static List<Playlist> Playlists = new List<Playlist>();
-        public static List<SongInfoViewModel> LocalSongs = new List<SongInfoViewModel>();
+        public static List<LocalSongInfoViewModel> LocalSongs = new List<LocalSongInfoViewModel>();
 
         public static async Task LoadPlaylists(string rootDir)
         {
@@ -62,7 +62,7 @@ namespace BeatManager_WPF_
                 var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
                 var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
 
-                var songInfoViewModel = new SongInfoViewModel
+                var songInfoViewModel = new LocalSongInfoViewModel
                 {
                     SongName = songInfo.SongName,
                     Artist = songInfo.SongAuthorName,

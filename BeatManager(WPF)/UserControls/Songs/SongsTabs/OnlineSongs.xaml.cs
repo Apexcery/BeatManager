@@ -142,18 +142,33 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 songs = _beatSaverApi.SearchMaps(Filter.SearchQuery, CurrentPageNum).Result;
             }
 
-            var allOnlineSongs = new List<SongInfoViewModel>();
+            var allOnlineSongs = new List<OnlineSongInfoViewModel>();
 
             foreach (var song in songs.Songs)
             {
-                allOnlineSongs.Add(new SongInfoViewModel
+                var songInfoViewModel = new OnlineSongInfoViewModel
                 {
                     SongName = song.Name,
                     Artist = song.Metadata.SongAuthorName,
                     Mapper = song.Metadata.LevelAuthorName,
                     FullImagePath = $"https://beatsaver.com{song.CoverURL}",
-                    BPM = song.Metadata.Bpm
-                });
+                    BPM = song.Metadata.Bpm,
+                    Hash = song.Hash,
+                    DownloadPath = $@"https://beatsaver.com{song.DirectDownload}"
+                };
+
+                if (song.Metadata.Difficulties.Easy)
+                    songInfoViewModel.Difficulties.Add(new SongInfoViewModel.Difficulty{Name = "Easy", Rank = 1});
+                if (song.Metadata.Difficulties.Normal)
+                    songInfoViewModel.Difficulties.Add(new SongInfoViewModel.Difficulty{Name = "Normal", Rank = 3});
+                if (song.Metadata.Difficulties.Hard)
+                    songInfoViewModel.Difficulties.Add(new SongInfoViewModel.Difficulty{Name = "Hard", Rank = 5});
+                if (song.Metadata.Difficulties.Expert)
+                    songInfoViewModel.Difficulties.Add(new SongInfoViewModel.Difficulty{Name = "Expert", Rank = 7});
+                if (song.Metadata.Difficulties.ExpertPlus)
+                    songInfoViewModel.Difficulties.Add(new SongInfoViewModel.Difficulty{Name = "ExpertPlus", Rank = 9});
+
+                allOnlineSongs.Add(songInfoViewModel);
             }
 
             var numSongs = songs.TotalSongs;
@@ -165,7 +180,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in allOnlineSongs)
                 {
-                    var songInfoPanel = new SongTile(song, false, LoadSongs);
+                    var songInfoPanel = new SongTile(false, LoadSongs, _config, _beatSaverApi, onlineSongInfo: song);
                     Items.Add(songInfoPanel);
                 }
 

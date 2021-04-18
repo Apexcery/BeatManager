@@ -1,4 +1,7 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models.BeatSaverAPI;
@@ -56,6 +59,21 @@ namespace BeatManager_WPF_.Services
             var map = JsonConvert.DeserializeObject<Map>(await response.Content.ReadAsStringAsync());
 
             return map;
+        }
+
+        public async Task<bool> DownloadMap(string directDownloadUri, string hash)
+        {
+            if (string.IsNullOrEmpty(directDownloadUri))
+                return false;
+
+            var uri = new Uri(@"https://beatsaver.com" + directDownloadUri);
+            var client = new WebClient();
+            client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0");
+            client.Headers.Add("Accept-Language", "en-GB,en-US;q=0.7,en;q=0.3");
+            client.Headers.Add("Accept", "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+            client.DownloadFile(uri, $"./data/{hash}.zip");
+
+            return true;
         }
     }
 }

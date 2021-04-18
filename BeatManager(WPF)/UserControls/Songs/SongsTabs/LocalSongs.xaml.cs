@@ -266,7 +266,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanel = new SongTile(song, true, LoadSongs);
+                    var songInfoPanel = new SongTile(true, LoadSongs, _config, null, localSongInfo: song);
                     Items.Add(songInfoPanel);
                 }
 

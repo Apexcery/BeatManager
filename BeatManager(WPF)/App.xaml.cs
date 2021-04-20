@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Net.Http.Headers;
 using System.Windows;
+using System.Windows.Threading;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Sentry;
 
 namespace BeatManager_WPF_
 {
@@ -21,6 +22,20 @@ namespace BeatManager_WPF_
             ConfigureServices(serviceCollection);
             
             _serviceProvider = serviceCollection.BuildServiceProvider();
+
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            SentrySdk.Init(new SentryOptions
+            {
+                Dsn = "https://cf63505d892741229421f4b182c8a9b5@o575010.ingest.sentry.io/5726733",
+                Environment = "Development"
+            });
+        }
+
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            SentrySdk.CaptureException(e.Exception);
+
+            e.Handled = true;
         }
 
         private Config LoadConfig()

@@ -25,7 +25,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
     {
         private readonly Config _config;
 
-        public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
+        public ObservableCollection<SongTileV2> Items { get; set; } = new ObservableCollection<SongTileV2>();
 
         public LocalSongsFilter Filter = new LocalSongsFilter();
 
@@ -64,6 +64,9 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 this.OnPropertyChanged("HasNextPage");
             }
         }
+        
+        public bool IsLocal => true;
+        public bool IsOnline => false;
 
         public LocalSongs(Config config)
         {
@@ -267,8 +270,8 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanel = new SongTile(true, LoadSongs, _config, null, localSongInfo: song);
-                    Items.Add(songInfoPanel);
+                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, null, localSongInfo: song);
+                    Items.Add(songInfoPanelV2);
                 }
 
                 TxtCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";

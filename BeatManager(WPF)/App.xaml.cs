@@ -23,12 +23,12 @@ namespace BeatManager_WPF_
             
             _serviceProvider = serviceCollection.BuildServiceProvider();
 
-            DispatcherUnhandledException += App_DispatcherUnhandledException;
-            SentrySdk.Init(new SentryOptions
-            {
-                Dsn = "https://cf63505d892741229421f4b182c8a9b5@o575010.ingest.sentry.io/5726733",
-                Environment = "Development"
-            });
+            // DispatcherUnhandledException += App_DispatcherUnhandledException;
+            // SentrySdk.Init(new SentryOptions
+            // {
+            //     Dsn = "https://cf63505d892741229421f4b182c8a9b5@o575010.ingest.sentry.io/5726733",
+            //     Environment = "Development"
+            // });
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

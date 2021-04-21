@@ -22,7 +22,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
         private readonly Config _config;
         private readonly IBeatSaverAPI _beatSaverApi;
 
-        public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
+        public ObservableCollection<SongTileV2> Items { get; set; } = new ObservableCollection<SongTileV2>();
 
         public OnlineSongsFilter Filter = new OnlineSongsFilter();
 
@@ -61,6 +61,9 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 this.OnPropertyChanged("HasNextPage");
             }
         }
+
+        public bool IsLocal => false;
+        public bool IsOnline => true;
 
         public OnlineSongs(Config config, IBeatSaverAPI beatSaverApi)
         {
@@ -181,8 +184,9 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in allOnlineSongs)
                 {
-                    var songInfoPanel = new SongTile(false, LoadSongs, _config, _beatSaverApi, onlineSongInfo: song);
-                    Items.Add(songInfoPanel);
+                    // var songInfoPanel = new SongTile(false, LoadSongs, _config, _beatSaverApi, onlineSongInfo: song);
+                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, _beatSaverApi, onlineSongInfo: song);
+                    Items.Add(songInfoPanelV2);
                 }
 
                 TxtCurrentPage.Text = $"Page {CurrentPageNum + 1} / {MaxPageNum + 1}";

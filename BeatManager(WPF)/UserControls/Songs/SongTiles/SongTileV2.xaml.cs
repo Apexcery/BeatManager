@@ -208,6 +208,15 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
                     MainWindow.ShowNotification("Song failed to be deleted.", NotificationSeverityEnum.Error);
                 }
             }
+
+            foreach (var playlist in Globals.Playlists) // Remove song from all playlists regardless of if it's downloaded. //TODO: Should probably be an option on a settings page.
+            {
+                var songExistsInPlaylist = playlist.Songs.Select(x => x.Hash).Contains(_localSongInfo.Hash ?? _onlineSongInfo!.Hash);
+                if (!songExistsInPlaylist)
+                    continue;
+
+                Globals.RemoveSongFromPlaylist(playlist, _localSongInfo.Hash ?? _onlineSongInfo!.Hash);
+            }
         }
 
         private void BtnSongTileDownload_OnClick(object sender, RoutedEventArgs e) //TODO: Download song on a separate thread and show spinner on single song card.

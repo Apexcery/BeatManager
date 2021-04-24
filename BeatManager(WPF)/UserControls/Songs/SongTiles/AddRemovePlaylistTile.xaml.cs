@@ -89,7 +89,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
         {
             if (PlaylistContainsSong) // Remove song from playlist.
             {
-                var removeSuccess = Globals.RemoveSongFromPlaylist(ref _playlist, _songHash);
+                var removeSuccess = Globals.RemoveSongFromPlaylist(_playlist, _songHash);
                 if (removeSuccess)
                 {
                     OnPropertyChanged("PackIconKind");
@@ -100,7 +100,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
                 return;
             }
 
-            var addSuccess = Globals.AddSongToPlaylist(ref _playlist, _songHash);
+            var addSuccess = Globals.AddSongToPlaylist(_playlist, _songHash);
             if (addSuccess)
             {
                 OnPropertyChanged("PackIconKind");

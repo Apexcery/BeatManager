@@ -34,7 +34,7 @@ namespace BeatManager_WPF_
             }
         }
 
-        public static bool RemoveSongFromPlaylist(ref Playlist playlist, string songHash)
+        public static bool RemoveSongFromPlaylist(Playlist playlist, string songHash)
         {
             var fullPath = playlist.FullPath;
             var existing = Playlists.FirstOrDefault(x => x.FullPath.Equals(fullPath, StringComparison.InvariantCultureIgnoreCase));
@@ -57,7 +57,7 @@ namespace BeatManager_WPF_
             return true;
         }
 
-        public static bool AddSongToPlaylist(ref Playlist playlist, string songHash)
+        public static bool AddSongToPlaylist(Playlist playlist, string songHash)
         {
             var fullPath = playlist.FullPath;
             var existing = Playlists.FirstOrDefault(x => x.FullPath.Equals(fullPath, StringComparison.InvariantCultureIgnoreCase));

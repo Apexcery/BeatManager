@@ -21,6 +21,11 @@
             <system:Double x:Key="NavWidth">60</system:Double>
             <system:Double x:Key="TopBarHeight">50</system:Double>
             <Thickness x:Key="WindowContentMargin" Left="{StaticResource NavWidth}" Top="{StaticResource TopBarHeight}" />
+
+            <SolidColorBrush x:Key="BackgroundColorDark">#FF0E0E0E</SolidColorBrush>
+            <SolidColorBrush x:Key="BackgroundColorMid">#FF191919</SolidColorBrush>
+            <SolidColorBrush x:Key="BackgroundColorLight">#FF212121</SolidColorBrush>
+
          </ResourceDictionary>
     </Application.Resources>
 </Application>

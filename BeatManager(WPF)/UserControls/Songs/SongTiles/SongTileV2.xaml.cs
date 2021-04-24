@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -17,10 +17,11 @@ using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
 using MaterialDesignThemes.Wpf;
+using MoreLinq;
 using Newtonsoft.Json;
 using Color = System.Windows.Media.Color;
 
-namespace BeatManager_WPF_.UserControls.Songs
+namespace BeatManager_WPF_.UserControls.Songs.SongTiles
 {
     public partial class SongTileV2 : UserControl
     {
@@ -30,6 +31,7 @@ namespace BeatManager_WPF_.UserControls.Songs
         private readonly IBeatSaverAPI? _beatSaverAPI;
         private readonly LocalSongInfoViewModel? _localSongInfo;
         private readonly OnlineSongInfoViewModel? _onlineSongInfo;
+        private readonly ObservableCollection<SongTileV2> _songTiles;
 
         public static readonly char[] IllegalCharacters = new char[]
         {
@@ -40,42 +42,43 @@ namespace BeatManager_WPF_.UserControls.Songs
             '\u0017', '\u0018', '\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001f',
         };
 
-        private readonly BitmapImage _image;
-
-        public SongTileV2(Action refreshSongs, Config config, IBeatSaverAPI? beatSaverAPI, LocalSongInfoViewModel? localSongInfo = null, OnlineSongInfoViewModel? onlineSongInfo = null)
+        public SongTileV2(Action refreshSongs, Config config, IBeatSaverAPI? beatSaverAPI, ObservableCollection<SongTileV2> songTiles, LocalSongInfoViewModel? localSongInfo = null, OnlineSongInfoViewModel? onlineSongInfo = null)
         {
+            if (localSongInfo == null && onlineSongInfo == null)
+                throw new ArgumentException("At least one of the filters in the song tile must be non-null.");
+            if (localSongInfo != null && onlineSongInfo != null)
+                throw new ArgumentException("Only one of the song info types should be set.");
+
             _refreshSongs = refreshSongs;
             _config = config;
             _beatSaverAPI = beatSaverAPI;
             _localSongInfo = localSongInfo;
             _onlineSongInfo = onlineSongInfo;
+            _songTiles = songTiles;
 
             InitializeComponent();
 
-            if (_localSongInfo == null && _onlineSongInfo == null)
-                throw new ArgumentException("At least one of the filters in the song tile must be non-null.");
-            if (_localSongInfo != null && _onlineSongInfo != null)
-                throw new ArgumentException("Only one of the filters should be set.");
+            BitmapImage image;
 
             if (_localSongInfo != null)
             {
-                _image = new BitmapImage();
+                image = new BitmapImage();
                 var stream = File.OpenRead(_localSongInfo.FullImagePath);
 
-                _image.BeginInit();
-                _image.CacheOption = BitmapCacheOption.OnLoad;
-                _image.StreamSource = stream;
-                _image.EndInit();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.StreamSource = stream;
+                image.EndInit();
                 stream.Close();
                 stream.Dispose();
             }
             else
             {
-                _image = new BitmapImage(new Uri(_onlineSongInfo!.FullImagePath));
+                image = new BitmapImage(new Uri(_onlineSongInfo!.FullImagePath));
             }
 
-            SongTileImage.Source = _image;
-            SongTileImageBlurred.Source = _image;
+            SongTileImage.Source = image;
+            SongTileImageBlurred.Source = image;
             SongTileName.Text = _localSongInfo?.SongName ?? _onlineSongInfo!.SongName;
             SongTileArtist.Text = _localSongInfo?.Artist ?? _onlineSongInfo!.Artist;
             SongTileBPM.Content = _localSongInfo != null ? (int)_localSongInfo.BPM : (int)_onlineSongInfo!.BPM;
@@ -84,6 +87,14 @@ namespace BeatManager_WPF_.UserControls.Songs
 
         private void SongTileFlipper_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            foreach (var tile in _songTiles)
+            {
+                if (tile == this)
+                    continue;
+                if (tile.SongTileFlipper.IsFlipped)
+                    Flipper.FlipCommand.Execute(null, tile.SongTileFlipper);
+            }
+
             Flipper.FlipCommand.Execute(null, SongTileFlipper);
         }
 
@@ -128,7 +139,21 @@ namespace BeatManager_WPF_.UserControls.Songs
 
         private void BtnSongTilePlaylist_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if (Application.Current.MainWindow == null)
+                return;
+
+            Application.Current.MainWindow.Effect = new BlurEffect
+            {
+                Radius = 10
+            };
+
+            var popup = new AddRemoveFromPlaylist(_config, _localSongInfo, _onlineSongInfo)
+            {
+                Owner = Application.Current.MainWindow
+            };
+            popup.ShowDialog();
+
+            Application.Current.MainWindow.Effect = null;
         }
 
         private void BtnSongTileDelete_OnClick(object sender, RoutedEventArgs e) //TODO: Remove from all playlists if exists.

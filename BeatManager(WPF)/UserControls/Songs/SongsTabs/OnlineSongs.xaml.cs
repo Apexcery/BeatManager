@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Models.BeatSaverAPI;
 using BeatManager_WPF_.Models.BeatSaverAPI.Responses;
 using BeatManager_WPF_.Models.SongFilterModels;
+using BeatManager_WPF_.UserControls.Songs.SongTiles;
 using BeatManager_WPF_.ViewModels;
 
 namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
@@ -185,7 +185,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 foreach (var song in allOnlineSongs)
                 {
                     // var songInfoPanel = new SongTile(false, LoadSongs, _config, _beatSaverApi, onlineSongInfo: song);
-                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, _beatSaverApi, onlineSongInfo: song);
+                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, _beatSaverApi, Items, onlineSongInfo: song);
                     Items.Add(songInfoPanelV2);
                 }
 

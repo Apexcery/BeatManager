@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
 using Newtonsoft.Json;
@@ -31,6 +32,51 @@ namespace BeatManager_WPF_
 
                 Playlists.Add(playlist);
             }
+        }
+
+        public static bool RemoveSongFromPlaylist(ref Playlist playlist, string songHash)
+        {
+            var fullPath = playlist.FullPath;
+            var existing = Playlists.FirstOrDefault(x => x.FullPath.Equals(fullPath, StringComparison.InvariantCultureIgnoreCase));
+            if (existing == null)
+            {
+                MainWindow.ShowNotification("Could not match the full path of the playlist.", NotificationSeverityEnum.Error);
+                return false;
+            }
+            var songToRemove = existing.Songs.FirstOrDefault(x => x.Hash.Equals(songHash, StringComparison.InvariantCulture));
+            if (songToRemove == null)
+            {
+                MainWindow.ShowNotification("Could not find song in playlist.", NotificationSeverityEnum.Error);
+                return false;
+            }
+
+            existing.Songs.Remove(songToRemove);
+            playlist.Songs.Remove(songToRemove);
+            File.WriteAllText(existing.FullPath, JsonConvert.SerializeObject(existing));
+            MainWindow.ShowNotification("Song removed from playlist.", NotificationSeverityEnum.Success);
+            return true;
+        }
+
+        public static bool AddSongToPlaylist(ref Playlist playlist, string songHash)
+        {
+            var fullPath = playlist.FullPath;
+            var existing = Playlists.FirstOrDefault(x => x.FullPath.Equals(fullPath, StringComparison.InvariantCultureIgnoreCase));
+            if (existing == null)
+            {
+                MainWindow.ShowNotification("Could not match the full path of the playlist.", NotificationSeverityEnum.Error);
+                return false;
+            }
+            var songExists = existing.Songs.FirstOrDefault(x => x.Hash.Equals(songHash, StringComparison.InvariantCulture)) != null;
+            if (songExists)
+            {
+                MainWindow.ShowNotification("Song already exists in playlist.", NotificationSeverityEnum.Error);
+                return false;
+            }
+
+            existing.Songs.Add(new Playlist.Song{Hash = songHash});
+            File.WriteAllText(existing.FullPath, JsonConvert.SerializeObject(existing));
+            MainWindow.ShowNotification("Song added to playlist.", NotificationSeverityEnum.Success);
+            return true;
         }
 
         public static async Task LoadLocalSongs(string rootDir)

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BeatManager_WPF_.UserControls.Songs.SongTileV2"
+﻿<UserControl x:Class="BeatManager_WPF_.UserControls.Songs.SongTiles.SongTileV2"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="200" ClipToBounds="False" x:Name="SongTile">
+             d:DesignHeight="200" d:DesignWidth="200" ClipToBounds="False" x:Name="SongTile" Cursor="Hand">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -69,7 +69,7 @@
                 <StackPanel>
                     <Border x:Name="SongTileBPMBox" Width="55" Height="30" HorizontalAlignment="Left" Margin="5" Padding="0" CornerRadius="3" BorderThickness="1" Background="Black" Opacity="0.6" BorderBrush="#2194f3" >
                         <StackPanel Orientation="Vertical" >
-                            <Label x:Name="SongTileBPM" Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Padding="0"/>
+                            <Label x:Name="SongTileBPM" Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
                             <Label Content="BPM" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
                         </StackPanel>
                     </Border>

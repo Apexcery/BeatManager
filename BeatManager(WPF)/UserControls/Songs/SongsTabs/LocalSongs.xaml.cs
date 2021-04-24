@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Models.SongFilterModels;
-using BeatManager_WPF_.ViewModels;
+using BeatManager_WPF_.UserControls.Songs.SongTiles;
 using MoreLinq;
-using Newtonsoft.Json;
 
 namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
 {
@@ -270,7 +264,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, null, localSongInfo: song);
+                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, null, Items, localSongInfo: song);
                     Items.Add(songInfoPanelV2);
                 }
 

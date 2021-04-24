@@ -156,7 +156,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             Application.Current.MainWindow.Effect = null;
         }
 
-        private void BtnSongTileDelete_OnClick(object sender, RoutedEventArgs e) //TODO: Remove from all playlists if exists.
+        private void BtnSongTileDelete_OnClick(object sender, RoutedEventArgs e)
         {
             var songDirectory = _localSongInfo.FullSongDir;
             if (MessageBox.Show("Are you sure you want to delete this song?", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)

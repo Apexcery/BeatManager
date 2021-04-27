@@ -142,6 +142,18 @@ namespace BeatManager_WPF_.UserControls.Playlists
             GridPlaylists.MaxHeight = maxHeight;
         }
 
+        private void NewPlaylist_OnClick(object sender, RoutedEventArgs e)
+        {
+            var playlistDetails = new PlaylistDetails(_config, null);
+
+            var windowContent = ((MainWindow)Application.Current.MainWindow)?.WindowContent;
+            if (windowContent == null)
+                return;
+
+            windowContent.Children.Clear();
+            windowContent.Children.Add(playlistDetails);
+        }
+
         private void SortFilter_OnClick(object sender, RoutedEventArgs args, LocalSongsFilter.SortFilter.SortOptions sortOptionEnum, Button button)
         {
             throw new NotImplementedException();

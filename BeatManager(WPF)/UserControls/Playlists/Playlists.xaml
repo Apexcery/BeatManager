@@ -71,6 +71,11 @@
                 </Button>
             </StackPanel>
         </DockPanel>
+        <Grid DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            <Button x:Name="NewPlaylist" Style="{StaticResource MaterialDesignFloatingActionButton}" Margin="15, 0" Padding="0" Click="NewPlaylist_OnClick">
+                <fa:ImageAwesome Icon="PlusCircle" Foreground="White" Width="25" Height="25" Margin="0" />
+            </Button>
+        </Grid>
         <Grid
             Margin="0">
             <ScrollViewer x:Name="GridPlaylists" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Hidden" Margin="0, 0, 0, 5" DockPanel.Dock="Top" >

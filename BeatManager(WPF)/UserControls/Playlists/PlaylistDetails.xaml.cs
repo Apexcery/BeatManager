@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -20,7 +21,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
     public partial class PlaylistDetails : UserControl, INotifyPropertyChanged
     {
         private readonly Config _config;
-        private readonly Playlist _playlist;
+        private readonly Playlist? _playlist;
 
         public ObservableCollection<PlaylistSongRowTile> Songs { get; set; } = new ObservableCollection<PlaylistSongRowTile>();
 
@@ -62,7 +63,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
             }
         }
 
-        public PlaylistDetails(Config config, Playlist playlist)
+        public PlaylistDetails(Config config, Playlist? playlist)
         {
             _config = config;
             _playlist = playlist;
@@ -162,6 +163,14 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private void LoadContent(object sender, RoutedEventArgs e)
         {
+            if (_playlist == null) // New playlist
+            {
+                TxtName.Text = "New Playlist";
+                TxtAuthor.Text = "Beat Manager";
+                TxtDesc.Text = "Playlist created by Beat Manager";
+                return;
+            }
+
             var base64 = _playlist.Image[(_playlist.Image.IndexOf(',') + 1)..];
             var byteBuffer = Convert.FromBase64String(base64);
             var stream = new MemoryStream(byteBuffer, 0, byteBuffer.Length);
@@ -181,6 +190,9 @@ namespace BeatManager_WPF_.UserControls.Playlists
         private void LoadSongs()
         {
             Songs.Clear();
+
+            if (_playlist?.Songs == null || (!_playlist?.Songs.Any() ?? true))
+                return;
 
             var allSongs = _playlist.Songs.Select(x =>
                 Globals.LocalSongs.FirstOrDefault(z =>
@@ -339,39 +351,39 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
             var base64Image = $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
 
-            var imageString = base64Image != _playlist.Image ? base64Image : _playlist.Image;
+            var imageString = base64Image != _playlist?.Image ? base64Image : _playlist.Image;
 
             var titleString = "";
-            if (!string.IsNullOrEmpty(TxtName.Text) && TxtName.Text != _playlist.PlaylistTitle)
+            if (!string.IsNullOrEmpty(TxtName.Text) && TxtName.Text != _playlist?.PlaylistTitle)
             {
                 titleString = TxtName.Text;
             }
             else
             {
-                titleString = string.IsNullOrEmpty(_playlist.PlaylistTitle) ? $"New Playlist - {DateTime.UtcNow}" : _playlist.PlaylistTitle;
+                titleString = string.IsNullOrEmpty(_playlist?.PlaylistTitle) ? $"New Playlist - {DateTime.UtcNow}" : _playlist.PlaylistTitle;
             }
 
             var authorString = "";
-            if (!string.IsNullOrEmpty(TxtAuthor.Text) && TxtAuthor.Text != _playlist.PlaylistAuthor)
+            if (!string.IsNullOrEmpty(TxtAuthor.Text) && TxtAuthor.Text != _playlist?.PlaylistAuthor)
             {
                 authorString = TxtAuthor.Text;
             }
             else
             {
-                if (!string.IsNullOrEmpty(_playlist.PlaylistAuthor))
+                if (!string.IsNullOrEmpty(_playlist?.PlaylistAuthor))
                 {
                     authorString = _playlist.PlaylistTitle;
                 }
             }
 
             var descString = "";
-            if (!string.IsNullOrEmpty(TxtDesc.Text) && TxtDesc.Text != _playlist.PlaylistDescription)
+            if (!string.IsNullOrEmpty(TxtDesc.Text) && TxtDesc.Text != _playlist?.PlaylistDescription)
             {
                 descString = TxtDesc.Text;
             }
             else
             {
-                if (!string.IsNullOrEmpty(_playlist.PlaylistDescription))
+                if (!string.IsNullOrEmpty(_playlist?.PlaylistDescription))
                 {
                     descString = _playlist.PlaylistDescription;
                 }
@@ -383,10 +395,10 @@ namespace BeatManager_WPF_.UserControls.Playlists
                 PlaylistTitle = titleString.Trim(),
                 PlaylistAuthor = authorString.Trim(),
                 PlaylistDescription = descString.Trim(),
-                Songs = _playlist.Songs
+                Songs = _playlist?.Songs ?? new List<Playlist.Song>()
             };
 
-            if (!string.IsNullOrEmpty(_playlist.FullPath))
+            if (!string.IsNullOrEmpty(_playlist?.FullPath))
             {
                 File.Delete(_playlist.FullPath);
                 Globals.Playlists.Remove(Globals.Playlists.FirstOrDefault(x => x.FullPath.Equals(_playlist.FullPath)));

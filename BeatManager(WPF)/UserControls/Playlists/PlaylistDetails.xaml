@@ -24,7 +24,7 @@
                 VerticalAlignment="Stretch"
                 Cursor="Hand"
                 MouseEnter="ImgPlaylist_OnMouseEnter"
-                MouseLeave="ImgPlaylist_OnMouseLeave"/>
+                MouseLeave="ImgPlaylist_OnMouseLeave" Source="/Resources/Images/BMSmallLogo.png"/>
             <Border x:Name="ImgPlaylistOverlayColor" Width="150" Height="150" Background="White" Opacity="0.5" Visibility="Hidden" IsHitTestVisible="False" />
             <fa:ImageAwesome x:Name="ImgPlaylistOverlayIcon" Foreground="White" Icon="Pencil" Width="100" Height="100" Opacity="0.9" Visibility="Hidden" IsHitTestVisible="False" />
         </Grid>

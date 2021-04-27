@@ -3,139 +3,114 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BeatManager_WPF_.UserControls"
+             xmlns:local="clr-namespace:BeatManager_WPF_.UserControls.Playlists"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="150"
-             MouseUp="PlaylistTile_OnMouseUp" Cursor="Hand">
-    <materialDesign:Card x:Name="tile" Background="{x:Null}" RenderTransformOrigin="0.5, 0.5" materialDesign:ShadowAssist.ShadowDepth="Depth5" >
-        <materialDesign:Card.RenderTransform>
+             d:DesignHeight="200" d:DesignWidth="200"
+             Cursor="Hand">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <materialDesign:Flipper x:Name="PlaylistTileFlipper" MouseDown="PlaylistTileFlipper_OnMouseDown" RenderTransformOrigin="0.5, 0.5" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+        <materialDesign:Flipper.RenderTransform>
             <ScaleTransform ScaleX="1" ScaleY="1"/>
-        </materialDesign:Card.RenderTransform>
+        </materialDesign:Flipper.RenderTransform>
 
-        <materialDesign:Card.Style>
-            <Style>
+        <materialDesign:Flipper.Style>
+            <Style TargetType="materialDesign:Flipper" BasedOn="{StaticResource MaterialDesignCardFlipper}">
                 <Style.Triggers>
-                    <EventTrigger RoutedEvent="materialDesign:Card.MouseEnter">
+                    <EventTrigger RoutedEvent="materialDesign:Flipper.MouseEnter">
                         <EventTrigger.Actions>
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.95"/>
-                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.95"/>
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.05"/>
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.05"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger.Actions>
                     </EventTrigger>
 
-                    <EventTrigger RoutedEvent="materialDesign:Card.MouseLeave">
+                    <EventTrigger RoutedEvent="materialDesign:Flipper.MouseLeave">
                         <EventTrigger.Actions>
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Duration="0:0:0.6" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1"/>
-                                    <DoubleAnimation Duration="0:0:0.6" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1"/>
+                                    <DoubleAnimation Duration="0:0:0.5" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1"/>
+                                    <DoubleAnimation Duration="0:0:0.5" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger.Actions>
                     </EventTrigger>
                 </Style.Triggers>
             </Style>
-        </materialDesign:Card.Style>
+        </materialDesign:Flipper.Style>
 
-        <Grid>
-            <Border BorderBrush="Gray" BorderThickness="0.5">
-                <Grid>
-                    <Grid.Triggers>
-                        <EventTrigger RoutedEvent="Grid.MouseEnter">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation From="0" To="5" Duration="0:0:0.1" Storyboard.TargetName="blurEffect" Storyboard.TargetProperty="Radius"></DoubleAnimation>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
+        <materialDesign:Flipper.FrontContent>
+            <Grid x:Name="FrontContentGrid" MouseEnter="FrontContentGrid_OnMouseEnter" MouseLeave="FrontContentGrid_OnMouseLeave">
+                <Image x:Name="PlaylistTileImage" VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <Image.Effect>
+                        <BlurEffect x:Name="BlurEffect" Radius="0" />
+                    </Image.Effect>
+                </Image>
 
-                        <EventTrigger RoutedEvent="Grid.MouseLeave">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation From="8" To="0" Duration="0:0:0.8" Storyboard.TargetName="blurEffect" Storyboard.TargetProperty="Radius"></DoubleAnimation>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Grid.Triggers>
-                    <Image x:Name="PlaylistTileImage">
-                        <Image.Effect>
-                            <BlurEffect Radius="0" x:Name="blurEffect"/>
-                        </Image.Effect>
-                    </Image>
+                <Border x:Name="PlaylistTileDetailBox" Padding="5" VerticalAlignment="Bottom" Height="75" Background="White" Opacity="0.6">
+                    <UniformGrid Columns="1" Rows="2">
+                        <TextBlock x:Name="PlaylistTileName" Text="Name: " Foreground="Black" FontSize="16" />
+                        <TextBlock x:Name="PlaylistTileAuthor" Text="Author: " Foreground="Black" FontSize="14" />
+                    </UniformGrid>
+                </Border>
 
-                    <Border Padding="5" VerticalAlignment="Bottom" Height="50">
-                        <Border.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="True">
-                                        <Setter Property="Border.Background">
-                                            <Setter.Value>
-                                                <SolidColorBrush Color="White" Opacity="1"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                    <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="False">
-                                        <Setter Property="Border.Background">
-                                            <Setter.Value>
-                                                <SolidColorBrush Color="White" Opacity="0.6"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-
-                        <UniformGrid Columns="1" Rows="2">
-                            <TextBlock x:Name="PlaylistTileName" Text="Name: " Foreground="Black" />
-                            <TextBlock x:Name="PlaylistTileAuthor" Text="Author: " Foreground="Black" FontSize="11" />
-                        </UniformGrid>
+                <StackPanel>
+                    <Border x:Name="PlaylistTileSongCountBox" Width="55" Height="30" HorizontalAlignment="Left" Margin="5" Padding="0" CornerRadius="3" BorderThickness="1" Background="Black" Opacity="0.6" BorderBrush="#2194f3" >
+                        <StackPanel Orientation="Vertical" >
+                            <Label x:Name="PlaylistTileSongCount" Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
+                            <Label Content="Songs" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
+                        </StackPanel>
                     </Border>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Flipper.FrontContent>
 
-                    <StackPanel>
-                        <Border x:Name="BtnSongs" Width="55" Height="30" HorizontalAlignment="Left" Margin="5" Padding="0" CornerRadius="15" BorderThickness="1">
-                            <Border.Style>
-                                <Style>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="True">
-                                            <Setter Property="Border.Background">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="#2194f3" Opacity="1"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Setter Property="Border.BorderBrush">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.4"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding = "{Binding ElementName=tile,Path=IsMouseOver}" Value="False">
-                                            <Setter Property="Border.Background">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.65"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Setter Property="Border.BorderBrush">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="#2194f3" Opacity="1"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
+        <materialDesign:Flipper.BackContent>
+            <Grid ClipToBounds="True">
+                <Image x:Name="PlaylistTileImageBlurred">
+                    <Image.Effect>
+                        <BlurEffect Radius="20" />
+                    </Image.Effect>
+                </Image>
 
-                            <StackPanel Orientation="Vertical" >
-                                <Label x:Name="PlaylistTileNumSongs" Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Padding="0"/>
-                                <Label Content="Songs" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
+                <Grid Margin="0" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="75" />
+                        <RowDefinition Height="75" />
+                    </Grid.RowDefinitions>
+
+                    <Button x:Name="PlaylistTileViewDetails" Height="60" Grid.Row="0" Style="{StaticResource MaterialDesignFlatMidBgButton}" Click="PlaylistTileViewDetails_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
+                        <Button.Content>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="View Details" HorizontalAlignment="Center" FontSize="16" />
+                                <fa:FontAwesome Icon="InfoCircle" HorizontalAlignment="Center" FontSize="24" />
                             </StackPanel>
-                        </Border>
-                    </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button x:Name="PlaylistTileDelete" Height="60" Grid.Row="1" Style="{StaticResource MaterialDesignFlatAccentBgButton}" Click="PlaylistTileDelete_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
+                        <Button.Content>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Delete" HorizontalAlignment="Center" FontSize="16" />
+                                <fa:FontAwesome Icon="Trash" HorizontalAlignment="Center" FontSize="24" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
                 </Grid>
-            </Border>
-        </Grid>
-    </materialDesign:Card>
+            </Grid>
+        </materialDesign:Flipper.BackContent>
+    </materialDesign:Flipper>
 </UserControl>

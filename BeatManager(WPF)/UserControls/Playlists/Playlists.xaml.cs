@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Models.SongFilterModels;
 
@@ -92,6 +89,8 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
             this.Dispatcher.Invoke(delegate
             {
+                Items.Clear();
+
                 foreach (var playlist in _playlists.OrderBy(x => x.PlaylistTitle))
                 {
                     var playlistInfoTile = GeneratePlaylistTile(playlist);
@@ -115,7 +114,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private PlaylistTile GeneratePlaylistTile(Playlist playlist)
         {
-            var tile = new PlaylistTile(_config, playlist);
+            var tile = new PlaylistTile(_config, playlist, Items, LoadPlaylists);
 
             return tile;
         }

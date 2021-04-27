@@ -79,6 +79,22 @@ namespace BeatManager_WPF_
             return true;
         }
 
+        public static bool DeletePlaylist(Playlist playlist)
+        {
+            var fullPath = playlist.FullPath;
+            var existing = Playlists.FirstOrDefault(x => x.FullPath.Equals(fullPath, StringComparison.InvariantCultureIgnoreCase));
+            if (existing == null)
+            {
+                MainWindow.ShowNotification("Could not match the full path of the playlist.", NotificationSeverityEnum.Error);
+                return false;
+            }
+
+            Playlists.Remove(existing);
+            File.Delete(fullPath);
+            MainWindow.ShowNotification("Playlist successfully deleted!", NotificationSeverityEnum.Success);
+            return true;
+        }
+
         public static async Task LoadLocalSongs(string rootDir)
         {
             var songDirectories = Directory.GetDirectories($"{rootDir}/Beat Saber_Data/CustomLevels");

@@ -401,7 +401,9 @@ namespace BeatManager_WPF_.UserControls.Playlists
             if (!string.IsNullOrEmpty(_playlist?.FullPath))
             {
                 File.Delete(_playlist.FullPath);
-                Globals.Playlists.Remove(Globals.Playlists.FirstOrDefault(x => x.FullPath.Equals(_playlist.FullPath)));
+                var playlistToRemove = Globals.Playlists.FirstOrDefault(x => x.FullPath.Equals(_playlist.FullPath));
+                if (playlistToRemove != null)
+                    Globals.Playlists.Remove(playlistToRemove);
             }
 
             var saveLoc = _config.BeatSaberLocation + "/Playlists";

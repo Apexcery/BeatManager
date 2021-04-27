@@ -17,13 +17,12 @@ using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
 using MaterialDesignThemes.Wpf;
-using MoreLinq;
 using Newtonsoft.Json;
 using Color = System.Windows.Media.Color;
 
 namespace BeatManager_WPF_.UserControls.Songs.SongTiles
 {
-    public partial class SongTileV2 : UserControl
+    public partial class SongTile : UserControl
     {
 
         private readonly Action _refreshSongs;
@@ -31,7 +30,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
         private readonly IBeatSaverAPI? _beatSaverAPI;
         private readonly LocalSongInfoViewModel? _localSongInfo;
         private readonly OnlineSongInfoViewModel? _onlineSongInfo;
-        private readonly ObservableCollection<SongTileV2> _songTiles;
+        private readonly ObservableCollection<SongTile> _songTiles;
 
         public static readonly char[] IllegalCharacters = new char[]
         {
@@ -42,7 +41,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             '\u0017', '\u0018', '\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001f',
         };
 
-        public SongTileV2(Action refreshSongs, Config config, IBeatSaverAPI? beatSaverAPI, ObservableCollection<SongTileV2> songTiles, LocalSongInfoViewModel? localSongInfo = null, OnlineSongInfoViewModel? onlineSongInfo = null)
+        public SongTile(Action refreshSongs, Config config, IBeatSaverAPI? beatSaverAPI, ObservableCollection<SongTile> songTiles, LocalSongInfoViewModel? localSongInfo = null, OnlineSongInfoViewModel? onlineSongInfo = null)
         {
             if (localSongInfo == null && onlineSongInfo == null)
                 throw new ArgumentException("At least one of the filters in the song tile must be non-null.");

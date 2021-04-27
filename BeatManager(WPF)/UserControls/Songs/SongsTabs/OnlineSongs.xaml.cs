@@ -22,7 +22,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
         private readonly Config _config;
         private readonly IBeatSaverAPI _beatSaverApi;
 
-        public ObservableCollection<SongTileV2> Items { get; set; } = new ObservableCollection<SongTileV2>();
+        public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
 
         public OnlineSongsFilter Filter = new OnlineSongsFilter();
 
@@ -184,8 +184,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in allOnlineSongs)
                 {
-                    // var songInfoPanel = new SongTile(false, LoadSongs, _config, _beatSaverApi, onlineSongInfo: song);
-                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, _beatSaverApi, Items, onlineSongInfo: song);
+                    var songInfoPanelV2 = new SongTile(LoadSongs, _config, _beatSaverApi, Items, onlineSongInfo: song);
                     Items.Add(songInfoPanelV2);
                 }
 

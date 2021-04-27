@@ -19,7 +19,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
     {
         private readonly Config _config;
 
-        public ObservableCollection<SongTileV2> Items { get; set; } = new ObservableCollection<SongTileV2>();
+        public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
 
         public LocalSongsFilter Filter = new LocalSongsFilter();
 
@@ -264,7 +264,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanelV2 = new SongTileV2(LoadSongs, _config, null, Items, localSongInfo: song);
+                    var songInfoPanelV2 = new SongTile(LoadSongs, _config, null, Items, localSongInfo: song);
                     Items.Add(songInfoPanelV2);
                 }
 

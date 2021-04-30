@@ -47,7 +47,7 @@
         <materialDesign:Flipper.FrontContent>
             <Grid>
                 <Grid x:Name="FrontContentGrid" MouseEnter="FrontContentGrid_OnMouseEnter" MouseLeave="FrontContentGrid_OnMouseLeave">
-                    <Image x:Name="PlaylistTileImage">
+                    <Image x:Name="PlaylistTileImage" VerticalAlignment="Top" HorizontalAlignment="Center">
                         <Image.Effect>
                             <BlurEffect x:Name="BlurEffect" Radius="0" />
                         </Image.Effect>

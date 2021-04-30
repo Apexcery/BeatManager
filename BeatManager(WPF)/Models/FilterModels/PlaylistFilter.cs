@@ -1,13 +1,8 @@
-﻿using System;
-using BeatManager_WPF_.Enums;
-
-namespace BeatManager_WPF_.Models.SongFilterModels
+﻿namespace BeatManager_WPF_.Models.FilterModels
 {
-    public class LocalSongsFilter
+    public class PlaylistFilter
     {
-        public string SearchQuery { get; set; } = null;
-        public DifficultiesEnum? Difficulty { get; set; } = null;
-        public Range? BpmRange { get; set; } = null;
+        public string SearchQuery { get; set; } = "";
         public SortFilter Sort { get; set; } = new SortFilter // Initialize with the default sort order.
         {
             Option = SortFilter.SortOptions.Name,
@@ -28,10 +23,8 @@ namespace BeatManager_WPF_.Models.SongFilterModels
             public enum SortOptions
             {
                 Name,
-                Artist,
-                Difficulty,
-                BPM,
-                Date
+                Author,
+                NumSongs
             }
         }
     }

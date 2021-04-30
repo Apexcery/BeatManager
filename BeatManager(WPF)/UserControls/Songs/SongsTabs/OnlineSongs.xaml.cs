@@ -11,7 +11,7 @@ using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.Models.BeatSaverAPI;
 using BeatManager_WPF_.Models.BeatSaverAPI.Responses;
-using BeatManager_WPF_.Models.SongFilterModels;
+using BeatManager_WPF_.Models.FilterModels;
 using BeatManager_WPF_.UserControls.Songs.SongTiles;
 using BeatManager_WPF_.ViewModels;
 

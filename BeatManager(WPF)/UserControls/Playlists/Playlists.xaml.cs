@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using BeatManager_WPF_.Models;
-using BeatManager_WPF_.Models.SongFilterModels;
+using BeatManager_WPF_.Models.FilterModels;
+using MoreLinq;
 
 namespace BeatManager_WPF_.UserControls.Playlists
 {
@@ -18,7 +20,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         public ObservableCollection<PlaylistTile> Items { get; set; } = new ObservableCollection<PlaylistTile>();
 
-        public LocalSongsFilter Filter = new LocalSongsFilter();
+        public PlaylistFilter Filter = new PlaylistFilter();
 
         public int CurrentPageNum = 1;
         public int MaxPageNum = 1;
@@ -70,7 +72,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
             {
                 var sortOption = button.Name[(button.Name.IndexOf('_') + 1)..];
 
-                Enum.TryParse(sortOption, true, out LocalSongsFilter.SortFilter.SortOptions sortOptionEnum);
+                Enum.TryParse(sortOption, true, out PlaylistFilter.SortFilter.SortOptions sortOptionEnum);
 
                 button.Click += (o, args) => SortFilter_OnClick(o, args, sortOptionEnum, button);
             }
@@ -82,18 +84,96 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
         private void LoadPlaylists()
         {
-            var numPlaylists = _playlists.Count;
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                ProgressBar.Visibility = Visibility.Visible;
+                PageButtons.Visibility = Visibility.Hidden;
+                GridPlaylists.Visibility = Visibility.Hidden;
+            });
+
+            if (Items.Count > 0)
+            {
+                Trace.WriteLine("--=[ Clearing Playlists ]=--\n");
+                Items.Clear();
+            }
+
+            Trace.WriteLine($"--=[ Local Search Query: {Filter.SearchQuery} ]=--");
+            Trace.WriteLine($"--=[ Local Sorting By: {Filter.Sort?.Option?.ToString()} ({Filter.Sort?.Direction?.ToString()}) ]=--");
+
+            var filteredPlaylists = Globals.Playlists;
+
+            if (!string.IsNullOrEmpty(Filter.SearchQuery))
+            {
+                var tempList = filteredPlaylists;
+
+                filteredPlaylists = tempList.Where(x => x.PlaylistTitle.ToLower().Contains(Filter.SearchQuery.ToLower())).ToList();
+                filteredPlaylists = filteredPlaylists.Concat(tempList.Where(x => x.PlaylistAuthor.ToLower().Contains(Filter.SearchQuery.ToLower()))).ToList();
+                filteredPlaylists = filteredPlaylists.Concat(tempList.Where(x => x.PlaylistDescription.ToLower().Contains(Filter.SearchQuery.ToLower()))).ToList();
+            }
+
+            filteredPlaylists = filteredPlaylists.DistinctBy(x => new { x.PlaylistTitle, x.PlaylistAuthor, x.PlaylistDescription, x.FullPath }).ToList();
+
+            if (Filter.Sort?.Option != null && Filter.Sort.Direction != null)
+            {
+                switch (Filter.Sort.Option)
+                {
+                    case PlaylistFilter.SortFilter.SortOptions.Name:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case PlaylistFilter.SortFilter.SortDirection.Ascending:
+                                filteredPlaylists = filteredPlaylists.OrderBy(x => x.PlaylistTitle).ToList();
+                                break;
+                            case PlaylistFilter.SortFilter.SortDirection.Descending:
+                                filteredPlaylists = filteredPlaylists.OrderByDescending(x => x.PlaylistTitle).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(PlaylistFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    case PlaylistFilter.SortFilter.SortOptions.Author:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case PlaylistFilter.SortFilter.SortDirection.Ascending:
+                                filteredPlaylists = filteredPlaylists.OrderBy(x => x.PlaylistAuthor).ToList();
+                                break;
+                            case PlaylistFilter.SortFilter.SortDirection.Descending:
+                                filteredPlaylists = filteredPlaylists.OrderByDescending(x => x.PlaylistAuthor).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(PlaylistFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    case PlaylistFilter.SortFilter.SortOptions.NumSongs:
+                        switch (Filter.Sort.Direction)
+                        {
+                            case PlaylistFilter.SortFilter.SortDirection.Ascending:
+                                filteredPlaylists = filteredPlaylists.OrderBy(x => x.Songs.Count).ToList();
+                                break;
+                            case PlaylistFilter.SortFilter.SortDirection.Descending:
+                                filteredPlaylists = filteredPlaylists.OrderByDescending(x => x.Songs.Count).ToList();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(PlaylistFilter.SortFilter.SortDirection));
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(PlaylistFilter.SortFilter.SortOptions));
+                }
+            }
+
+            var numPlaylists = filteredPlaylists.Count;
 
             var pageResult = (double)numPlaylists / NumOnPage;
             MaxPageNum = (int)Math.Ceiling(pageResult);
 
-            this.Dispatcher.Invoke(delegate
-            {
-                Items.Clear();
+            var toSkip = CurrentPageNum > 1;
+            filteredPlaylists = filteredPlaylists.Skip(toSkip ? (CurrentPageNum - 1) * NumOnPage : 0).Take(NumOnPage).ToList();
 
-                foreach (var playlist in _playlists.OrderBy(x => x.PlaylistTitle))
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                foreach (var playlist in filteredPlaylists)
                 {
-                    var playlistInfoTile = GeneratePlaylistTile(playlist);
+                    var playlistInfoTile = new PlaylistTile(_config, playlist, Items, LoadPlaylists);
                     Items.Add(playlistInfoTile);
                 }
 
@@ -110,13 +190,6 @@ namespace BeatManager_WPF_.UserControls.Playlists
                 this.OnPropertyChanged("HasPreviousPage");
                 this.OnPropertyChanged("HasNextPage");
             });
-        }
-
-        private PlaylistTile GeneratePlaylistTile(Playlist playlist)
-        {
-            var tile = new PlaylistTile(_config, playlist, Items, LoadPlaylists);
-
-            return tile;
         }
 
         private void SetGridMaxHeight(object sender, RoutedEventArgs e)
@@ -153,34 +226,88 @@ namespace BeatManager_WPF_.UserControls.Playlists
             windowContent.Children.Add(playlistDetails);
         }
 
-        private void SortFilter_OnClick(object sender, RoutedEventArgs args, LocalSongsFilter.SortFilter.SortOptions sortOptionEnum, Button button)
+        private void SortFilter_OnClick(object sender, RoutedEventArgs args, PlaylistFilter.SortFilter.SortOptions sortOptionEnum, Button buttonClicked)
         {
-            throw new NotImplementedException();
+            RemoveSymbolFromSortButtons();
+
+            CurrentPageNum = 1;
+
+            if (Filter.Sort.Option == sortOptionEnum)
+            {
+                if (Filter.Sort.Direction == PlaylistFilter.SortFilter.SortDirection.Ascending)
+                {
+                    Filter.Sort.Direction = PlaylistFilter.SortFilter.SortDirection.Descending;
+                    buttonClicked.Content = buttonClicked.Tag + " ▼";
+                }
+                else
+                {
+                    Filter.Sort.Direction = PlaylistFilter.SortFilter.SortDirection.Ascending;
+                    buttonClicked.Content = buttonClicked.Tag + " ▲";
+                }
+            }
+            else
+            {
+                Filter.Sort.Direction = PlaylistFilter.SortFilter.SortDirection.Ascending;
+                buttonClicked.Content = buttonClicked.Tag + " ▲";
+            }
+
+            Filter.Sort.Option = sortOptionEnum;
+
+            LoadPlaylists();
+        }
+
+        private void RemoveSymbolFromSortButtons()
+        {
+            var sortFilterButtons = SortFilters;
+            foreach (Button button in sortFilterButtons.Children)
+            {
+                button.Content = button.Tag;
+            }
         }
 
         private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if (Filter.SearchQuery.Equals(TxtSearch.Text))
+                return;
+
+            Filter.SearchQuery = TxtSearch.Text;
+            LoadPlaylists();
         }
 
         private void PageButtonFirst_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if (CurrentPageNum <= 1)
+                return;
+
+            CurrentPageNum = 1;
+            LoadPlaylists();
         }
 
         private void PageButtonBack_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if (CurrentPageNum <= 1)
+                return;
+
+            CurrentPageNum--;
+            LoadPlaylists();
         }
 
         private void PageButtonForward_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if (CurrentPageNum >= MaxPageNum)
+                return;
+
+            CurrentPageNum++;
+            LoadPlaylists();
         }
 
         private void PageButtonLast_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            if (CurrentPageNum >= MaxPageNum)
+                return;
+
+            CurrentPageNum = MaxPageNum;
+            LoadPlaylists();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

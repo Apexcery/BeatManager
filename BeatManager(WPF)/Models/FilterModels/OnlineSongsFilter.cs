@@ -1,10 +1,10 @@
 ﻿using BeatManager_WPF_.Models.BeatSaverAPI;
 
-namespace BeatManager_WPF_.Models.SongFilterModels
+namespace BeatManager_WPF_.Models.FilterModels
 {
     public class OnlineSongsFilter
     {
-        public string SearchQuery { get; set; } = null;
+        public string SearchQuery { get; set; } = "";
         public SortFilter Sort { get; set; } = new SortFilter();
 
         public class SortFilter

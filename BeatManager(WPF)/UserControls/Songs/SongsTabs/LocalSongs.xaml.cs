@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Models;
-using BeatManager_WPF_.Models.SongFilterModels;
+using BeatManager_WPF_.Models.FilterModels;
 using BeatManager_WPF_.UserControls.Songs.SongTiles;
 using MoreLinq;
 
@@ -176,7 +176,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
                 filteredSongs = filteredSongs.Where(x => x.BPM >= Filter.BpmRange.Value.Start.Value && x.BPM <= Filter.BpmRange.Value.End.Value).ToList();
             }
 
-            filteredSongs = filteredSongs.DistinctBy(x => new { x.SongName, x.Artist, x.Mapper }).ToList();
+            filteredSongs = filteredSongs.DistinctBy(x => new { x.SongName, x.Artist, x.Mapper, x.FullSongDir }).ToList();
 
             if (Filter.Sort?.Option != null && Filter.Sort.Direction != null)
             {
@@ -264,8 +264,8 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanelV2 = new SongTile(LoadSongs, _config, null, Items, localSongInfo: song);
-                    Items.Add(songInfoPanelV2);
+                    var songInfoPanel = new SongTile(LoadSongs, _config, null, Items, localSongInfo: song);
+                    Items.Add(songInfoPanel);
                 }
 
                 TxtCurrentPage.Text = $"Page {CurrentPageNum} / {MaxPageNum}";

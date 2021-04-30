@@ -8,6 +8,7 @@ using BeatManager_WPF_.Models;
 using BeatManager_WPF_.UserControls.Playlists;
 using BeatManager_WPF_.UserControls.Songs.SongTiles;
 using BeatManager_WPF_.ViewModels;
+using MoreLinq;
 
 namespace BeatManager_WPF_.UserControls.Songs
 {
@@ -58,7 +59,7 @@ namespace BeatManager_WPF_.UserControls.Songs
             }
             SongImage.Source = image;
 
-            Globals.Playlists.ForEach(p =>
+            Globals.Playlists.OrderBy(x => x.PlaylistTitle).ForEach(p =>
             {
                 var playlistTile = new AddRemovePlaylistTile(_config, p, _localSongInfo?.Hash ?? _onlineSongInfo!.Hash);
                 Playlists.Add(playlistTile);

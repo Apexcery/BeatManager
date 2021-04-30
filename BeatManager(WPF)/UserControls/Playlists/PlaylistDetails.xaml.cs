@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
-using BeatManager_WPF_.Models.SongFilterModels;
+using BeatManager_WPF_.Models.FilterModels;
 using MoreLinq;
 using Newtonsoft.Json;
 

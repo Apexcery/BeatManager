@@ -52,8 +52,8 @@
 
         <materialDesign:Flipper.FrontContent>
             <Grid x:Name="FrontContentGrid" MouseEnter="FrontContentGrid_OnMouseEnter" MouseLeave="FrontContentGrid_OnMouseLeave">
-                
-                <Image x:Name="SongTileImage">
+
+                <Image x:Name="SongTileImage" VerticalAlignment="Top" HorizontalAlignment="Center">
                     <Image.Effect>
                         <BlurEffect x:Name="BlurEffect" Radius="0" />
                     </Image.Effect>
@@ -72,6 +72,15 @@
                             <Label x:Name="SongTileBPM" Content="123" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
                             <Label Content="BPM" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"/>
                         </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel>
+                    <Border x:Name="SongTileDiffBox" Width="75" Height="30" HorizontalAlignment="Right" Margin="5" Padding="0" CornerRadius="3" BorderThickness="1" Background="Black" Opacity="0.6" BorderBrush="#2194f3" >
+                        <StackPanel x:Name="SongTileDifficulties" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" />
+                        <!-- <Label FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"> -->
+                        <!--     <TextBlock x:Name="SongTileDifficulties" /> -->
+                        <!-- </Label> -->
                     </Border>
                 </StackPanel>
             </Grid>

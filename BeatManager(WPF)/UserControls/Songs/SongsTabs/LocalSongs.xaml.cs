@@ -155,7 +155,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongsTabs
             Trace.WriteLine($"--=[ Local BPM Range Filter: {Filter.BpmRange?.Start}-{Filter.BpmRange?.End} ]=--");
             Trace.WriteLine($"--=[ Local Sorting By: {Filter.Sort?.Option?.ToString()} ({Filter.Sort?.Direction?.ToString()}) ]=--");
 
-            var filteredSongs = Globals.LocalSongs;
+            var filteredSongs = SongData.LocalSongs;
 
             if (!string.IsNullOrEmpty(Filter.SearchQuery))
             {

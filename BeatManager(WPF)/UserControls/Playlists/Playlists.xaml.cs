@@ -61,7 +61,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
         public Playlists(Config config)
         {
             _config = config;
-            _playlists = Globals.Playlists;
+            _playlists = SongData.Playlists;
 
             InitializeComponent();
             this.DataContext = this;
@@ -100,7 +100,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
             Trace.WriteLine($"--=[ Local Search Query: {Filter.SearchQuery} ]=--");
             Trace.WriteLine($"--=[ Local Sorting By: {Filter.Sort?.Option?.ToString()} ({Filter.Sort?.Direction?.ToString()}) ]=--");
 
-            var filteredPlaylists = Globals.Playlists;
+            var filteredPlaylists = SongData.Playlists;
 
             if (!string.IsNullOrEmpty(Filter.SearchQuery))
             {

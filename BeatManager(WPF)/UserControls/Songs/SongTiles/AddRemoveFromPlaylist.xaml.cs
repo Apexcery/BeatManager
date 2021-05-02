@@ -59,7 +59,7 @@ namespace BeatManager_WPF_.UserControls.Songs
             }
             SongImage.Source = image;
 
-            Globals.Playlists.OrderBy(x => x.PlaylistTitle).ForEach(p =>
+            SongData.Playlists.OrderBy(x => x.PlaylistTitle).ForEach(p =>
             {
                 var playlistTile = new AddRemovePlaylistTile(_config, p, _localSongInfo?.Hash ?? _onlineSongInfo!.Hash);
                 Playlists.Add(playlistTile);

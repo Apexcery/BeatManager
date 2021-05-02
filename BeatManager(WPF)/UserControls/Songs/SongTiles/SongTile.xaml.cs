@@ -161,7 +161,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             if (MessageBox.Show("Are you sure you want to delete this song?", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 return;
 
-            var songToRemove = Globals.LocalSongs.FirstOrDefault(x => x.FullSongDir == _localSongInfo.FullSongDir);
+            var songToRemove = SongData.LocalSongs.FirstOrDefault(x => x.FullSongDir == _localSongInfo.FullSongDir);
             if (songToRemove != null)
             {
                 try
@@ -180,9 +180,9 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
                     var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
                     var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
 
-                    for (var i = Globals.Playlists.Count; i-- > 0;)
+                    for (var i = SongData.Playlists.Count; i-- > 0;)
                     {
-                        var playlist = Globals.Playlists[i];
+                        var playlist = SongData.Playlists[i];
                         var allSongsInPlaylist = playlist.Songs.Select(x => x.Hash).ToList();
                         if (allSongsInPlaylist.Contains(hashString))
                         {
@@ -190,11 +190,11 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
                             playlist.Songs = allSongsInPlaylist.Select(x => new Playlist.Song { Hash = x }).ToList();
                         }
 
-                        Globals.Playlists[i] = playlist;
+                        SongData.Playlists[i] = playlist;
                         File.WriteAllText(playlist.FullPath, JsonConvert.SerializeObject(playlist));
                     }
 
-                    Globals.LocalSongs.Remove(songToRemove);
+                    SongData.LocalSongs.Remove(songToRemove);
 
                     _refreshSongs();
 
@@ -208,13 +208,13 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
                 }
             }
 
-            foreach (var playlist in Globals.Playlists) // Remove song from all playlists regardless of if it's downloaded. //TODO: Should probably be an option on a settings page.
+            foreach (var playlist in SongData.Playlists) // Remove song from all playlists regardless of if it's downloaded. //TODO: Should probably be an option on a settings page.
             {
                 var songExistsInPlaylist = playlist.Songs.Select(x => x.Hash).Contains(_localSongInfo.Hash ?? _onlineSongInfo!.Hash);
                 if (!songExistsInPlaylist)
                     continue;
 
-                Globals.RemoveSongFromPlaylist(playlist, _localSongInfo.Hash ?? _onlineSongInfo!.Hash);
+                SongData.RemoveSongFromPlaylist(playlist, _localSongInfo.Hash ?? _onlineSongInfo!.Hash);
             }
         }
 
@@ -279,7 +279,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
                 Hash = hashString
             };
 
-            Globals.LocalSongs.Add(songInfoViewModel);
+            SongData.LocalSongs.Add(songInfoViewModel);
 
             MainWindow.ShowNotification($"Song '{songInfoViewModel.SongName}' downloaded successfully!", NotificationSeverityEnum.Success);
         }

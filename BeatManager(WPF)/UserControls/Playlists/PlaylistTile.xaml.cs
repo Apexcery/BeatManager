@@ -123,7 +123,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
             var response = MessageBox.Show("Are you sure you want to delete this playlist?", "Are you sure?", MessageBoxButton.YesNo);
             if (response == MessageBoxResult.Yes)
             {
-                var success = Globals.DeletePlaylist(_playlist);
+                var success = SongData.DeletePlaylist(_playlist);
                 if (success)
                     _loadPlaylists();
             }

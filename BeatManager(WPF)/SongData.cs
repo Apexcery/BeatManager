@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace BeatManager_WPF_
 {
-    public static class Globals
+    public static class SongData
     {
         public static List<Playlist> Playlists = new List<Playlist>();
         public static List<LocalSongInfoViewModel> LocalSongs = new List<LocalSongInfoViewModel>();

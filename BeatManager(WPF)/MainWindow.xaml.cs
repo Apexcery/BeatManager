@@ -45,9 +45,9 @@ namespace BeatManager_WPF_
             InitializeComponent();
             this.DataContext = this;
 
-            if (!Globals.LocalSongs.Any())
+            if (!SongData.LocalSongs.Any())
             {
-                Task.WhenAll(Globals.LoadPlaylists(_config.BeatSaberLocation), Globals.LoadLocalSongs(_config.BeatSaberLocation)).ContinueWith((t) =>
+                Task.WhenAll(SongData.LoadPlaylists(_config.BeatSaberLocation), SongData.LoadLocalSongs(_config.BeatSaberLocation)).ContinueWith((t) =>
                 {
                     IsReady = true;
                     InitializeStartupPage();

@@ -195,7 +195,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
                 return;
 
             var allSongs = _playlist.Songs.Select(x =>
-                Globals.LocalSongs.FirstOrDefault(z =>
+                SongData.LocalSongs.FirstOrDefault(z =>
                     z.Hash.Equals(x.Hash, StringComparison.InvariantCultureIgnoreCase))).Where(x => x != null).ToList();
 
             var filteredSongs = allSongs;
@@ -401,9 +401,9 @@ namespace BeatManager_WPF_.UserControls.Playlists
             if (!string.IsNullOrEmpty(_playlist?.FullPath))
             {
                 File.Delete(_playlist.FullPath);
-                var playlistToRemove = Globals.Playlists.FirstOrDefault(x => x.FullPath.Equals(_playlist.FullPath));
+                var playlistToRemove = SongData.Playlists.FirstOrDefault(x => x.FullPath.Equals(_playlist.FullPath));
                 if (playlistToRemove != null)
-                    Globals.Playlists.Remove(playlistToRemove);
+                    SongData.Playlists.Remove(playlistToRemove);
             }
 
             var saveLoc = _config.BeatSaberLocation + "/Playlists";
@@ -413,7 +413,7 @@ namespace BeatManager_WPF_.UserControls.Playlists
             editedPlaylist.FullPath = Regex.Replace($"{saveLoc}/{editedPlaylist.PlaylistTitle}.json", @"\r\n?|\n", " ");
 
             File.WriteAllText(editedPlaylist.FullPath, JsonConvert.SerializeObject(editedPlaylist));
-            Globals.Playlists.Add(editedPlaylist);
+            SongData.Playlists.Add(editedPlaylist);
 
             TxtName.Text = TxtName.Text.Trim();
             TxtAuthor.Text = TxtAuthor.Text.Trim();

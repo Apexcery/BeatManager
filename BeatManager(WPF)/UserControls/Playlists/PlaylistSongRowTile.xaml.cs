@@ -53,14 +53,14 @@ namespace BeatManager_WPF_.UserControls.Playlists
 
             _playlist.Songs.Remove(toRemove);
 
-            var index = Globals.Playlists.FindIndex(x => x.FullPath == _playlist.FullPath);
+            var index = SongData.Playlists.FindIndex(x => x.FullPath == _playlist.FullPath);
             if (index == -1)
             {
                 MainWindow.ShowNotification("Failed to remove song from playlist.", NotificationSeverityEnum.Error);
                 return;
             }
 
-            Globals.Playlists[index] = _playlist;
+            SongData.Playlists[index] = _playlist;
 
             File.WriteAllText(_playlist.FullPath, JsonConvert.SerializeObject(_playlist, Formatting.None));
 

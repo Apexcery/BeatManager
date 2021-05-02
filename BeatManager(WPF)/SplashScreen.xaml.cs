@@ -35,7 +35,7 @@ namespace BeatManager_WPF_
             
             if (!string.IsNullOrEmpty(_config.BeatSaberLocation) && ValidateDirectory(_config.BeatSaberLocation))
             {
-                Task.WhenAll(Globals.LoadPlaylists(_config.BeatSaberLocation), Globals.LoadLocalSongs(_config.BeatSaberLocation)).ContinueWith((t) =>
+                Task.WhenAll(SongData.LoadPlaylists(_config.BeatSaberLocation), SongData.LoadLocalSongs(_config.BeatSaberLocation)).ContinueWith((t) =>
                 {
                     StartChangeWindowTimer();
                 });
@@ -116,7 +116,7 @@ namespace BeatManager_WPF_
 
             if (_config.BeatSaberLocation.Equals(beatSaberRootDir))
             {
-                Task.WhenAll(Globals.LoadPlaylists(beatSaberRootDir), Globals.LoadLocalSongs(beatSaberRootDir)).ContinueWith((t) =>
+                Task.WhenAll(SongData.LoadPlaylists(beatSaberRootDir), SongData.LoadLocalSongs(beatSaberRootDir)).ContinueWith((t) =>
                 {
                     StartChangeWindowTimer();
                 });
@@ -127,7 +127,7 @@ namespace BeatManager_WPF_
 
             File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
 
-            Task.WhenAll(Globals.LoadPlaylists(beatSaberRootDir), Globals.LoadLocalSongs(beatSaberRootDir)).ContinueWith((t) =>
+            Task.WhenAll(SongData.LoadPlaylists(beatSaberRootDir), SongData.LoadLocalSongs(beatSaberRootDir)).ContinueWith((t) =>
             {
                 StartChangeWindowTimer(0, "Root directory saved successfully.", NotificationSeverityEnum.Success);
             });

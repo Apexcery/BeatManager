@@ -16,7 +16,7 @@ namespace BeatManager_WPF_.UserControls.Songs
         {
             _config = config;
             _beatSaverApi = beatSaverApi;
-            _playlists = Globals.Playlists;
+            _playlists = SongData.Playlists;
 
             InitializeComponent();
 

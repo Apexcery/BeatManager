@@ -164,57 +164,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             var songToRemove = SongData.LocalSongs.FirstOrDefault(x => x.FullSongDir == _localSongInfo.FullSongDir);
             if (songToRemove != null)
             {
-                try
-                {
-                    var infoFilePath = Directory.GetFiles(_localSongInfo.FullSongDir).FirstOrDefault(x => x.EndsWith("info.dat", StringComparison.InvariantCultureIgnoreCase));
-                    var stringToHash = File.ReadAllText(infoFilePath);
-                    var songInfo = JsonConvert.DeserializeObject<SongInfo>(stringToHash);
-                    foreach (var diffSet in songInfo.DifficultyBeatmapSets)
-                    {
-                        foreach (var diff in diffSet.DifficultyBeatmaps)
-                        {
-                            var diffPath = $"{_localSongInfo.FullSongDir}/{diff.BeatmapFilename}";
-                            stringToHash += File.ReadAllText(diffPath);
-                        }
-                    }
-                    var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
-                    var hashString = string.Concat(hash.Select(b => b.ToString("x2")));
-
-                    for (var i = SongData.Playlists.Count; i-- > 0;)
-                    {
-                        var playlist = SongData.Playlists[i];
-                        var allSongsInPlaylist = playlist.Songs.Select(x => x.Hash).ToList();
-                        if (allSongsInPlaylist.Contains(hashString))
-                        {
-                            allSongsInPlaylist.Remove(hashString);
-                            playlist.Songs = allSongsInPlaylist.Select(x => new Playlist.Song { Hash = x }).ToList();
-                        }
-
-                        SongData.Playlists[i] = playlist;
-                        File.WriteAllText(playlist.FullPath, JsonConvert.SerializeObject(playlist));
-                    }
-
-                    SongData.LocalSongs.Remove(songToRemove);
-
-                    _refreshSongs();
-
-                    Directory.Delete(songDirectory, true);
-
-                    MainWindow.ShowNotification("Song successfully deleted.", NotificationSeverityEnum.Success);
-                }
-                catch (Exception ex)
-                {
-                    MainWindow.ShowNotification("Song failed to be deleted.", NotificationSeverityEnum.Error);
-                }
-            }
-
-            foreach (var playlist in SongData.Playlists) // Remove song from all playlists regardless of if it's downloaded. //TODO: Should probably be an option on a settings page.
-            {
-                var songExistsInPlaylist = playlist.Songs.Select(x => x.Hash).Contains(_localSongInfo.Hash ?? _onlineSongInfo!.Hash);
-                if (!songExistsInPlaylist)
-                    continue;
-
-                SongData.RemoveSongFromPlaylist(playlist, _localSongInfo.Hash ?? _onlineSongInfo!.Hash);
+                SongData.DeleteSong(songToRemove);
             }
         }
 

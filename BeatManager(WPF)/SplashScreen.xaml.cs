@@ -31,7 +31,9 @@ namespace BeatManager_WPF_
             _config = config;
             _beatSaverApi = beatSaverApi;
             InitializeComponent();
+            
             DirectoryPanel.Visibility = Visibility.Hidden;
+            TopBar.Visibility = Visibility.Hidden;
             
             if (!string.IsNullOrEmpty(_config.BeatSaberLocation) && ValidateDirectory(_config.BeatSaberLocation))
             {
@@ -43,20 +45,21 @@ namespace BeatManager_WPF_
             else
             {
                 DirectoryPanel.Visibility = Visibility.Visible;
+                TopBar.Visibility = Visibility.Visible;
             }
         }
 
-        private void StartChangeWindowTimer(int seconds = 0, string notifMessage = null, NotificationSeverityEnum? severity = null)
+        private void StartChangeWindowTimer(int seconds = 0, string? notifMessage = null, NotificationSeverityEnum? severity = null)
         {
             _dispatchTimer.Tick += new EventHandler((o, args) => ChangeWindow(o, args, notifMessage, severity));
             _dispatchTimer.Interval = new TimeSpan(0, 0, seconds);
             _dispatchTimer.Start();
         }
 
-        private void ChangeWindow(object sender, EventArgs e, string notifMessage = null, NotificationSeverityEnum? severity = null)
+        private void ChangeWindow(object sender, EventArgs e, string? notifMessage = null, NotificationSeverityEnum? severity = null)
         {
             MainWindow main;
-            if (notifMessage == null || severity == null)
+            if (string.IsNullOrEmpty(notifMessage) || severity == null)
                 main = new MainWindow(_config, _beatSaverApi);
             else
                 main = new MainWindow(_config, _beatSaverApi, notifMessage, (NotificationSeverityEnum) severity);
@@ -165,6 +168,11 @@ namespace BeatManager_WPF_
             }
 
             return true;
+        }
+
+        private void BtnExit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

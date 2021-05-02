@@ -7,9 +7,23 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="BeatManager_WPF_.SplashScreen"
         mc:Ignorable="d"
         Title="SplashScreen" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
-
-
     <Grid Background="#FF0C0C0C">
+        <Grid x:Name="TopBar" Height="{StaticResource TopBarHeight}" VerticalAlignment="Top">
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="BtnExit"  Width="15" Height="15" Padding="0"  HorizontalAlignment="Right" Margin="15" Click="BtnExit_Click" BorderBrush="{x:Null}" Background="Transparent">
+                    <materialDesign:PackIcon Kind="ClearBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform X="0"/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+                </Button>
+            </StackPanel>
+        </Grid>
         <StackPanel x:Name="DirectoryPanel" Width="1000" Height="100" Orientation="Vertical" VerticalAlignment="Bottom">
             <Label Content="Please select your Beat Saber Directory" HorizontalAlignment="Center" Margin="20,0,0,0" FontSize="22"/>
             <StackPanel Orientation="Horizontal">

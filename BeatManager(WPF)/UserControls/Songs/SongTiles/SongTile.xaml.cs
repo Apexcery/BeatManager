@@ -7,17 +7,20 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using BeatManager_WPF_.Enums;
 using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
 using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
+using Sentry;
 using Color = System.Windows.Media.Color;
 
 namespace BeatManager_WPF_.UserControls.Songs.SongTiles
@@ -82,6 +85,55 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             SongTileArtist.Text = _localSongInfo?.Artist ?? _onlineSongInfo!.Artist;
             SongTileBPM.Content = _localSongInfo != null ? (int)_localSongInfo.BPM : (int)_onlineSongInfo!.BPM;
             ToolTip = _localSongInfo?.SongName ?? _onlineSongInfo!.SongName;
+
+            foreach (var diff in _localSongInfo?.Difficulties.OrderBy(x => x.Rank) ?? _onlineSongInfo!.Difficulties.OrderBy(x => x.Rank))
+            {
+                Grid? circleGrid = null;
+                switch (diff.Name)
+                {
+                    case "Easy":
+                        circleGrid = CreateDifficultyCircle(Colors.LimeGreen);
+                        break;
+                    case "Normal":
+                        circleGrid = CreateDifficultyCircle(Colors.Yellow);
+                        break;
+                    case "Hard":
+                        circleGrid = CreateDifficultyCircle(Colors.Orange);
+                        break;
+                    case "Expert":
+                        circleGrid = CreateDifficultyCircle(Colors.Red);
+                        break;
+                    case "ExpertPlus":
+                        circleGrid = CreateDifficultyCircle(Colors.Purple);
+                        break;
+                    default:
+                        SentrySdk.CaptureException(new Exception("Invalid difficulty for showing difficulty circles."));
+                        break;
+                }
+                if (circleGrid != null)
+                {
+                    SongTileDifficulties.Children.Add(circleGrid);
+                }
+            }
+        }
+
+        private Grid CreateDifficultyCircle(Color backColor)
+        {
+            return new Grid
+            {
+                Margin = new Thickness(0),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Children =
+                {
+                    new Ellipse
+                    {
+                        Width = 20,
+                        Height = 20,
+                        Margin = new Thickness(-5),
+                        Fill = new SolidColorBrush(backColor)
+                    }
+                }
+            };
         }
 
         private void SongTileFlipper_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -115,6 +167,11 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             SongTileBPMBox.Background.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBackgroundColorAnimation);
             SongTileBPMBox.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBorderColorAnimation);
             SongTileBPMBox.BeginAnimation(OpacityProperty, opacityAnimation);
+
+            SongTileDiffBox.Background = new SolidColorBrush();
+            SongTileDiffBox.Background.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBackgroundColorAnimation);
+            SongTileDiffBox.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBorderColorAnimation);
+            SongTileDiffBox.BeginAnimation(OpacityProperty, opacityAnimation);
         }
 
         private void FrontContentGrid_OnMouseLeave(object sender, MouseEventArgs e)
@@ -134,6 +191,11 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             SongTileBPMBox.Background.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBackgroundColorAnimation);
             SongTileBPMBox.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBorderColorAnimation);
             SongTileBPMBox.BeginAnimation(OpacityProperty, opacityAnimation);
+
+            SongTileDiffBox.Background = new SolidColorBrush();
+            SongTileDiffBox.Background.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBackgroundColorAnimation);
+            SongTileDiffBox.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, bpmBoxBorderColorAnimation);
+            SongTileDiffBox.BeginAnimation(OpacityProperty, opacityAnimation);
         }
 
         private void BtnSongTilePlaylist_OnClick(object sender, RoutedEventArgs e)

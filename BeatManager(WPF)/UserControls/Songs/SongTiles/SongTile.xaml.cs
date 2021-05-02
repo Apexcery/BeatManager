@@ -19,6 +19,7 @@ using BeatManager_WPF_.Interfaces;
 using BeatManager_WPF_.Models;
 using BeatManager_WPF_.ViewModels;
 using MaterialDesignThemes.Wpf;
+using MoreLinq;
 using Newtonsoft.Json;
 using Sentry;
 using Color = System.Windows.Media.Color;
@@ -86,7 +87,7 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             SongTileBPM.Content = _localSongInfo != null ? (int)_localSongInfo.BPM : (int)_onlineSongInfo!.BPM;
             ToolTip = _localSongInfo?.SongName ?? _onlineSongInfo!.SongName;
 
-            foreach (var diff in _localSongInfo?.Difficulties.OrderBy(x => x.Rank) ?? _onlineSongInfo!.Difficulties.OrderBy(x => x.Rank))
+            foreach (var diff in _localSongInfo?.Difficulties.DistinctBy(x => x.Name).OrderBy(x => x.Rank) ?? _onlineSongInfo!.Difficulties.DistinctBy(x => x.Name).OrderBy(x => x.Rank))
             {
                 Grid? circleGrid = null;
                 switch (diff.Name)

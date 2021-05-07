@@ -1,0 +1,53 @@
+﻿<Window x:Class="BeatManager.UserControls.Songs.SongTiles.AddRemoveFromPlaylist"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        Title="Add / Remove from Playlist"
+        Width="900" Height="600"
+        Background="{StaticResource BackgroundColorDark}"
+        WindowStyle="None" ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        x:Name="UI">
+    <DockPanel>
+        <Grid x:Name="TopBar" DockPanel.Dock="Top" Height="{StaticResource TopBarHeight}" VerticalAlignment="Top" Background="{StaticResource BackgroundColorMid}">
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock Text="Add / Remove from Playlist" Foreground="{StaticResource MaterialDesignDarkForeground}" FontSize="16" Margin="10"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="BtnClose"  Width="15" Height="15" Padding="0"  HorizontalAlignment="Right" Margin="15" Click="BtnClose_Click" Background="Transparent">
+                    <materialDesign:PackIcon Kind="ClearBox" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform X="0"/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Background="{StaticResource BackgroundColorLight}" DockPanel.Dock="Top">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <Image x:Name="SongImage" Width="150" Height="150" Margin="10, 10, 10, 5" />
+                <TextBlock x:Name="SongName" Text="Song Name" FontSize="14" Foreground="{StaticResource MaterialDesignDarkForeground}" Margin="10, 5, 10, 10" />
+            </StackPanel>
+        </Grid>
+        <Grid>
+            <ScrollViewer x:Name="GridPlaylists" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding Playlists, ElementName=UI}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5" VerticalAlignment="Top" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Window>

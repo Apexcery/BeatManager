@@ -246,7 +246,9 @@ namespace BeatManager_WPF_.UserControls.Songs.SongTiles
             }
 
             _beatSaverAPI.DownloadMap(song.DirectDownload, song.Hash).Wait();
-            var zip = ZipFile.OpenRead($"./data/{song.Hash}.zip");
+
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\BeatManager";
+            var zip = ZipFile.OpenRead($"{appDataFolder}/data/{song.Hash}.zip");
 
             var songDir = $"{_config.BeatSaberLocation}/Beat Saber_Data/CustomLevels/{songDirName}";
             zip.ExtractToDirectory(songDir);

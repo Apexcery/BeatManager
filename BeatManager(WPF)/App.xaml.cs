@@ -42,13 +42,15 @@ namespace BeatManager_WPF_
         {
             var config = new Config();
 
-            if (!Directory.Exists("./data"))
-                Directory.CreateDirectory("./data");
+            var appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\BeatManager";
 
-            if (File.Exists("./data/config.json"))
-                config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("./data/config.json"));
+            if (!Directory.Exists($"{appDataDirectory}/data"))
+                Directory.CreateDirectory($"{appDataDirectory}/data");
+
+            if (File.Exists($"{appDataDirectory}/data/config.json"))
+                config = JsonConvert.DeserializeObject<Config>(File.ReadAllText($"{appDataDirectory}/data/config.json"));
             else
-                File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
+                File.WriteAllText($"{appDataDirectory}/data/config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 
             return config;
         }

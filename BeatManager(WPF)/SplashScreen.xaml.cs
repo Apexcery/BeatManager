@@ -128,7 +128,9 @@ namespace BeatManager_WPF_
 
             _config.BeatSaberLocation = beatSaberRootDir;
 
-            File.WriteAllText("./data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\BeatManager";
+
+            File.WriteAllText($"{appDataFolder}/data/config.json", JsonConvert.SerializeObject(_config, Formatting.Indented));
 
             Task.WhenAll(SongData.LoadPlaylists(beatSaberRootDir), SongData.LoadLocalSongs(beatSaberRootDir)).ContinueWith((t) =>
             {

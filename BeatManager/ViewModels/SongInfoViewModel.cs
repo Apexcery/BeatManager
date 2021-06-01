@@ -29,5 +29,8 @@ namespace BeatManager.ViewModels
     public class OnlineSongInfoViewModel : SongInfoViewModel
     {
         public string DownloadPath { get; set; }
+        public int Downloads { get; set; }
+        public int Upvotes { get; set; }
+        public int Downvotes { get; set; }
     }
 }

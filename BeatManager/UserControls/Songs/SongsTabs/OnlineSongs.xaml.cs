@@ -158,7 +158,10 @@ namespace BeatManager.UserControls.Songs.SongsTabs
                     FullImagePath = $"https://beatsaver.com{song.CoverURL}",
                     BPM = song.Metadata.Bpm,
                     Hash = song.Hash,
-                    DownloadPath = $@"https://beatsaver.com{song.DirectDownload}"
+                    DownloadPath = $@"https://beatsaver.com{song.DirectDownload}",
+                    Downloads = song.Stats.Downloads,
+                    Upvotes = song.Stats.UpVotes,
+                    Downvotes = song.Stats.DownVotes
                 };
 
                 if (song.Metadata.Difficulties.Easy)

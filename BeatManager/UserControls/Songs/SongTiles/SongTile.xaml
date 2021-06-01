@@ -6,7 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="200" ClipToBounds="False" x:Name="Tile" Cursor="Hand">
+             d:DesignHeight="250" d:DesignWidth="250" ClipToBounds="False" x:Name="Tile" Cursor="Hand">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -59,10 +59,22 @@
                 </Image>
 
                 <Border x:Name="SongTileDetailBox" Padding="5" VerticalAlignment="Bottom" Height="75" Background="White" Opacity="0.6">
-                    <UniformGrid Columns="1" Rows="2">
+                    <StackPanel>
                         <TextBlock x:Name="SongTileName" Text="Name: " Foreground="Black" FontSize="16" />
-                        <TextBlock x:Name="SongTileArtist" Text="Artist: " Foreground="Black" FontSize="14" />
-                    </UniformGrid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="SongTileArtist" Grid.Column="0" Text="Artist: " Foreground="Black" FontSize="14" TextAlignment="Left" VerticalAlignment="Center" />
+                            <UniformGrid Grid.Column="1" Columns="1" Rows="3" HorizontalAlignment="Center">
+                                <TextBlock x:Name="SongTileDownloads" Foreground="Black" FontSize="14" TextAlignment="Right" />
+                                <TextBlock x:Name="SongTileUpvotes" Foreground="Black" FontSize="14" TextAlignment="Right" />
+                                <TextBlock x:Name="SongTileDownvotes" Foreground="Black" FontSize="14" TextAlignment="Right" />
+                            </UniformGrid>
+                        </Grid>
+                    </StackPanel>
                 </Border>
 
                 <StackPanel>
@@ -77,9 +89,6 @@
                 <StackPanel>
                     <Border x:Name="SongTileDiffBox" Width="75" Height="30" HorizontalAlignment="Right" Margin="5" Padding="0" CornerRadius="3" BorderThickness="1" Background="Black" Opacity="0.6" BorderBrush="#2194f3" >
                         <StackPanel x:Name="SongTileDifficulties" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" />
-                        <!-- <Label FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"> -->
-                        <!--     <TextBlock x:Name="SongTileDifficulties" /> -->
-                        <!-- </Label> -->
                     </Border>
                 </StackPanel>
             </Grid>

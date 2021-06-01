@@ -27,8 +27,6 @@ namespace BeatManager.UserControls.Songs.SongTiles
 {
     public partial class SongTile : UserControl
     {
-
-        private readonly Action _refreshSongs;
         private readonly Config _config;
         private readonly IBeatSaverAPI? _beatSaverAPI;
         private readonly LocalSongInfoViewModel? _localSongInfo;
@@ -51,7 +49,6 @@ namespace BeatManager.UserControls.Songs.SongTiles
             if (localSongInfo != null && onlineSongInfo != null)
                 throw new ArgumentException("Only one of the song info types should be set.");
 
-            _refreshSongs = refreshSongs;
             _config = config;
             _beatSaverAPI = beatSaverAPI;
             _localSongInfo = localSongInfo;
@@ -85,6 +82,13 @@ namespace BeatManager.UserControls.Songs.SongTiles
             SongTileArtist.Text = _localSongInfo?.Artist ?? _onlineSongInfo!.Artist;
             SongTileBPM.Content = _localSongInfo != null ? (int)_localSongInfo.BPM : (int)_onlineSongInfo!.BPM;
             ToolTip = _localSongInfo?.SongName ?? _onlineSongInfo!.SongName;
+
+            if (_onlineSongInfo != null)
+            {
+                SongTileDownloads.Text = $"⭳: {_onlineSongInfo.Downloads}";
+                SongTileUpvotes.Text = $"△: {_onlineSongInfo.Upvotes}";
+                SongTileDownvotes.Text = $"▽: {_onlineSongInfo.Downvotes}";
+            }
 
             foreach (var diff in _localSongInfo?.Difficulties.DistinctBy(x => x.Name).OrderBy(x => x.Rank) ?? _onlineSongInfo!.Difficulties.DistinctBy(x => x.Name).OrderBy(x => x.Rank))
             {

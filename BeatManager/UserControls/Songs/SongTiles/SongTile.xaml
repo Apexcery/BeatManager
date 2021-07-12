@@ -108,9 +108,18 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="75"/>
                         <RowDefinition Height="75"/>
+                        <RowDefinition Height="75"/>
                     </Grid.RowDefinitions>
 
-                    <Button Height="60" Grid.Row="0" Style="{StaticResource MaterialDesignFlatMidBgButton}" Click="BtnSongTilePlaylist_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
+                    <Button Height="60" Grid.Row="0" Style="{StaticResource MaterialDesignFlatMidBgButton}" Click="BtnSongTileDetails_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
+                        <Button.Content>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="View Details" HorizontalAlignment="Center" FontSize="16" />
+                                <fa:FontAwesome Icon="InfoCircle" HorizontalAlignment="Center" FontSize="24" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button Height="60" Grid.Row="1" Style="{StaticResource MaterialDesignFlatMidBgButton}" Click="BtnSongTilePlaylist_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
                         <Button.Content>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="Add/Remove From Playlist" HorizontalAlignment="Center" FontSize="16" />
@@ -118,7 +127,7 @@
                             </StackPanel>
                         </Button.Content>
                     </Button>
-                    <Button Height="60" Grid.Row="1" Click="BtnSongTileDelete_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
+                    <Button Height="60" Grid.Row="2" Click="BtnSongTileDelete_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
                         <Button.Content>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="Delete" HorizontalAlignment="Center" FontSize="16" />
@@ -136,7 +145,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button Height="60" Grid.Row="1" Click="BtnSongTileDownload_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
+                    <Button Height="60" Grid.Row="2" Click="BtnSongTileDownload_OnClick" materialDesign:ButtonAssist.CornerRadius="0">
                         <Button.Content>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="Download" HorizontalAlignment="Center" FontSize="16" />

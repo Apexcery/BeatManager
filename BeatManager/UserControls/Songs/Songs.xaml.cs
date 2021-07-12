@@ -20,7 +20,7 @@ namespace BeatManager.UserControls.Songs
 
             InitializeComponent();
 
-            var localSongControl = new LocalSongs(_config);
+            var localSongControl = new LocalSongs(_config, _beatSaverApi);
             LocalTabHeader.Content = localSongControl;
 
             var onlineSongControl = new OnlineSongs(_config, _beatSaverApi);

@@ -155,13 +155,21 @@ namespace BeatManager
 
             if (!Directory.Exists(directory + "\\Beat Saber_Data\\CustomLevels"))
             {
-                MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
+                var result = MessageBox.Show("Custom Levels directory not found.", "Invalid Directory", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    return true;
+                }
                 DisableSaveButton();
                 return false;
             }
             if (!Directory.Exists(directory + "\\Playlists"))
             {
-                MessageBox.Show("Custom Levels directory not found.", "Invalid Directory");
+                var result = MessageBox.Show("Custom Playlists directory not found. Continue?", "Invalid Directory", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    return true;
+                }
                 DisableSaveButton();
                 return false;
             }

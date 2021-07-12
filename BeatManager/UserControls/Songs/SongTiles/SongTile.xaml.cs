@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,7 +29,7 @@ namespace BeatManager.UserControls.Songs.SongTiles
     public partial class SongTile : UserControl
     {
         private readonly Config _config;
-        private readonly IBeatSaverAPI? _beatSaverAPI;
+        private readonly IBeatSaverAPI _beatSaverAPI;
         private readonly LocalSongInfoViewModel? _localSongInfo;
         private readonly OnlineSongInfoViewModel? _onlineSongInfo;
         private readonly ObservableCollection<SongTile> _songTiles;
@@ -42,7 +43,7 @@ namespace BeatManager.UserControls.Songs.SongTiles
             '\u0017', '\u0018', '\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001f',
         };
 
-        public SongTile(Action refreshSongs, Config config, IBeatSaverAPI? beatSaverAPI, ObservableCollection<SongTile> songTiles, LocalSongInfoViewModel? localSongInfo = null, OnlineSongInfoViewModel? onlineSongInfo = null)
+        public SongTile(Action refreshSongs, Config config, IBeatSaverAPI beatSaverAPI, ObservableCollection<SongTile> songTiles, LocalSongInfoViewModel? localSongInfo = null, OnlineSongInfoViewModel? onlineSongInfo = null)
         {
             if (localSongInfo == null && onlineSongInfo == null)
                 throw new ArgumentException("At least one of the filters in the song tile must be non-null.");
@@ -300,6 +301,54 @@ namespace BeatManager.UserControls.Songs.SongTiles
             SongData.LocalSongs.Add(songInfoViewModel);
 
             MainWindow.ShowNotification($"Song '{songInfoViewModel.SongName}' downloaded successfully!", NotificationSeverityEnum.Success);
+        }
+
+        private async void BtnSongTileDetails_OnClick(object sender, RoutedEventArgs e)
+        {
+            var songDetailsViewModel = await GetSongDetails();
+            var songDetails = new SongDetails(songDetailsViewModel);
+
+            var windowContent = ((MainWindow)Application.Current.MainWindow)?.WindowContent;
+            if (windowContent == null)
+                return;
+
+            windowContent.Children.Clear();
+            windowContent.Children.Add(songDetails);
+        }
+
+        private async Task<SongDetailsViewModel> GetSongDetails()
+        {
+            var hash = _localSongInfo?.Hash ?? _onlineSongInfo!.Hash;
+
+            var response = await _beatSaverAPI.GetByHash(hash);
+
+            var songDetailViewModel = new SongDetailsViewModel
+            {
+                FullImagePath = response.CoverURL,
+                SongName = response.Name,
+                Artist = response.Metadata.SongAuthorName,
+                Mapper = response.Metadata.LevelAuthorName,
+                Description = response.Description,
+                BPM = response.Metadata.Bpm,
+                Hash = hash,
+                DownloadPath = response.DownloadURL,
+                Downloads = response.Stats.Downloads,
+                Upvotes = response.Stats.UpVotes,
+                Downvotes = response.Stats.DownVotes
+            };
+
+            if (response.Metadata.Difficulties.Easy)
+                songDetailViewModel.Difficulties.Add(new SongDetailsViewModel.Difficulty { Name = "Easy", Rank = 1 });
+            if (response.Metadata.Difficulties.Normal)
+                songDetailViewModel.Difficulties.Add(new SongDetailsViewModel.Difficulty { Name = "Normal", Rank = 3 });
+            if (response.Metadata.Difficulties.Hard)
+                songDetailViewModel.Difficulties.Add(new SongDetailsViewModel.Difficulty { Name = "Hard", Rank = 5 });
+            if (response.Metadata.Difficulties.Expert)
+                songDetailViewModel.Difficulties.Add(new SongDetailsViewModel.Difficulty { Name = "Expert", Rank = 7 });
+            if (response.Metadata.Difficulties.ExpertPlus)
+                songDetailViewModel.Difficulties.Add(new SongDetailsViewModel.Difficulty { Name = "ExpertPlus", Rank = 9 });
+
+            return songDetailViewModel;
         }
     }
 }

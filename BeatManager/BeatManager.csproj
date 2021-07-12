@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\PlayButton.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
@@ -26,6 +30,7 @@
   <ItemGroup>
     <Resource Include="Resources\Images\BMLogo.png" />
     <Resource Include="Resources\Images\BMSmallLogo.png" />
+    <Resource Include="Resources\Images\PlayButton.png" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="BeatManager.UserControls.Songs.SongDetails"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BeatManager.UserControls.Songs"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d" 
+             d:DesignHeight="720" d:DesignWidth="1280">
+    <StackPanel Orientation="Vertical">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Column="0">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="350" CanVerticallyScroll="False" CanHorizontallyScroll="False">
+                    <TextBlock x:Name="SongName" 
+                               Text="Song Name: " 
+                               Foreground="White" 
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" 
+                               FontSize="16" 
+                               TextWrapping="Wrap"
+                               TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </DockPanel>
+
+            <DockPanel Grid.Column="1">
+                <Image x:Name="SongImage" Source="../../Resources/Images/BMLogo.png" Height="250" Width="250" MaxHeight="250" MaxWidth="250" />
+            </DockPanel>
+
+            <DockPanel Grid.Column="2">
+                <StackPanel VerticalAlignment="Center" CanVerticallyScroll="False" CanHorizontallyScroll="False">
+                    <TextBlock x:Name="SongArtist" Text="Artist Name: " Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
+                    <TextBlock x:Name="SongMapper" Text="Mapper Name: " Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+
+        <Separator Margin="15" />
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Column="0">
+                <StackPanel Width="500" CanVerticallyScroll="False" CanHorizontallyScroll="False">
+                    <TextBlock Text="Description" FontSize="18" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                    <TextBlock x:Name="SongDesc" Text="Song Description" FontSize="16" Foreground="White" VerticalAlignment="Center" Margin="10" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </DockPanel>
+
+            <DockPanel Grid.Column="1">
+                <UniformGrid Rows="3" Columns="1">
+                    <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" Margin="5">
+                        <fa:FontAwesome Icon="Download" Margin="15, 0" />
+                        <Run x:Name="SongDownloads" Text="&lt;num&gt; Downloads" />
+                    </TextBlock>
+                    <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" Margin="5" >
+                        <fa:FontAwesome Icon="ArrowUp" Margin="15, 0" />
+                        <Run x:Name="SongUpvotes" Text="&lt;num&gt; Upvotes" />
+                    </TextBlock>
+                    <TextBlock FontSize="16" Foreground="White" VerticalAlignment="Center" Margin="5" >
+                        <fa:FontAwesome Icon="ArrowDown" Margin="15, 0" />
+                        <Run x:Name="SongDownvotes" Text="&lt;num&gt; Downvotes" />
+                    </TextBlock>
+                </UniformGrid>
+            </DockPanel>
+
+            <DockPanel Grid.Column="2">
+                <Border x:Name="PlayBorder" BorderThickness="2" BorderBrush="White" Width="150" Height="100">
+                    <Image x:Name="SongPlayPreview"
+                           Source="../../Resources/Images/PlayButton.png"
+                           Width="50" Height="50"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           ToolTip="Play Preview"
+                           Cursor="Hand"
+                           MouseUp="SongPlayPreview_MouseUp">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="1" />
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="Opacity" Value="0.5" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Border>
+            </DockPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using BeatManager.Enums;
+using BeatManager.Interfaces;
 using BeatManager.Models;
 using BeatManager.Models.FilterModels;
 using BeatManager.UserControls.Songs.SongTiles;
@@ -18,6 +19,7 @@ namespace BeatManager.UserControls.Songs.SongsTabs
     public partial class LocalSongs : UserControl, INotifyPropertyChanged
     {
         private readonly Config _config;
+        private readonly IBeatSaverAPI _beatSaverAPI;
 
         public ObservableCollection<SongTile> Items { get; set; } = new ObservableCollection<SongTile>();
 
@@ -62,9 +64,10 @@ namespace BeatManager.UserControls.Songs.SongsTabs
         public bool IsLocal => true;
         public bool IsOnline => false;
 
-        public LocalSongs(Config config)
+        public LocalSongs(Config config, IBeatSaverAPI beatSaverAPI)
         {
             _config = config;
+            _beatSaverAPI = beatSaverAPI;
 
             InitializeComponent();
             this.DataContext = this;
@@ -264,7 +267,7 @@ namespace BeatManager.UserControls.Songs.SongsTabs
             {
                 foreach (var song in filteredSongs)
                 {
-                    var songInfoPanel = new SongTile(LoadSongs, _config, null, Items, localSongInfo: song);
+                    var songInfoPanel = new SongTile(LoadSongs, _config, _beatSaverAPI, Items, localSongInfo: song);
                     Items.Add(songInfoPanel);
                 }
 
